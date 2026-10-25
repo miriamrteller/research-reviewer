@@ -73,11 +73,16 @@ test.describe('keyboard operability', () => {
 
     const expectedOrder = [
       'Badge key',
+      'Go to source 1',
+      'Go to source 2',
+      'Go to source 1',
+      'Go to source 2',
+      'Go to source 3',
       'Revise',
       'Approve',
-      '1 Quarterly Data Quality Review',
-      '2 Dataset Naming Retrospective',
-      '3 Data Sharing Readiness Checklist',
+      'Full passage: Quarterly Data Quality Review',
+      'Full passage: Dataset Naming Retrospective',
+      'Full passage: Data Sharing Readiness Checklist',
       'Feedback',
     ]
 
@@ -110,7 +115,7 @@ test.describe('keyboard operability', () => {
     gotoApp,
   }) => {
     await gotoApp()
-    const trigger = page.getByRole('button', { name: /^2 Dataset Naming/ })
+    const trigger = page.getByRole('button', { name: /^Full passage. Dataset Naming/ })
     await trigger.focus()
     await page.keyboard.press('Enter')
     await expect(trigger).toHaveAttribute('aria-expanded', 'true')

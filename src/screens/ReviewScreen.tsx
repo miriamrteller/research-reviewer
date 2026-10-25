@@ -11,6 +11,7 @@ import { ReviseDialog } from '../components/review/ReviseDialog'
 import { SourceCard } from '../components/review/SourceCard'
 import { SourceList } from '../components/review/SourceList'
 import { describeError } from '../lib/describeError'
+import { isSourceLit, litCitations, sourceTriggerId, type Focused } from '../lib/highlight'
 import { SendFeedback } from './SendFeedback'
 
 // The decision buttons are gone after a write, so focus moves to the new status instead of <body>.
@@ -42,7 +43,7 @@ export function ReviewScreen() {
   return (
     // Sources show in full for now (Miriam); their inner scroll comes in the next step. The health
     // toast and Feedback FAB may overlap the page; html scroll-padding keeps focus clear of them.
-    <main className="mx-auto flex w-full flex-col gap-8 px-4 py-6 sm:p-8 md:px-12">
+    <main className="mx-auto flex w-full flex-col gap-8 px-4 py-6 sm:p-8 md:h-dvh md:px-12">
       {document.isPending ? (
         <output aria-busy="true" className="type-body-large text-on-surface-variant">
           Loading the review…
@@ -95,21 +96,42 @@ type ReviewBodyProps = {
   actions: ReactNode
 }
 
+// Owns the inspect state: which claim or source is in focus, and which sources are open.
 function ReviewBody({ doc, actions }: ReviewBodyProps) {
+  const [focused, setFocused] = useState<Focused>(null)
+  const [open, setOpen] = useState<number[]>([])
   const numberOf = new Map(doc.sources.map((source) => [source.id, source.number]))
   const claims = doc.claims.map((claim) => ({
     id: claim.id,
     text: claim.text,
-    sourceNumbers: claim.sourceIds.flatMap((id) => numberOf.get(id) ?? []),
+    citations: claim.citations.flatMap(({ sourceId, words }) => {
+      const number = numberOf.get(sourceId)
+      return number === undefined ? [] : [{ number, words }]
+    }),
   }))
   return (
     <>
       <QuestionHeader question={doc.question} state={doc.review} />
-      <div className="grid gap-6 md:grid-cols-2 md:gap-8">
-        <ClaimsPaper caveat={doc.caveat} claims={claims} actions={actions} />
-        <SourceList>
+      <div className="grid gap-6 md:min-h-0 md:flex-1 md:grid-cols-2 md:gap-8">
+        <ClaimsPaper
+          caveat={doc.caveat}
+          claims={claims}
+          actions={actions}
+          litFor={(claim) => litCitations(claim, focused)}
+          onInspect={(id) => setFocused(id === null ? null : { kind: 'claim', id })}
+          onCite={(n) => document.getElementById(sourceTriggerId(n))?.focus()}
+        />
+        <SourceList open={open} onOpenChange={setOpen}>
           {doc.sources.map((source) => (
-            <SourceCard key={source.id} source={source} />
+            <SourceCard
+              key={source.id}
+              source={source}
+              open={open.includes(source.number)}
+              compact={open.length > 0}
+              lit={isSourceLit(source.number, claims, focused)}
+              onClose={() => setOpen(open.filter((n) => n !== source.number))}
+              onInspect={(n) => setFocused(n === null ? null : { kind: 'source', number: n })}
+            />
           ))}
         </SourceList>
       </div>

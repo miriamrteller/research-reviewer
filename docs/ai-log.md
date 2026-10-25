@@ -75,3 +75,14 @@ One line per commit: the piece, what the assistant produced, what the human chan
   `docs/research/claim-editing.md`. Miriam rejected two drafts (README assumptions; then too
   much on the obvious inline case) and redirected it to versions, multiple users, authorisation
   and audit, and one paragraph versus separate boxes that look like one paragraph. Docs only.
+- Source highlight and open at passage (Miriam's instruction): AI linked claims and source cards
+  both ways on hover and focus (outline and underline, keyed by claim id and citation number),
+  made citation numbers buttons that go to their source, and opened a source to its whole passage
+  on a scrolling paper with the quote marked, the reference code linking out to a made-up URL, and
+  Escape returning focus to the chevron. Miriam added the passage paper and the reference link, tint on the claim words only with no outline, a bold citation number, a tinted outlined source, the chevron under the grade badge, only the cited words lit, and cards shrinking while a source is open (badges on a second line, as one line did not fit).
+- Cited words in the schema (Miriam's instruction): AI merged main (fixture, badge key) into the
+  source highlight branch, replaced each claim's `sourceIds` with `citations: [{ sourceId, words }]`
+  in the Zod schema and both fixtures, with a check that the words are in the claim text.
+- Long passages (Miriam's instruction): AI wrote longer fictional passages for the three sources
+  and made the open source's paper run to the card's edges and fill the free height of the
+  Sources column, scrolling inside, with the other sources still visible.

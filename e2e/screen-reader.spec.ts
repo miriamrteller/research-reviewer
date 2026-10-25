@@ -25,24 +25,24 @@ function expectedTree(): string {
       - region "AI answer":
         - heading "AI answer" [level=2]
         - paragraph: /AI-generated answer/
-        - paragraph:
-          - text: /concentrated in incomplete mandatory fields/
-          - superscript: source 1
-          - superscript: source 2
-        - paragraph:
-          - text: /delayed analysis handover/
-          - superscript: source 1
-        - paragraph:
-          - text: /named data owners/
-          - superscript: source 2
-          - superscript: source 3
+        - text: /concentrated in incomplete mandatory fields/
+        - superscript:
+          - button "Go to source 1"
+        - superscript:
+          - button "Go to source 2"
+        - text: /delayed analysis handover/
+        - superscript:
+          - button "Go to source 1"
+        - text: /named data owners/
+        - superscript:
+          - button "Go to source 2"
+        - superscript:
+          - button "Go to source 3"
         - button "Revise"
         - button "Approve"
       - region "Sources":
         - heading "Sources" [level=2]
-        - heading /^1 Quarterly Data Quality Review/ [level=3]:
-          - button /^1 Quarterly Data Quality Review/
-        - text: "Evidence strength: Moderate"
+        - heading /^1 Quarterly Data Quality Review/ [level=3]
         - paragraph: /Quarterly audit/
         - list "Checks for source 1":
           - listitem: "Reference check: Verified"
@@ -50,11 +50,10 @@ function expectedTree(): string {
           - listitem: "Claim support: Supported"
           - listitem: "Stance: Agrees"
         - blockquote: /Incomplete mandatory fields/
-        - heading /^2 Dataset Naming Retrospective/ [level=3]:
-          - button /^2 Dataset Naming Retrospective/
-        - heading /^3 Data Sharing Readiness Checklist/ [level=3]:
-          - button /^3 Data Sharing Readiness Checklist/
-        - text: "Evidence strength: Weak"
+        - text: "Evidence strength: Moderate"
+        - button /^Full passage. Quarterly Data Quality Review/
+        - heading /^2 Dataset Naming Retrospective/ [level=3]
+        - heading /^3 Data Sharing Readiness Checklist/ [level=3]
         - paragraph: /Guidance checklist/
         - list "Checks for source 3":
           - listitem: "Reference check: Verified"
@@ -65,6 +64,8 @@ function expectedTree(): string {
           - strong: "Lowered because:"
           - text: /without data/
         - blockquote: /Validation checks/
+        - text: "Evidence strength: Weak"
+        - button /^Full passage. Data Sharing Readiness Checklist/
       - button "Feedback"
     - region "Notifications"
   `
@@ -117,7 +118,11 @@ test.describe('screen reader experience', () => {
     await waitForApi(page)
 
     // Source cards are accordion triggers: open or closed is in aria-expanded, not only the chevron.
-    for (const name of [/^1 Quarterly Data/, /^2 Dataset Naming/, /^3 Data Sharing/]) {
+    for (const name of [
+      /^Full passage. Quarterly Data/,
+      /^Full passage. Dataset Naming/,
+      /^Full passage. Data Sharing/,
+    ]) {
       await expect(page.getByRole('button', { name })).toHaveAttribute('aria-expanded', 'false')
     }
 
@@ -221,7 +226,7 @@ test.describe('screen reader experience', () => {
     gotoApp,
   }) => {
     await gotoApp()
-    const trigger = page.getByRole('button', { name: /^1 Quarterly Data/ })
+    const trigger = page.getByRole('button', { name: /^Full passage. Quarterly Data/ })
     await trigger.click()
     await expect(trigger).toHaveAttribute('aria-expanded', 'true')
     await expect(page.getByText(/Delayed analysis handover was/)).toBeVisible()

@@ -15,7 +15,7 @@ test.describe('WCAG 2.2 AA — automated scan', () => {
 
   test('source opened (full passage showing)', async ({ page, gotoApp, makeAxe }) => {
     await gotoApp()
-    await page.getByRole('button', { name: /^1 Quarterly Data/ }).click()
+    await page.getByRole('button', { name: /^Full passage. Quarterly Data/ }).click()
     await expect(page.getByText(/Delayed analysis handover was/)).toBeVisible()
     const { violations } = await makeAxe().analyze()
     expect(violations, formatViolations(violations)).toEqual([])

@@ -51,11 +51,26 @@ export const Source = z.strictObject({
 })
 export type Source = z.infer<typeof Source>
 
-export const Claim = z.strictObject({
-  id: ClaimId,
-  text,
-  sourceIds: z.array(SourceId).min(1),
-})
+/** One source backing a claim, and the exact words of the claim it backs (lit on hover or focus). */
+export const Citation = z.strictObject({ sourceId: SourceId, words: text })
+export type Citation = z.infer<typeof Citation>
+
+export const Claim = z
+  .strictObject({
+    id: ClaimId,
+    text,
+    citations: z.array(Citation).min(1),
+  })
+  .superRefine((claim, ctx) => {
+    claim.citations.forEach((citation, i) => {
+      if (!claim.text.includes(citation.words))
+        ctx.addIssue({
+          code: 'custom',
+          message: 'Cited words are not in the claim text',
+          path: ['citations', i, 'words'],
+        })
+    })
+  })
 export type Claim = z.infer<typeof Claim>
 
 /** Who did it and when (CLAUDE.md rule 8). */
@@ -90,12 +105,12 @@ export const ReviewDocument = z
       if (claimIds.has(claim.id))
         ctx.addIssue({ code: 'custom', message: 'Duplicate claim id', path: ['claims', i, 'id'] })
       claimIds.add(claim.id)
-      claim.sourceIds.forEach((id, j) => {
-        if (!sourceIds.has(id))
+      claim.citations.forEach(({ sourceId }, j) => {
+        if (!sourceIds.has(sourceId))
           ctx.addIssue({
             code: 'custom',
-            message: `Unknown source ${id}`,
-            path: ['claims', i, 'sourceIds', j],
+            message: `Unknown source ${sourceId}`,
+            path: ['claims', i, 'citations', j, 'sourceId'],
           })
       })
     })

@@ -49,11 +49,8 @@ describe('Review screen', () => {
     expect(within(answer).getByText(/Confirm that they apply/)).toHaveTextContent(
       'AI-generated answer.',
     )
-    expect(within(answer).getByText(/concentrated in incomplete mandatory/)).toHaveTextContent(
-      'source 1source 2',
-    )
-    expect(within(answer).getByText(/delayed analysis handover/)).toHaveTextContent('source 1')
-    expect(within(answer).getByText(/named data owners/)).toHaveTextContent('source 2source 3')
+    expect(within(answer).getByText(/concentrated in incomplete mandatory/)).toBeInTheDocument()
+    expect(within(answer).getAllByRole('button', { name: /^Go to source/ })).toHaveLength(5)
     expect(await axe(container)).toHaveNoViolations()
   })
 
@@ -73,7 +70,36 @@ describe('Review screen', () => {
     const trigger = screen.getByRole('button', { name: /Quarterly Data Quality Review/ })
     await user.click(trigger)
     expect(trigger).toHaveAttribute('aria-expanded', 'true')
-    expect(screen.getByText(/Delayed analysis handover was the most common/)).toBeVisible()
+    expect(
+      screen.getByText(/Delayed analysis handover was the most common reported impact/),
+    ).toBeVisible()
+  })
+
+  it('goes from a claim’s citation number to the source it cites', async () => {
+    const { user } = await renderLoaded()
+    await user.click(screen.getAllByRole('button', { name: 'Go to source 3' })[0]!)
+    expect(screen.getByRole('button', { name: /Data Sharing Readiness Checklist/ })).toHaveFocus()
+  })
+
+  it('opens a source at the marked quote, with its reference code opening the original', async () => {
+    const { user, container } = await renderLoaded()
+    await user.click(screen.getByRole('button', { name: /Quarterly Data Quality Review/ }))
+    expect(screen.getByText('Quoted excerpt starts.')).toBeInTheDocument()
+    const original = screen.getByRole('link', { name: /SRC-01/ })
+    expect(original).toHaveAttribute('target', '_blank')
+    expect(original).toHaveAccessibleName('SRC-01 (opens the original in a new tab)')
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('closes an open source with Escape and lands back on its chevron', async () => {
+    const { user } = await renderLoaded()
+    const trigger = screen.getByRole('button', { name: /Data Sharing Readiness Checklist/ })
+    await user.click(trigger)
+    await user.tab()
+    expect(screen.getByRole('link', { name: /SRC-03/ })).toHaveFocus()
+    await user.keyboard('{Escape}')
+    expect(trigger).toHaveAttribute('aria-expanded', 'false')
+    expect(trigger).toHaveFocus()
   })
 
   it('approves with confirmation and a note, and the page goes read-only', async () => {

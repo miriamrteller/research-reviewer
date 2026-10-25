@@ -1,15 +1,30 @@
 // The AI answer on its own paper: caveat, claims with citation numbers, and the decision buttons.
 import { Sparkles } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { cn } from '../../lib/cn'
+import { segmentClaim } from '../../lib/highlight'
+
+type Citation = { number: number; words: string }
+type Claim = { id: string; text: string; citations: readonly Citation[] }
 
 type ClaimsPaperProps = {
   caveat: string
-  claims: readonly { id: string; text: string; sourceNumbers: readonly number[] }[]
+  claims: readonly Claim[]
+  litFor: (claim: Claim) => Citation[]
+  onInspect: (id: string | null) => void
+  onCite: (number: number) => void
   /** Approve and Revise while in review; nothing once the answer is read-only. */
   actions: ReactNode
 }
 
-export function ClaimsPaper({ caveat, claims, actions }: ClaimsPaperProps) {
+export function ClaimsPaper({
+  caveat,
+  claims,
+  litFor,
+  onInspect,
+  onCite,
+  actions,
+}: ClaimsPaperProps) {
   return (
     <section
       aria-labelledby="claims-heading"
@@ -27,15 +42,45 @@ export function ClaimsPaper({ caveat, claims, actions }: ClaimsPaperProps) {
 
       <div className="relative grid min-h-0 flex-1 content-start gap-6 overflow-y-auto px-6 py-4">
         {claims.map((claim) => (
-          <p key={claim.id} className="type-headline-small">
-            {claim.text}
-            {claim.sourceNumbers.map((n) => (
-              <sup key={n} className="ml-1 type-label-small text-primary">
-                <span className="sr-only">source </span>
-                {n}
+          // Hover is extra; the citation buttons inside give keyboard users the same highlight.
+          <div
+            key={claim.id}
+            onMouseEnter={() => onInspect(claim.id)}
+            onMouseLeave={() => onInspect(null)}
+            onFocus={() => onInspect(claim.id)}
+            onBlur={() => onInspect(null)}
+            className="type-headline-small"
+          >
+            {/* Tint and underline on the cited words only, no box (Miriam): not colour alone. */}
+            {segmentClaim(claim.text, litFor(claim)).map((run, i) =>
+              run.lit ? (
+                <span
+                  key={i}
+                  className="rounded-sm bg-secondary-container box-decoration-clone text-on-secondary-container underline decoration-primary decoration-2 underline-offset-4"
+                >
+                  {run.text}
+                </span>
+              ) : (
+                <span key={i}>{run.text}</span>
+              ),
+            )}
+            {claim.citations.map(({ number }) => (
+              <sup key={number} className="ml-1">
+                <button
+                  type="button"
+                  aria-label={`Go to source ${number}`}
+                  onClick={() => onCite(number)}
+                  // Bold, not outlined, while its words are lit (Miriam).
+                  className={cn(
+                    'rounded-sm px-0.5 type-label-small text-primary',
+                    litFor(claim).some((c) => c.number === number) && 'font-bold',
+                  )}
+                >
+                  {number}
+                </button>
               </sup>
             ))}
-          </p>
+          </div>
         ))}
       </div>
 

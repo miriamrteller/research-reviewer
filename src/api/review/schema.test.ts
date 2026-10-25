@@ -11,10 +11,23 @@ describe('ReviewDocument schema', () => {
   it('rejects a claim that cites a source that does not exist', () => {
     const bad = {
       ...reviewFixture,
-      claims: [{ ...reviewFixture.claims[0], sourceIds: ['SRC-99'] }],
+      claims: [
+        { ...reviewFixture.claims[0], citations: [{ sourceId: 'SRC-99', words: 'naming' }] },
+      ],
     }
     const result = ReviewDocument.safeParse(bad)
-    expect(result.error?.issues[0]?.path).toEqual(['claims', 0, 'sourceIds', 0])
+    expect(result.error?.issues[0]?.path).toEqual(['claims', 0, 'citations', 0, 'sourceId'])
+  })
+
+  it('rejects cited words that are not in the claim text', () => {
+    const bad = {
+      ...reviewFixture,
+      claims: [
+        { ...reviewFixture.claims[0], citations: [{ sourceId: 'SRC-01', words: 'not there' }] },
+      ],
+    }
+    const result = ReviewDocument.safeParse(bad)
+    expect(result.error?.issues[0]?.path).toEqual(['claims', 0, 'citations', 0, 'words'])
   })
 
   it('rejects an approval without who and when', () => {
