@@ -34,6 +34,7 @@ export const reviewFixture = ReviewDocument.parse({
     {
       id: 'SRC-01',
       number: 1,
+      reference: { code: 'SRC-01', url: 'https://example.org/sources/SRC-01' },
       title: 'Quarterly Data Quality Review',
       design: 'Quarterly audit',
       publisher: 'Data Governance Office',
@@ -53,6 +54,7 @@ export const reviewFixture = ReviewDocument.parse({
     {
       id: 'SRC-02',
       number: 2,
+      reference: { code: 'SRC-02', url: 'https://example.org/sources/SRC-02' },
       title: 'Dataset Naming Retrospective',
       design: 'Team retrospective',
       publisher: 'Analytics Platform Team',
@@ -72,6 +74,7 @@ export const reviewFixture = ReviewDocument.parse({
     {
       id: 'SRC-03',
       number: 3,
+      reference: { code: 'SRC-03', url: 'https://example.org/sources/SRC-03' },
       title: 'Data Sharing Readiness Checklist',
       design: 'Guidance checklist',
       publisher: 'Data Sharing Working Group',

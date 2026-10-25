@@ -35,6 +35,8 @@ export type SourceBadges = z.infer<typeof SourceBadges>
 export const Source = z.strictObject({
   id: SourceId,
   number: z.number().int().positive(),
+  /** The source's reference code and where the original lives (fictional URL). */
+  reference: z.strictObject({ code: text, url: z.url() }),
   title: text,
   /** Study design word shown beside the evidence strength, e.g. "Internal audit". */
   design: text,

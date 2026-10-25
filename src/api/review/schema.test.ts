@@ -32,4 +32,10 @@ describe('ReviewDocument schema', () => {
     expect(every).toHaveLength(17)
     expect(every.filter((value) => !shown.includes(value))).toEqual([])
   })
+
+  it('quotes every source word for word from its passage', () => {
+    for (const source of reviewFixture.sources) {
+      expect(source.passage).toContain(source.quote.replace(/\.$/, ''))
+    }
+  })
 })
