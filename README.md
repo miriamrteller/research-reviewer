@@ -64,7 +64,7 @@ Each claim's sources sit beside it in one Sources panel on the right: a bar per 
 
 ### Uncertainty
 
-Each source card shows five badge groups, one value each, in the order a reviewer reads a card. Every value has its own icon, colour and word.
+This was the main research topic. Each source card shows five badge groups, one value each, in the order a reviewer reads a card. Every value has its own icon, colour and word.
 
 | Badge group        | Values                                                |
 | ------------------ | ----------------------------------------------------- |
