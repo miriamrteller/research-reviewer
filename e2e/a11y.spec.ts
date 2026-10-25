@@ -13,17 +13,10 @@ test.describe('WCAG 2.2 AA — automated scan', () => {
     expect(violations, formatViolations(violations)).toEqual([])
   })
 
-  test('text field focused (active indicator state)', async ({ page, gotoApp, makeAxe }) => {
+  test('source opened (full passage showing)', async ({ page, gotoApp, makeAxe }) => {
     await gotoApp()
-    await page.getByRole('textbox', { name: 'Summary' }).focus()
-    const { violations } = await makeAxe().analyze()
-    expect(violations, formatViolations(violations)).toEqual([])
-  })
-
-  test('confirmation dialog open', async ({ page, gotoApp, makeAxe }) => {
-    await gotoApp()
-    await page.getByRole('button', { name: 'Submit' }).click()
-    await page.getByRole('dialog', { name: 'Submit for review?' }).waitFor()
+    await page.getByRole('button', { name: /^1 Evening walking/ }).click()
+    await expect(page.getByText(/Participants walked for 20 minutes/)).toBeVisible()
     const { violations } = await makeAxe().analyze()
     expect(violations, formatViolations(violations)).toEqual([])
   })

@@ -35,3 +35,10 @@ One line per commit: the piece, what the assistant produced, what the human chan
 - Architecture diagrams (Miriam's instruction, 2026-10-25): AI drew two new diagrams, which Miriam
   rejected and had deleted; at her instruction it copied three of her earlier approved diagrams
   (high level, approve and revise, sources) unchanged into `docs/architecture.md`.
+- Static review layout from sketch (Miriam's instruction and sketch, 2026-10-25): AI read
+  `docs/research/my-layout-sketch.jpg`, asked about the handwriting it could not read, and built the
+  static layout (question, status, badge key, claims paper with citation numbers and caveat, source
+  accordion with grade, badges, "Lowered because" line and quote, Revise/Approve, Feedback FAB) with
+  fictional sample content and updated the unit and e2e specs; Miriam answered the open questions
+  (two sources per claim allowed, "Lowered because" lines, renamed from "Why this was lowered", caveat kept, badges neutral until the
+  badge step).
