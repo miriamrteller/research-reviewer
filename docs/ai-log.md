@@ -48,3 +48,9 @@ One line per commit: the piece, what the assistant produced, what the human chan
   `POST /api/feedback` that stamps who and when, with journey tests; Miriam reviews.
 - Badge key one line per row (Miriam's instruction): the assistant made the key a striped table with
   every row on one line, no divider lines.
+- Badge colours (Miriam's instruction, 2026-10-25): AI derived green, amber and orange M3 custom
+  colour roles from HCT tones (light and dark), mapped them to Tailwind utilities, coloured each
+  badge value per ADR 001 (red from the error roles, neutral as outline), and added contrast tests
+  for every badge pair; Miriam set one colour per value and orange for Limited.
+- Badges as a prototype stand-in (Miriam's instruction, 2026-10-25): AI added a README assumption
+  that the badge set is for the prototype and a real product would use its own badges.
