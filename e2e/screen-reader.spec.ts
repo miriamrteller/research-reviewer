@@ -18,50 +18,53 @@ import { expect, test } from './fixtures'
 function expectedTree(): string {
   return `
     - main:
-      - heading "Does a short evening walk help older adults fall asleep faster?" [level=1]
-      - paragraph: In review
+      - heading "Summarise the recurring data-quality issues reported this quarter and suggest next steps." [level=1]
+      - paragraph:
+        - strong: In review
       - button "Badge key"
       - region "AI answer":
         - heading "AI answer" [level=2]
         - paragraph: /AI-generated answer/
         - paragraph:
-          - text: /A 20-minute evening walk/
+          - text: /concentrated in incomplete mandatory fields/
           - superscript: source 1
-        - paragraph:
-          - text: /The benefit was smaller/
           - superscript: source 2
         - paragraph:
-          - text: /Walking in daylight/
+          - text: /delayed analysis handover/
+          - superscript: source 1
+        - paragraph:
+          - text: /named data owners/
+          - superscript: source 2
           - superscript: source 3
         - button "Revise"
         - button "Approve"
       - region "Sources":
         - heading "Sources" [level=2]
-        - heading /^1 Evening walking/ [level=3]:
-          - button /^1 Evening walking/
+        - heading /^1 Quarterly Data Quality Review/ [level=3]:
+          - button /^1 Quarterly Data Quality Review/
         - text: "Evidence strength: Moderate"
-        - paragraph: /Controlled study/
+        - paragraph: /Quarterly audit/
         - list "Checks for source 1":
           - listitem: "Reference check: Verified"
           - listitem: "Publication status: Peer reviewed"
           - listitem: "Claim support: Supported"
           - listitem: "Stance: Agrees"
-        - blockquote: /Sleep onset latency/
-        - heading /^2 Habitual activity/ [level=3]:
-          - button /^2 Habitual activity/
-        - text: "Evidence strength: Limited"
-        - paragraph: /Observational study/
-        - list "Checks for source 2":
-          - listitem: "Reference check: Details differ"
+        - blockquote: /Incomplete mandatory fields/
+        - heading /^2 Dataset Naming Retrospective/ [level=3]:
+          - button /^2 Dataset Naming Retrospective/
+        - heading /^3 Data Sharing Readiness Checklist/ [level=3]:
+          - button /^3 Data Sharing Readiness Checklist/
+        - text: "Evidence strength: Weak"
+        - paragraph: /Guidance checklist/
+        - list "Checks for source 3":
+          - listitem: "Reference check: Verified"
           - listitem: "Publication status: Preprint"
           - listitem: "Claim support: Partly supported"
           - listitem: "Stance: Neutral"
         - paragraph:
           - strong: "Lowered because:"
-          - text: /self-reported rest/
-        - blockquote: /Gains were smaller/
-        - heading /^3 Light exposure timing/ [level=3]:
-          - button /^3 Light exposure timing/
+          - text: /without data/
+        - blockquote: /Validation checks/
       - button "Feedback"
     - region "Notifications"
   `
@@ -114,7 +117,7 @@ test.describe('screen reader experience', () => {
     await waitForApi(page)
 
     // Source cards are accordion triggers: open or closed is in aria-expanded, not only the chevron.
-    for (const name of [/^1 Evening walking/, /^2 Habitual activity/, /^3 Light exposure/]) {
+    for (const name of [/^1 Quarterly Data/, /^2 Dataset Naming/, /^3 Data Sharing/]) {
       await expect(page.getByRole('button', { name })).toHaveAttribute('aria-expanded', 'false')
     }
 
@@ -218,10 +221,10 @@ test.describe('screen reader experience', () => {
     gotoApp,
   }) => {
     await gotoApp()
-    const trigger = page.getByRole('button', { name: /^1 Evening walking/ })
+    const trigger = page.getByRole('button', { name: /^1 Quarterly Data/ })
     await trigger.click()
     await expect(trigger).toHaveAttribute('aria-expanded', 'true')
-    await expect(page.getByText(/Participants walked for 20 minutes/)).toBeVisible()
+    await expect(page.getByText(/Delayed analysis handover was/)).toBeVisible()
     await trigger.click()
     await expect(trigger).toHaveAttribute('aria-expanded', 'false')
   })

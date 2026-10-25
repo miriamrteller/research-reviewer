@@ -54,3 +54,15 @@ One line per commit: the piece, what the assistant produced, what the human chan
   for every badge pair; Miriam set one colour per value and orange for Limited.
 - Badges as a prototype stand-in (Miriam's instruction, 2026-10-25): AI added a README assumption
   that the badge set is for the prototype and a real product would use its own badges.
+- Badge good values blue (Miriam's instruction, 2026-10-25): AI re-derived the positive role at
+  HCT hue 255 so green keeps one meaning (Approved), and updated ADR 001.
+- Limited badge pink (Miriam's instruction, 2026-10-25): AI moved the limited role to HCT hue 355
+  so it no longer looks like amber Moderate, and updated ADR 001.
+- Badge text in its own colour (Miriam's instruction, 2026-10-25): AI set each badge's word and
+  icon to the strong tone of its colour, with contrast tests for each pair.
+- Live review screen with Approve and Revise (Miriam's instruction and seed text, 2026-10-25): AI
+  wrote the review schema (ADR 001 badge enums, `{ by, at }` review states), a fixture from her
+  draft summary, sources, uncertainty wording and question, the mock API, Base UI Approve and
+  Revise dialogs (one write each, never retried) and the three read-only header states, and
+  updated the unit and e2e specs. AI chose the claim-to-source mapping, badge values and the
+  approved tint; at her instruction it added `?doc=badges` so the two fixtures show all 17 badge values. Miriam to review.

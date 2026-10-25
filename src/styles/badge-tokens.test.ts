@@ -16,11 +16,11 @@ const TEXT_MIN = 4.5
 const NON_TEXT_MIN = 3
 
 const textPairs: Array<[foreground: string, background: string]> = [
-  // Filled badges: word and icon on their own container.
-  ['on-positive-container', 'positive-container'],
-  ['on-caution-container', 'caution-container'],
-  ['on-limited-container', 'limited-container'],
-  ['on-error-container', 'error-container'],
+  // Filled badges: word and icon in the strong tone of their own colour (Miriam).
+  ['positive', 'positive-container'],
+  ['caution', 'caution-container'],
+  ['limited', 'limited-container'],
+  ['error', 'error-container'],
   // Neutral badge: outlined, on the source card surface.
   ['on-surface-variant', 'surface'],
   ['on-surface-variant', 'surface-container-low'],

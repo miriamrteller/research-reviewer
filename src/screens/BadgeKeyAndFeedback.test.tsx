@@ -11,7 +11,7 @@ describe('Badge key', () => {
   it('opens the badge key and reads every signal, its values and its question', async () => {
     const user = userEvent.setup()
     renderWithProviders(<App />)
-    await user.click(screen.getByRole('button', { name: 'Badge key' }))
+    await user.click(await screen.findByRole('button', { name: 'Badge key' }))
     const key = await screen.findByRole('dialog', { name: 'Badge key' })
     const rows = within(key).getAllByRole('rowheader')
     expect(rows.map((row) => row.textContent)).toEqual([
@@ -30,7 +30,7 @@ describe('Badge key', () => {
   it('closes the badge key with Escape and returns to the button', async () => {
     const user = userEvent.setup()
     renderWithProviders(<App />)
-    const trigger = screen.getByRole('button', { name: 'Badge key' })
+    const trigger = await screen.findByRole('button', { name: 'Badge key' })
     await user.click(trigger)
     await screen.findByRole('dialog', { name: 'Badge key' })
     await user.keyboard('{Escape}')
