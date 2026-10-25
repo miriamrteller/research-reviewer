@@ -32,3 +32,8 @@ One line per commit: the piece, what the assistant produced, what the human chan
 - ADR 001 source badges (Miriam's instruction, 2026-10-25): AI drafted the ADR from the research
   note `docs/research/uncertainty-signals.md` (five badge groups and their values); it folded
   `corrected` into text so every publication-status value has its own colour. Miriam to review.
+- Claim editing research (Miriam's instruction, 2026-10-25): AI searched the web and wrote
+  `docs/research/claim-editing.md` (inline vs dialog, what an edit invalidates, approve after
+  edit, by/at, empty and unchanged edits, revert, keyboard and screen reader, record shape,
+  risks, 20-minute recommendation, open decisions, state table). Docs only, no code. Miriam to
+  review the defaults.
