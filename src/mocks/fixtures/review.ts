@@ -1,5 +1,7 @@
 // Seed review document from Miriam's brief text: question, three-sentence draft summary as claims,
 // three internal sources, and her uncertainty wording as the caveat. Parsed so a bad edit fails here.
+// A second document (?doc=badges) gives the same sources the other badge values, so the two
+// together show every ADR 001 value at least once.
 import { ReviewDocument } from '../../api/review/schema'
 
 /** The fictional reviewer. The mock has no sign-in, so every write is stamped with this name. */
@@ -91,3 +93,39 @@ export const reviewFixture = ReviewDocument.parse({
   ],
   review: { status: 'review' },
 })
+
+const allOtherBadges = {
+  'SRC-01': {
+    referenceCheck: 'mismatch',
+    publicationStatus: 'concern',
+    claimSupport: 'unsupported',
+    stance: 'disagrees',
+    evidenceStrength: 'strong',
+  },
+  'SRC-02': {
+    referenceCheck: 'not_found',
+    publicationStatus: 'retracted',
+    claimSupport: 'supported',
+    stance: 'agrees',
+    evidenceStrength: 'moderate',
+  },
+  'SRC-03': {
+    referenceCheck: 'verified',
+    publicationStatus: 'peer_reviewed',
+    claimSupport: 'partial',
+    stance: 'neutral',
+    evidenceStrength: 'weak',
+  },
+} as const
+
+/** Same answer, other badge values: the badge values ?doc=badges shows. */
+export const badgesFixture = ReviewDocument.parse({
+  ...reviewFixture,
+  sources: reviewFixture.sources.map((source) => ({
+    ...source,
+    badges: allOtherBadges[source.id as keyof typeof allOtherBadges],
+  })),
+})
+
+export const reviewFixtures = { default: reviewFixture, badges: badgesFixture }
+export type FixtureName = keyof typeof reviewFixtures

@@ -3,12 +3,18 @@
 import { http, HttpResponse } from 'msw'
 import { ApproveBody, ReviseBody, type ReviewDocument } from '../../api/review/schema'
 import { applyScenario } from '../applyScenario'
-import { REVIEWER, reviewFixture } from '../fixtures/review'
+import { REVIEWER, reviewFixtures, type FixtureName } from '../fixtures/review'
 
-let current: ReviewDocument = reviewFixture
+// ?doc=badges picks the second fixture; anything else gets the default.
+function fixtureFromLocation(): FixtureName {
+  const name = new URLSearchParams(globalThis.location?.search ?? '').get('doc')
+  return name === 'badges' ? 'badges' : 'default'
+}
 
-export function resetReviewDocument() {
-  current = reviewFixture
+let current: ReviewDocument = reviewFixtures[fixtureFromLocation()]
+
+export function resetReviewDocument(name: FixtureName = 'default') {
+  current = reviewFixtures[name]
 }
 
 const notInReview = () =>

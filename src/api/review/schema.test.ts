@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { reviewFixture } from '../../mocks/fixtures/review'
+import { badgesFixture, reviewFixture } from '../../mocks/fixtures/review'
+import { badgeLooks } from '../../components/review/badges'
 import { ReviewDocument } from './schema'
 
 describe('ReviewDocument schema', () => {
@@ -19,5 +20,16 @@ describe('ReviewDocument schema', () => {
   it('rejects an approval without who and when', () => {
     const result = ReviewDocument.safeParse({ ...reviewFixture, review: { status: 'approved' } })
     expect(result.error?.issues[0]?.path).toEqual(['review', 'by'])
+  })
+
+  it('shows every badge value at least once across the two fixtures', () => {
+    const shown = [reviewFixture, badgesFixture].flatMap((doc) =>
+      doc.sources.flatMap((source) => Object.entries(source.badges).map(([g, v]) => `${g}.${v}`)),
+    )
+    const every = Object.entries(badgeLooks).flatMap(([g, values]) =>
+      Object.keys(values).map((v) => `${g}.${v}`),
+    )
+    expect(every).toHaveLength(17)
+    expect(every.filter((value) => !shown.includes(value))).toEqual([])
   })
 })
