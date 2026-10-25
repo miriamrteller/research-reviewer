@@ -6,12 +6,12 @@ import type { ReviewDocument } from '../api/review/schema'
 import { Button } from '../components/Button'
 import { ApproveDialog } from '../components/review/ApproveDialog'
 import { ClaimsPaper } from '../components/review/ClaimsPaper'
-import { FeedbackFab } from '../components/review/FeedbackFab'
 import { QuestionHeader } from '../components/review/QuestionHeader'
 import { ReviseDialog } from '../components/review/ReviseDialog'
 import { SourceCard } from '../components/review/SourceCard'
 import { SourceList } from '../components/review/SourceList'
 import { describeError } from '../lib/describeError'
+import { SendFeedback } from './SendFeedback'
 
 // The decision buttons are gone after a write, so focus moves to the new status instead of <body>.
 function focusStatus() {
@@ -85,7 +85,7 @@ export function ReviewScreen() {
           }
         />
       )}
-      <FeedbackFab />
+      <SendFeedback />
     </main>
   )
 }

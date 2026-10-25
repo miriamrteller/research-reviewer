@@ -42,6 +42,12 @@ One line per commit: the piece, what the assistant produced, what the human chan
   fictional sample content and updated the unit and e2e specs; Miriam answered the open questions
   (two sources per claim allowed, "Lowered because" lines, renamed from "Why this was lowered", caveat kept, badges neutral until the
   badge step).
+- Badge key and Feedback (Miriam's instruction): the assistant built the Badge key popover (one
+  table: signal, every value with its icon and word, the question it answers, from ADR 001 and the
+  research badge key) and the Feedback dialog (ease 1 to 5, topic, comment) posting to a mock
+  `POST /api/feedback` that stamps who and when, with journey tests; Miriam reviews.
+- Badge key one line per row (Miriam's instruction): the assistant made the key a striped table with
+  every row on one line, no divider lines.
 - Badge colours (Miriam's instruction, 2026-10-25): AI derived green, amber and orange M3 custom
   colour roles from HCT tones (light and dark), mapped them to Tailwind utilities, coloured each
   badge value per ADR 001 (red from the error roles, neutral as outline), and added contrast tests
