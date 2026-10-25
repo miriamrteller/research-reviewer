@@ -42,19 +42,20 @@ export function parseColorValue(value: string): ColorValue | null {
   return null
 }
 
-/** Collect `--md-sys-color-*` roles from rules whose selector passes the filter. */
+/** Collect color roles (`--md-sys-color-*` by default) from rules whose selector passes the filter. */
 export function collectColorRoles(
   css: string,
   selectorFilter: (selector: string) => boolean,
+  prefix = '--md-sys-color-',
 ): Palette {
   const palette: Palette = {}
   for (const rule of parseRules(css)) {
     if (!selectorFilter(rule.selector)) continue
     for (const { property, value } of rule.declarations) {
-      if (!property.startsWith('--md-sys-color-')) continue
+      if (!property.startsWith(prefix)) continue
       const parsed = parseColorValue(value)
       if (!parsed) throw new Error(`Unparseable color for ${property}: ${value}`)
-      palette[property.replace('--md-sys-color-', '')] = parsed
+      palette[property.replace(prefix, '')] = parsed
     }
   }
   return palette

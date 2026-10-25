@@ -42,6 +42,18 @@ One line per commit: the piece, what the assistant produced, what the human chan
   fictional sample content and updated the unit and e2e specs; Miriam answered the open questions
   (two sources per claim allowed, "Lowered because" lines, renamed from "Why this was lowered", caveat kept, badges neutral until the
   badge step).
+- Badge colours (Miriam's instruction, 2026-10-25): AI derived green, amber and orange M3 custom
+  colour roles from HCT tones (light and dark), mapped them to Tailwind utilities, coloured each
+  badge value per ADR 001 (red from the error roles, neutral as outline), and added contrast tests
+  for every badge pair; Miriam set one colour per value and orange for Limited.
+- Badges as a prototype stand-in (Miriam's instruction, 2026-10-25): AI added a README assumption
+  that the badge set is for the prototype and a real product would use its own badges.
+- Badge good values blue (Miriam's instruction, 2026-10-25): AI re-derived the positive role at
+  HCT hue 255 so green keeps one meaning (Approved), and updated ADR 001.
+- Limited badge pink (Miriam's instruction, 2026-10-25): AI moved the limited role to HCT hue 355
+  so it no longer looks like amber Moderate, and updated ADR 001.
+- Badge text in its own colour (Miriam's instruction, 2026-10-25): AI set each badge's word and
+  icon to the strong tone of its colour, with contrast tests for each pair.
 - Live review screen with Approve and Revise (Miriam's instruction and seed text, 2026-10-25): AI
   wrote the review schema (ADR 001 badge enums, `{ by, at }` review states), a fixture from her
   draft summary, sources, uncertainty wording and question, the mock API, Base UI Approve and
