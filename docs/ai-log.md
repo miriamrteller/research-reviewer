@@ -46,3 +46,5 @@ One line per commit: the piece, what the assistant produced, what the human chan
   table: signal, every value with its icon and word, the question it answers, from ADR 001 and the
   research badge key) and the Feedback dialog (ease 1 to 5, topic, comment) posting to a mock
   `POST /api/feedback` that stamps who and when, with journey tests; Miriam reviews.
+- Badge key one line per row (Miriam's instruction): the assistant made the key a striped table with
+  every row on one line, no divider lines.
