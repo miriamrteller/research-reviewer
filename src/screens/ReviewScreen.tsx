@@ -1,8 +1,10 @@
 // The live review screen: loads the review document, shows loading and error as query states,
-// and owns which decision dialog is open. Approve and Revise are one write each, never retried.
+// owns the claim edit draft and which decision dialog is open. Approve and Revise are one write
+// each, never retried, and carry the saved edits with them.
+import { Pencil, Save } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { useApproveReview, useReviewDocument, useReviseReview } from '../api/review/review'
-import type { ReviewDocument } from '../api/review/schema'
+import type { ClaimEdit, ReviewDocument } from '../api/review/schema'
 import { Button } from '../components/Button'
 import { ApproveDialog } from '../components/review/ApproveDialog'
 import { ClaimsPaper } from '../components/review/ClaimsPaper'
@@ -13,11 +15,16 @@ import { SourceList } from '../components/review/SourceList'
 import { describeError } from '../lib/describeError'
 import { isSourceLit, litCitations, sourceTriggerId, type Focused } from '../lib/highlight'
 import { SendFeedback } from './SendFeedback'
+import { useClaimEdits } from './useClaimEdits'
 
-// The decision buttons are gone after a write, so focus moves to the new status instead of <body>.
-function focusStatus() {
-  requestAnimationFrame(() => document.getElementById('review-status')?.focus())
+// After a write the decision buttons are gone, so focus moves to the new status; after Save or
+// Discard the textareas are gone, so focus returns to Edit. Never <body>.
+function focusId(id: string) {
+  requestAnimationFrame(() => document.getElementById(id)?.focus())
 }
+
+const UNSAVED = 'Save or discard your changes to approve or send for revision.'
+const UNSENT = 'Edited text is kept on this page only until you approve or send for revision.'
 
 export function ReviewScreen() {
   const document = useReviewDocument()
@@ -36,7 +43,7 @@ export function ReviewScreen() {
   const done = {
     onSuccess: () => {
       setOpenDialog(null)
-      focusStatus()
+      focusId('review-status')
     },
   }
 
@@ -64,26 +71,24 @@ export function ReviewScreen() {
       ) : (
         <ReviewBody
           doc={document.data}
-          actions={
-            document.data.review.status === 'review' && (
-              <>
-                <ReviseDialog
-                  open={openDialog === 'revise'}
-                  onOpenChange={(open) => toggle('revise', open)}
-                  onRevise={(reason) => revise.mutate({ reason }, done)}
-                  pending={revise.isPending}
-                  error={revise.isError ? describeError(revise.error) : null}
-                />
-                <ApproveDialog
-                  open={openDialog === 'approve'}
-                  onOpenChange={(open) => toggle('approve', open)}
-                  onApprove={(note) => approve.mutate(note ? { note } : {}, done)}
-                  pending={approve.isPending}
-                  error={approve.isError ? describeError(approve.error) : null}
-                />
-              </>
-            )
-          }
+          decisions={(edits) => (
+            <>
+              <ReviseDialog
+                open={openDialog === 'revise'}
+                onOpenChange={(open) => toggle('revise', open)}
+                onRevise={(reason) => revise.mutate({ reason, ...edits }, done)}
+                pending={revise.isPending}
+                error={revise.isError ? describeError(revise.error) : null}
+              />
+              <ApproveDialog
+                open={openDialog === 'approve'}
+                onOpenChange={(open) => toggle('approve', open)}
+                onApprove={(note) => approve.mutate({ ...(note ? { note } : {}), ...edits }, done)}
+                pending={approve.isPending}
+                error={approve.isError ? describeError(approve.error) : null}
+              />
+            </>
+          )}
         />
       )}
       <SendFeedback />
@@ -93,22 +98,37 @@ export function ReviewScreen() {
 
 type ReviewBodyProps = {
   doc: ReviewDocument
-  actions: ReactNode
+  /** The Revise and Approve dialogs, given the saved edits to send with the decision. */
+  decisions: (edits: { claims?: ClaimEdit[] }) => ReactNode
 }
 
-// Owns the inspect state: which claim or source is in focus, and which sources are open.
-function ReviewBody({ doc, actions }: ReviewBodyProps) {
+// Owns the inspect state (which claim or source is in focus, which sources are open) and the
+// claim edit draft.
+function ReviewBody({ doc, decisions }: ReviewBodyProps) {
   const [focused, setFocused] = useState<Focused>(null)
   const [open, setOpen] = useState<number[]>([])
+  const edit = useClaimEdits(doc.claims)
   const numberOf = new Map(doc.sources.map((source) => [source.id, source.number]))
-  const claims = doc.claims.map((claim) => ({
+  const claims = edit.shown.map((claim) => ({
     id: claim.id,
     text: claim.text,
+    edit: claim.edit,
     citations: claim.citations.flatMap(({ sourceId, words }) => {
       const number = numberOf.get(sourceId)
       return number === undefined ? [] : [{ number, words }]
     }),
   }))
+  const inReview = doc.review.status === 'review'
+
+  function startEditing() {
+    edit.start()
+    focusId(doc.claims[0]?.id ?? '')
+  }
+  function finishEditing(keep: boolean) {
+    const closed = keep ? edit.save() : edit.discard()
+    if (closed) focusId('edit-claims')
+  }
+
   return (
     <>
       <QuestionHeader question={doc.question} state={doc.review} />
@@ -116,10 +136,51 @@ function ReviewBody({ doc, actions }: ReviewBodyProps) {
         <ClaimsPaper
           caveat={doc.caveat}
           claims={claims}
-          actions={actions}
           litFor={(claim) => litCitations(claim, focused)}
           onInspect={(id) => setFocused(id === null ? null : { kind: 'claim', id })}
           onCite={(n) => document.getElementById(sourceTriggerId(n))?.focus()}
+          editing={
+            edit.editing
+              ? { drafts: edit.drafts, empty: edit.empty, onChange: edit.change }
+              : undefined
+          }
+          note={
+            !inReview
+              ? undefined
+              : edit.editing
+                ? UNSAVED
+                : edit.edits.length > 0
+                  ? UNSENT
+                  : undefined
+          }
+          toolbar={
+            inReview && (
+              <>
+                {edit.editing && (
+                  <Button variant="text" onClick={() => finishEditing(false)}>
+                    Discard
+                  </Button>
+                )}
+                <Button
+                  id="edit-claims"
+                  variant="tonal"
+                  onClick={() => (edit.editing ? finishEditing(true) : startEditing())}
+                >
+                  {edit.editing ? (
+                    <Save aria-hidden="true" className="size-4" />
+                  ) : (
+                    <Pencil aria-hidden="true" className="size-4" />
+                  )}
+                  {edit.editing ? 'Save' : 'Edit'}
+                </Button>
+              </>
+            )
+          }
+          actions={
+            inReview &&
+            !edit.editing &&
+            decisions(edit.edits.length > 0 ? { claims: edit.edits } : {})
+          }
         />
         <SourceList open={open} onOpenChange={setOpen}>
           {doc.sources.map((source) => (

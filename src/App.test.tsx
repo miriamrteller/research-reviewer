@@ -139,6 +139,62 @@ describe('Review screen', () => {
     expect(screen.queryByRole('button', { name: 'Approve' })).not.toBeInTheDocument()
   })
 
+  it('edits a claim, saves, and sees the new wording with who edited it and when', async () => {
+    const { user, container } = await renderLoaded()
+    await user.click(screen.getByRole('button', { name: 'Edit' }))
+    await waitFor(() => expect(screen.getByLabelText('Claim 1 of 3')).toHaveFocus())
+    const field = screen.getByLabelText('Claim 2 of 3')
+    expect(screen.queryByRole('button', { name: 'Approve' })).not.toBeInTheDocument()
+    expect(screen.getByRole('status')).toHaveTextContent('Save or discard your changes')
+    expect(await axe(container)).toHaveNoViolations()
+    await user.clear(screen.getByLabelText('Claim 1 of 3'))
+    await user.type(field, ' Two teams reported it.')
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+
+    expect(screen.getByLabelText('Claim 1 of 3')).toHaveAccessibleDescription(/cannot be empty/)
+    await user.type(screen.getByLabelText('Claim 1 of 3'), 'Issues were concentrated in two areas.')
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+
+    const edit = screen.getByRole('button', { name: 'Edit' })
+    await waitFor(() => expect(edit).toHaveFocus())
+    const answer = screen.getByRole('region', { name: 'AI answer' })
+    expect(within(answer).getByText(/Two teams reported it/)).toBeInTheDocument()
+    expect(within(answer).getAllByRole('button', { name: /^Go to source/ })).toHaveLength(5)
+    expect(within(answer).getAllByText(/Edited by Prof. I. C. Everything/)).toHaveLength(2)
+    expect(within(answer).getByText(/named data owners/)).toBeInTheDocument()
+    expect(screen.getByRole('status')).toHaveTextContent('kept on this page only')
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('discards an edit and the text returns, with nothing marked as edited', async () => {
+    const { user } = await renderLoaded()
+    await user.click(screen.getByRole('button', { name: 'Edit' }))
+    await user.type(screen.getByLabelText('Claim 2 of 3'), ' Not for long.')
+    await user.click(screen.getByRole('button', { name: 'Discard' }))
+    const answer = screen.getByRole('region', { name: 'AI answer' })
+    expect(within(answer).queryByText(/Not for long/)).not.toBeInTheDocument()
+    expect(within(answer).queryByText(/Edited by/)).not.toBeInTheDocument()
+    expect(screen.queryByRole('status')).not.toBeInTheDocument()
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Edit' })).toHaveFocus())
+  })
+
+  it('approves after editing and the edited wording is what gets approved', async () => {
+    const { user } = await renderLoaded()
+    await user.click(screen.getByRole('button', { name: 'Edit' }))
+    await user.type(screen.getByLabelText('Claim 3 of 3'), ' Pilot it on one dataset first.')
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+    await user.click(screen.getByRole('button', { name: 'Approve' }))
+    const dialog = screen.getByRole('dialog', { name: 'Approve this answer?' })
+    await user.click(within(dialog).getByRole('checkbox'))
+    await user.click(within(dialog).getByRole('button', { name: 'Approve' }))
+    expect(await screen.findByText('Approved')).toBeInTheDocument()
+    const answer = screen.getByRole('region', { name: 'AI answer' })
+    expect(within(answer).getByText(/Pilot it on one dataset first/)).toBeInTheDocument()
+    expect(within(answer).getByText(/Edited by Prof. I. C. Everything/)).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Edit' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('status')).not.toBeInTheDocument()
+  })
+
   it('sees a failed approval in the dialog, and it is not retried on its own', async () => {
     let calls = 0
     server.use(

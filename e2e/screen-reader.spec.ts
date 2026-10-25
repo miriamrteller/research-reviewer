@@ -25,6 +25,7 @@ function expectedTree(): string {
       - region "AI answer":
         - heading "AI answer" [level=2]
         - paragraph: /AI-generated answer/
+        - button "Edit"
         - text: /concentrated in incomplete mandatory fields/
         - superscript:
           - button "Go to source 1"
