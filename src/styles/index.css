@@ -58,6 +58,20 @@
   --color-inverse-primary: var(--md-sys-color-inverse-primary);
   --color-scrim: var(--md-sys-color-scrim);
   --color-shadow: var(--md-sys-color-shadow);
+
+  /* ---- Badge colours (md.custom.color, ADR 001) ---- */
+  --color-positive: var(--md-custom-color-positive);
+  --color-on-positive: var(--md-custom-color-on-positive);
+  --color-positive-container: var(--md-custom-color-positive-container);
+  --color-on-positive-container: var(--md-custom-color-on-positive-container);
+  --color-caution: var(--md-custom-color-caution);
+  --color-on-caution: var(--md-custom-color-on-caution);
+  --color-caution-container: var(--md-custom-color-caution-container);
+  --color-on-caution-container: var(--md-custom-color-on-caution-container);
+  --color-limited: var(--md-custom-color-limited);
+  --color-on-limited: var(--md-custom-color-on-limited);
+  --color-limited-container: var(--md-custom-color-limited-container);
+  --color-on-limited-container: var(--md-custom-color-on-limited-container);
   --color-primary-fixed: var(--md-sys-color-primary-fixed);
   --color-primary-fixed-dim: var(--md-sys-color-primary-fixed-dim);
   --color-on-primary-fixed: var(--md-sys-color-on-primary-fixed);
