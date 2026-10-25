@@ -1,0 +1,313 @@
+/* ==========================================================================
+   Material Design 3 — system token layer
+   --------------------------------------------------------------------------
+   Source of truth for every structural and reference value in the app.
+   Token names follow the M3 spec (`md.sys.*` / `md.ref.*`) so they map 1:1
+   to Material Theme Builder exports and any other M3 tooling.
+
+   Rules for this file:
+     • Contains the M3 BASELINE palette only. Brand palettes live in brand.css
+       and override `--md-sys-color-*` inside a `[data-theme]` scope.
+     • Everything that is NOT a color role (shape, elevation, type, motion,
+       state layers, layout) is defined here and ONLY here.
+     • Light and dark values are declared once with `light-dark()`; the active
+       scheme is driven by `color-scheme` (OS preference by default,
+       forced via `data-color-scheme="light|dark"` on <html>).
+   ========================================================================== */
+
+:root {
+  color-scheme: light dark;
+}
+
+:root[data-color-scheme='light'] {
+  color-scheme: light;
+}
+
+:root[data-color-scheme='dark'] {
+  color-scheme: dark;
+}
+
+/* --------------------------------------------------------------------------
+   md.ref — reference typefaces
+   Roboto is M3's reference face; it is intentionally NOT fetched here so the
+   base layer stays self-contained. Swap the first entry to load a webfont.
+   -------------------------------------------------------------------------- */
+:root {
+  --md-ref-typeface-brand: 'Roboto', system-ui, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --md-ref-typeface-plain: 'Roboto', system-ui, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --md-ref-typeface-weight-regular: 400;
+  --md-ref-typeface-weight-medium: 500;
+  --md-ref-typeface-weight-bold: 700;
+}
+
+/* --------------------------------------------------------------------------
+   md.sys.color — M3 baseline scheme (light, dark)
+   -------------------------------------------------------------------------- */
+:root {
+  --md-sys-color-primary: light-dark(#6750a4, #d0bcff);
+  --md-sys-color-on-primary: light-dark(#ffffff, #381e72);
+  --md-sys-color-primary-container: light-dark(#eaddff, #4f378b);
+  --md-sys-color-on-primary-container: light-dark(#21005d, #eaddff);
+
+  --md-sys-color-secondary: light-dark(#625b71, #ccc2dc);
+  --md-sys-color-on-secondary: light-dark(#ffffff, #332d41);
+  --md-sys-color-secondary-container: light-dark(#e8def8, #4a4458);
+  --md-sys-color-on-secondary-container: light-dark(#1d192b, #e8def8);
+
+  --md-sys-color-tertiary: light-dark(#7d5260, #efb8c8);
+  --md-sys-color-on-tertiary: light-dark(#ffffff, #492532);
+  --md-sys-color-tertiary-container: light-dark(#ffd8e4, #633b48);
+  --md-sys-color-on-tertiary-container: light-dark(#31111d, #ffd8e4);
+
+  --md-sys-color-error: light-dark(#b3261e, #f2b8b5);
+  --md-sys-color-on-error: light-dark(#ffffff, #601410);
+  --md-sys-color-error-container: light-dark(#f9dedc, #8c1d18);
+  --md-sys-color-on-error-container: light-dark(#410e0b, #f9dedc);
+
+  --md-sys-color-surface: light-dark(#fef7ff, #141218);
+  --md-sys-color-on-surface: light-dark(#1d1b20, #e6e0e9);
+  --md-sys-color-surface-variant: light-dark(#e7e0ec, #49454f);
+  --md-sys-color-on-surface-variant: light-dark(#49454f, #cac4d0);
+  --md-sys-color-surface-dim: light-dark(#ded8e1, #141218);
+  --md-sys-color-surface-bright: light-dark(#fef7ff, #3b383e);
+  --md-sys-color-surface-container-lowest: light-dark(#ffffff, #0f0d13);
+  --md-sys-color-surface-container-low: light-dark(#f7f2fa, #1d1b20);
+  --md-sys-color-surface-container: light-dark(#f3edf7, #211f26);
+  --md-sys-color-surface-container-high: light-dark(#ece6f0, #2b2930);
+  --md-sys-color-surface-container-highest: light-dark(#e6e0e9, #36343b);
+  --md-sys-color-surface-tint: light-dark(#6750a4, #d0bcff);
+
+  --md-sys-color-background: light-dark(#fef7ff, #141218);
+  --md-sys-color-on-background: light-dark(#1d1b20, #e6e0e9);
+
+  --md-sys-color-outline: light-dark(#79747e, #938f99);
+  --md-sys-color-outline-variant: light-dark(#cac4d0, #49454f);
+
+  --md-sys-color-inverse-surface: light-dark(#322f35, #e6e0e9);
+  --md-sys-color-inverse-on-surface: light-dark(#f5eff7, #322f35);
+  --md-sys-color-inverse-primary: light-dark(#d0bcff, #6750a4);
+
+  --md-sys-color-scrim: #000000;
+  --md-sys-color-shadow: #000000;
+
+  /* Fixed roles: same in both schemes by design */
+  --md-sys-color-primary-fixed: #eaddff;
+  --md-sys-color-primary-fixed-dim: #d0bcff;
+  --md-sys-color-on-primary-fixed: #21005d;
+  --md-sys-color-on-primary-fixed-variant: #4f378b;
+  --md-sys-color-secondary-fixed: #e8def8;
+  --md-sys-color-secondary-fixed-dim: #ccc2dc;
+  --md-sys-color-on-secondary-fixed: #1d192b;
+  --md-sys-color-on-secondary-fixed-variant: #4a4458;
+  --md-sys-color-tertiary-fixed: #ffd8e4;
+  --md-sys-color-tertiary-fixed-dim: #efb8c8;
+  --md-sys-color-on-tertiary-fixed: #31111d;
+  --md-sys-color-on-tertiary-fixed-variant: #633b48;
+}
+
+/* --------------------------------------------------------------------------
+   md.sys.shape — corner radius scale
+   -------------------------------------------------------------------------- */
+:root {
+  --md-sys-shape-corner-none: 0px;
+  --md-sys-shape-corner-extra-small: 4px;
+  --md-sys-shape-corner-small: 8px;
+  --md-sys-shape-corner-medium: 12px;
+  --md-sys-shape-corner-large: 16px;
+  --md-sys-shape-corner-extra-large: 28px;
+  --md-sys-shape-corner-full: 9999px;
+}
+
+/* --------------------------------------------------------------------------
+   md.sys.elevation — levels 0–5 as box-shadows (M3 web values)
+   Shadow color is derived from the `shadow` role so it follows the theme.
+   -------------------------------------------------------------------------- */
+:root {
+  --md-sys-elevation-level0: none;
+  --md-sys-elevation-level1:
+    0 1px 2px 0 color-mix(in srgb, var(--md-sys-color-shadow) 30%, transparent),
+    0 1px 3px 1px color-mix(in srgb, var(--md-sys-color-shadow) 15%, transparent);
+  --md-sys-elevation-level2:
+    0 1px 2px 0 color-mix(in srgb, var(--md-sys-color-shadow) 30%, transparent),
+    0 2px 6px 2px color-mix(in srgb, var(--md-sys-color-shadow) 15%, transparent);
+  --md-sys-elevation-level3:
+    0 1px 3px 0 color-mix(in srgb, var(--md-sys-color-shadow) 30%, transparent),
+    0 4px 8px 3px color-mix(in srgb, var(--md-sys-color-shadow) 15%, transparent);
+  --md-sys-elevation-level4:
+    0 2px 3px 0 color-mix(in srgb, var(--md-sys-color-shadow) 30%, transparent),
+    0 6px 10px 4px color-mix(in srgb, var(--md-sys-color-shadow) 15%, transparent);
+  --md-sys-elevation-level5:
+    0 4px 4px 0 color-mix(in srgb, var(--md-sys-color-shadow) 30%, transparent),
+    0 8px 12px 6px color-mix(in srgb, var(--md-sys-color-shadow) 15%, transparent);
+}
+
+/* --------------------------------------------------------------------------
+   md.sys.state — state layer opacities
+   -------------------------------------------------------------------------- */
+:root {
+  --md-sys-state-hover-state-layer-opacity: 0.08;
+  --md-sys-state-focus-state-layer-opacity: 0.1;
+  --md-sys-state-pressed-state-layer-opacity: 0.1;
+  --md-sys-state-dragged-state-layer-opacity: 0.16;
+  --md-sys-state-disabled-content-opacity: 0.38;
+  --md-sys-state-disabled-container-opacity: 0.12;
+}
+
+/* --------------------------------------------------------------------------
+   md.sys.focus — focus indicator (M3: 3dp ring, 2dp outer offset, secondary)
+   -------------------------------------------------------------------------- */
+:root {
+  --md-sys-focus-indicator-thickness: 3px;
+  --md-sys-focus-indicator-offset: 2px;
+  --md-sys-focus-indicator-color: var(--md-sys-color-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   md.sys.motion — easing curves and durations
+   -------------------------------------------------------------------------- */
+:root {
+  --md-sys-motion-easing-linear: cubic-bezier(0, 0, 1, 1);
+  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-easing-standard-accelerate: cubic-bezier(0.3, 0, 1, 1);
+  --md-sys-motion-easing-standard-decelerate: cubic-bezier(0, 0, 0, 1);
+  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+
+  --md-sys-motion-duration-short1: 50ms;
+  --md-sys-motion-duration-short2: 100ms;
+  --md-sys-motion-duration-short3: 150ms;
+  --md-sys-motion-duration-short4: 200ms;
+  --md-sys-motion-duration-medium1: 250ms;
+  --md-sys-motion-duration-medium2: 300ms;
+  --md-sys-motion-duration-medium3: 350ms;
+  --md-sys-motion-duration-medium4: 400ms;
+  --md-sys-motion-duration-long1: 450ms;
+  --md-sys-motion-duration-long2: 500ms;
+  --md-sys-motion-duration-long3: 550ms;
+  --md-sys-motion-duration-long4: 600ms;
+  --md-sys-motion-duration-extra-long1: 700ms;
+  --md-sys-motion-duration-extra-long2: 800ms;
+  --md-sys-motion-duration-extra-long3: 900ms;
+  --md-sys-motion-duration-extra-long4: 1000ms;
+}
+
+/* --------------------------------------------------------------------------
+   md.sys.layout — window size classes and spacing
+   Media queries cannot read custom properties; these are the canonical
+   values, mirrored as Tailwind breakpoints in index.css.
+     compact      <  600
+     medium       600 – 839
+     expanded     840 – 1199
+     large        1200 – 1599
+     extra-large  >= 1600
+   -------------------------------------------------------------------------- */
+:root {
+  --md-sys-layout-window-medium-min: 600px;
+  --md-sys-layout-window-expanded-min: 840px;
+  --md-sys-layout-window-large-min: 1200px;
+  --md-sys-layout-window-extra-large-min: 1600px;
+
+  --md-sys-layout-margin-compact: 16px;
+  --md-sys-layout-margin-medium: 24px;
+  --md-sys-layout-margin-expanded: 24px;
+  --md-sys-layout-spacer: 24px;
+  --md-sys-layout-spacing-unit: 4px;
+  --md-sys-layout-touch-target-min: 48px;
+}
+
+/* --------------------------------------------------------------------------
+   md.sys.typescale — 15 roles (size / line-height / weight / tracking)
+   Sizes in rem assume a 16px root.
+   -------------------------------------------------------------------------- */
+:root {
+  --md-sys-typescale-display-large-font: var(--md-ref-typeface-brand);
+  --md-sys-typescale-display-large-size: 3.5625rem;
+  --md-sys-typescale-display-large-line-height: 4rem;
+  --md-sys-typescale-display-large-weight: var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-display-large-tracking: -0.015625rem;
+
+  --md-sys-typescale-display-medium-font: var(--md-ref-typeface-brand);
+  --md-sys-typescale-display-medium-size: 2.8125rem;
+  --md-sys-typescale-display-medium-line-height: 3.25rem;
+  --md-sys-typescale-display-medium-weight: var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-display-medium-tracking: 0;
+
+  --md-sys-typescale-display-small-font: var(--md-ref-typeface-brand);
+  --md-sys-typescale-display-small-size: 2.25rem;
+  --md-sys-typescale-display-small-line-height: 2.75rem;
+  --md-sys-typescale-display-small-weight: var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-display-small-tracking: 0;
+
+  --md-sys-typescale-headline-large-font: var(--md-ref-typeface-brand);
+  --md-sys-typescale-headline-large-size: 2rem;
+  --md-sys-typescale-headline-large-line-height: 2.5rem;
+  --md-sys-typescale-headline-large-weight: var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-headline-large-tracking: 0;
+
+  --md-sys-typescale-headline-medium-font: var(--md-ref-typeface-brand);
+  --md-sys-typescale-headline-medium-size: 1.75rem;
+  --md-sys-typescale-headline-medium-line-height: 2.25rem;
+  --md-sys-typescale-headline-medium-weight: var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-headline-medium-tracking: 0;
+
+  --md-sys-typescale-headline-small-font: var(--md-ref-typeface-brand);
+  --md-sys-typescale-headline-small-size: 1.5rem;
+  --md-sys-typescale-headline-small-line-height: 2rem;
+  --md-sys-typescale-headline-small-weight: var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-headline-small-tracking: 0;
+
+  --md-sys-typescale-title-large-font: var(--md-ref-typeface-brand);
+  --md-sys-typescale-title-large-size: 1.375rem;
+  --md-sys-typescale-title-large-line-height: 1.75rem;
+  --md-sys-typescale-title-large-weight: var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-title-large-tracking: 0;
+
+  --md-sys-typescale-title-medium-font: var(--md-ref-typeface-plain);
+  --md-sys-typescale-title-medium-size: 1rem;
+  --md-sys-typescale-title-medium-line-height: 1.5rem;
+  --md-sys-typescale-title-medium-weight: var(--md-ref-typeface-weight-medium);
+  --md-sys-typescale-title-medium-tracking: 0.009375rem;
+
+  --md-sys-typescale-title-small-font: var(--md-ref-typeface-plain);
+  --md-sys-typescale-title-small-size: 0.875rem;
+  --md-sys-typescale-title-small-line-height: 1.25rem;
+  --md-sys-typescale-title-small-weight: var(--md-ref-typeface-weight-medium);
+  --md-sys-typescale-title-small-tracking: 0.00625rem;
+
+  --md-sys-typescale-body-large-font: var(--md-ref-typeface-plain);
+  --md-sys-typescale-body-large-size: 1rem;
+  --md-sys-typescale-body-large-line-height: 1.5rem;
+  --md-sys-typescale-body-large-weight: var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-body-large-tracking: 0.03125rem;
+
+  --md-sys-typescale-body-medium-font: var(--md-ref-typeface-plain);
+  --md-sys-typescale-body-medium-size: 0.875rem;
+  --md-sys-typescale-body-medium-line-height: 1.25rem;
+  --md-sys-typescale-body-medium-weight: var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-body-medium-tracking: 0.015625rem;
+
+  --md-sys-typescale-body-small-font: var(--md-ref-typeface-plain);
+  --md-sys-typescale-body-small-size: 0.75rem;
+  --md-sys-typescale-body-small-line-height: 1rem;
+  --md-sys-typescale-body-small-weight: var(--md-ref-typeface-weight-regular);
+  --md-sys-typescale-body-small-tracking: 0.025rem;
+
+  --md-sys-typescale-label-large-font: var(--md-ref-typeface-plain);
+  --md-sys-typescale-label-large-size: 0.875rem;
+  --md-sys-typescale-label-large-line-height: 1.25rem;
+  --md-sys-typescale-label-large-weight: var(--md-ref-typeface-weight-medium);
+  --md-sys-typescale-label-large-tracking: 0.00625rem;
+
+  --md-sys-typescale-label-medium-font: var(--md-ref-typeface-plain);
+  --md-sys-typescale-label-medium-size: 0.75rem;
+  --md-sys-typescale-label-medium-line-height: 1rem;
+  --md-sys-typescale-label-medium-weight: var(--md-ref-typeface-weight-medium);
+  --md-sys-typescale-label-medium-tracking: 0.03125rem;
+
+  --md-sys-typescale-label-small-font: var(--md-ref-typeface-plain);
+  --md-sys-typescale-label-small-size: 0.6875rem;
+  --md-sys-typescale-label-small-line-height: 1rem;
+  --md-sys-typescale-label-small-weight: var(--md-ref-typeface-weight-medium);
+  --md-sys-typescale-label-small-tracking: 0.03125rem;
+}

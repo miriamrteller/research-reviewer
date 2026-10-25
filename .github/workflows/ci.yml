@@ -1,0 +1,150 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  merge_group:
+
+# Least privilege: the workflow only needs to read the repo and write check results.
+permissions:
+  contents: read
+  checks: write
+
+# One run per branch at a time; superseded runs are cancelled.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  # Decides whether the change touches code. Docs-only pull requests (Markdown anywhere, or
+  # anything under docs/) skip unit, build and e2e; quality always runs because Prettier also
+  # checks Markdown. A skipped job counts as passing for the branch ruleset's required checks,
+  # so docs PRs still merge. Fail-safe: pushes to main, merge-queue runs, any file outside the
+  # docs patterns, or this job failing all mean the full suite runs.
+  changes:
+    name: changes
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.classify.outputs.code }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Classify changed files
+        id: classify
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [ "$EVENT" != "pull_request" ]; then
+            echo "code=true" >> "$GITHUB_OUTPUT"
+            echo "Not a pull request: running the full suite."
+            exit 0
+          fi
+          files="$(git diff --name-only "$BASE...$HEAD")"
+          echo "Changed files:"; echo "$files"
+          code="$(grep -Ev '(^docs/|\.md$)' <<<"$files" | grep -c . || true)"
+          if [ -z "$files" ] || [ "$code" -gt 0 ]; then
+            echo "code=true" >> "$GITHUB_OUTPUT"
+            echo "Code changed: running the full suite."
+          else
+            echo "code=false" >> "$GITHUB_OUTPUT"
+            echo "Docs only: skipping unit, build and e2e." | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
+
+  quality:
+    name: quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Lint (incl. jsx-a11y)
+        run: npx oxlint --deny-warnings
+      - name: Format check
+        run: npm run format:check
+      - name: Type check
+        run: npm run typecheck
+
+  unit:
+    name: unit
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.code != 'false' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Unit + token tests (axe in jsdom, contrast, theming contract)
+        run: npm run test -- --reporter=default --reporter=github-actions
+
+  build:
+    name: build
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.code != 'false' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Production build (must be warning-free)
+        run: npm run build
+
+  e2e:
+    name: e2e
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.code != 'false' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Browser accessibility matrix (axe, WCAG 2.2 AA) + keyboard + screen-reader specs
+        run: npm run test:e2e
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+      - name: Summarise
+        if: ${{ !cancelled() }}
+        # Counts come from Playwright's own test list, so the summary stays correct
+        # when a theme, window class or scan is added.
+        run: |
+          list="$(npx playwright test --list)"
+          a11y="$(grep '\[a11y' <<<"$list" || true)"
+          projects="$(sed -E 's/^ *\[([^]]*)\].*/\1/' <<<"$a11y" | sort -u | grep -c . || true)"
+          enforced="$(grep -vc 'report only' <<<"$a11y" || true)"
+          keyboard="$(grep -c '\[keyboard' <<<"$list" || true)"
+          reader="$(grep -c '\[screen-reader' <<<"$list" || true)"
+          {
+            echo "## Browser accessibility matrix"
+            echo
+            echo "- ${projects} axe projects (theme × scheme × window class), ${enforced} enforced scans in total"
+            echo "- ${keyboard} keyboard and focus tests across 2 viewports"
+            echo "- ${reader} screen-reader tests (accessibility tree, names, states, live regions) across 2 viewports"
+            echo "- Tags: wcag2a wcag2aa wcag21a wcag21aa wcag22aa — any violation fails"
+            echo "- Full HTML report attached as the \`playwright-report\` artifact"
+          } >> "$GITHUB_STEP_SUMMARY"

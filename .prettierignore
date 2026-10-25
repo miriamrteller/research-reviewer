@@ -1,0 +1,5 @@
+dist
+node_modules
+package-lock.json
+# Cursor rule files have YAML frontmatter Prettier cannot parse
+.cursor/rules/*.mdc

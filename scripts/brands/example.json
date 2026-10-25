@@ -1,0 +1,28 @@
+{
+  "$comment": "Example brand input. Copy to scripts/brands/<name>.json and replace the values. Seeds are brand colours; everything else is derived. Pins force exact brand hexes onto roles, and each pinned pair must still pass WCAG AA. A brand hex that fails as text can usually live on surface-tint or a container role instead.",
+  "theme": "example",
+  "label": "Example",
+  "seeds": {
+    "primary": "#3F6FB5",
+    "secondary": "#5B6B7A",
+    "neutral": "#1F2329"
+  },
+  "typeface": {
+    "brand": "system-ui, sans-serif",
+    "plain": "system-ui, sans-serif"
+  },
+  "pins": {
+    "light": {
+      "surface-tint": "#3F6FB5",
+      "surface": "#FFFFFF",
+      "background": "#FFFFFF"
+    },
+    "dark": {
+      "surface-tint": "#3F6FB5"
+    }
+  },
+  "both": {
+    "scrim": "#000000",
+    "shadow": "#000000"
+  }
+}

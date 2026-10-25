@@ -1,0 +1,8 @@
+---
+description: Project rules for this repository. Same rules as CLAUDE.md at the repo root.
+alwaysApply: true
+---
+
+Follow @CLAUDE.md exactly. It is the single source of truth for process, structure, state,
+Zod-first types, accessibility, testing by user flow, commit hygiene and the AI usage log.
+Do not re-decide anything in docs/adr. Run `npm run verify` before every commit.

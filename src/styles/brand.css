@@ -1,0 +1,77 @@
+/* ==========================================================================
+   Brand theme — color roles ONLY
+   --------------------------------------------------------------------------
+   Activated with `data-theme="brand"` on <html>. Overrides the M3 color roles
+   defined in material.css and nothing else: shape, elevation, typography,
+   motion, state layers and layout are structural and are never redefined
+   here (enforced by src/styles/brand-contract.test.ts).
+
+   PLACEHOLDER PALETTE — generic, brand-neutral defaults:
+     primary    deep blue           (trust, precision)
+     secondary  cool slate          (neutral support, data surfaces)
+     tertiary   green               (positive status, success)
+     error      M3 standard red
+   Replace with the approved brand scheme (e.g. a Material Theme Builder
+   export) when available. Every on-X / X pair below is contrast-tested.
+   ========================================================================== */
+
+:root[data-theme='brand'] {
+  --md-sys-color-primary: light-dark(#0f4c81, #a4c8ff);
+  --md-sys-color-on-primary: light-dark(#ffffff, #00315c);
+  --md-sys-color-primary-container: light-dark(#d3e4ff, #00417a);
+  --md-sys-color-on-primary-container: light-dark(#001c3b, #d3e4ff);
+
+  --md-sys-color-secondary: light-dark(#4e616c, #b5c9d7);
+  --md-sys-color-on-secondary: light-dark(#ffffff, #20333d);
+  --md-sys-color-secondary-container: light-dark(#d1e5f3, #364954);
+  --md-sys-color-on-secondary-container: light-dark(#0a1e28, #d1e5f3);
+
+  --md-sys-color-tertiary: light-dark(#1b6b4a, #8ad6b2);
+  --md-sys-color-on-tertiary: light-dark(#ffffff, #003824);
+  --md-sys-color-tertiary-container: light-dark(#a6f2cd, #005234);
+  --md-sys-color-on-tertiary-container: light-dark(#002114, #a6f2cd);
+
+  --md-sys-color-error: light-dark(#ba1a1a, #ffb4ab);
+  --md-sys-color-on-error: light-dark(#ffffff, #690005);
+  --md-sys-color-error-container: light-dark(#ffdad6, #93000a);
+  --md-sys-color-on-error-container: light-dark(#410002, #ffdad6);
+
+  --md-sys-color-surface: light-dark(#f8f9fc, #111416);
+  --md-sys-color-on-surface: light-dark(#191c1e, #e1e3e5);
+  --md-sys-color-surface-variant: light-dark(#dfe2eb, #43474e);
+  --md-sys-color-on-surface-variant: light-dark(#43474e, #c3c6cf);
+  --md-sys-color-surface-dim: light-dark(#d8dadc, #111416);
+  --md-sys-color-surface-bright: light-dark(#f8f9fc, #37393c);
+  --md-sys-color-surface-container-lowest: light-dark(#ffffff, #0c0e10);
+  --md-sys-color-surface-container-low: light-dark(#f2f4f6, #191c1e);
+  --md-sys-color-surface-container: light-dark(#eceef1, #1d2022);
+  --md-sys-color-surface-container-high: light-dark(#e6e8eb, #272a2d);
+  --md-sys-color-surface-container-highest: light-dark(#e1e3e5, #323538);
+  --md-sys-color-surface-tint: light-dark(#0f4c81, #a4c8ff);
+
+  --md-sys-color-background: light-dark(#f8f9fc, #111416);
+  --md-sys-color-on-background: light-dark(#191c1e, #e1e3e5);
+
+  --md-sys-color-outline: light-dark(#73777f, #8d9199);
+  --md-sys-color-outline-variant: light-dark(#c3c6cf, #43474e);
+
+  --md-sys-color-inverse-surface: light-dark(#2e3133, #e1e3e5);
+  --md-sys-color-inverse-on-surface: light-dark(#f0f1f3, #2e3133);
+  --md-sys-color-inverse-primary: light-dark(#a4c8ff, #0f4c81);
+
+  --md-sys-color-scrim: #000000;
+  --md-sys-color-shadow: #000000;
+
+  --md-sys-color-primary-fixed: #d3e4ff;
+  --md-sys-color-primary-fixed-dim: #a4c8ff;
+  --md-sys-color-on-primary-fixed: #001c3b;
+  --md-sys-color-on-primary-fixed-variant: #00417a;
+  --md-sys-color-secondary-fixed: #d1e5f3;
+  --md-sys-color-secondary-fixed-dim: #b5c9d7;
+  --md-sys-color-on-secondary-fixed: #0a1e28;
+  --md-sys-color-on-secondary-fixed-variant: #364954;
+  --md-sys-color-tertiary-fixed: #a6f2cd;
+  --md-sys-color-tertiary-fixed-dim: #8ad6b2;
+  --md-sys-color-on-tertiary-fixed: #002114;
+  --md-sys-color-on-tertiary-fixed-variant: #005234;
+}
