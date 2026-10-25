@@ -107,11 +107,11 @@ The mock API produces a clear error state, and errors are written so the reviewe
 
 ## How AI was used in this project
 
-I directed the whole build and AI threads wrote the code, working in parallel PRs from my own layout sketch and my ADR 001. I supplied the research questions, seed content and design feedback, decided what to cut when time ran short, and corrected the AI whenever it drifted. Every PR was merged only on my explicit yes. Before the clock I prepared the template and diagrams. The edit flow landed after the original two hours and is named as post-clock.
+I directed the whole build and AI threads wrote the code, working in parallel PRs from my own layout sketch and my ADR 001. I supplied the research questions, seed content and design feedback, decided what to cut when time ran short, and corrected the AI whenever it drifted. Every PR was merged only on my explicit yes and an input was added to the ai-log. The template and diagrams were prepared before the clock and one touch-up PR was added just afterwards.
 
 ## Options
 
-The following are settings from the template that can be added to the URL like http://localhost:5173/?setting=value
+The following are settings from the template that can be added to the URL to veiw differernt states.
 Set a theme and colour scheme with `/?theme=brand&scheme=dark`; the page has no switcher. Themes: `material` (Material 3 baseline), `brand` (generic placeholder). There is no top bar: the API's health shows as a toast in the bottom-left corner (Material 3 snackbar, Base UI Toast). "API ok" closes itself after 6 seconds, paused while the pointer or keyboard focus is on it; "API unavailable" stays with Retry until it is used or dismissed. F6 jumps to it.
 
 In development the app talks to a mock API (MSW). Drive it from the URL with `?mock=<scenario>`:
