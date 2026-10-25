@@ -94,6 +94,8 @@ One line per commit: the piece, what the assistant produced, what the human chan
   and hiding Approve and Revise while editing. Miriam to review.
 - CI switched off (Miriam's decision, 2026-10-25): `npm run ci:off` parks the workflow; local
   `npm run verify` and `CI=1 npm run test:e2e` are the gate for this timeboxed repo.
+- CI switched back on (Miriam's instruction, 2026-10-25): `npm run ci:on` moves the workflow back
+  to `.github/workflows/`, so PRs run quality, unit, build and e2e again.
 - Post-clock page touch-ups (Miriam's instruction, 2026-10-25): AI added a max width so the page
   centres on wide screens, scrolled the sources inside their own box so the page keeps its bottom
   margin, and made claims keep their large size unless they would scroll, then step down one type
