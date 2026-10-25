@@ -33,8 +33,6 @@ One line per commit: the piece, what the assistant produced, what the human chan
   note `docs/research/uncertainty-signals.md` (five badge groups and their values); it folded
   `corrected` into text so every publication-status value has its own colour. Miriam to review.
 - Claim editing research (Miriam's instruction, 2026-10-25): AI searched the web and wrote
-  `docs/research/claim-editing.md` (inline vs dialog, what an edit invalidates, approve after
-  edit, by/at, empty and unchanged edits, revert, keyboard and screen reader, record shape,
-  risks, 20-minute recommendation, what to leave out, open decisions, state table). Docs only, no
-  code. Miriam rejected the first draft for using README assumptions; redone from industry
-  practice only, shorter.
+  `docs/research/claim-editing.md`. Miriam rejected two drafts (README assumptions; then too
+  much on the obvious inline case) and redirected it to versions, multiple users, authorisation
+  and audit, and one paragraph versus separate boxes that look like one paragraph. Docs only.

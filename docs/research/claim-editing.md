@@ -1,188 +1,192 @@
-# Editing AI claims in a review screen: industry practice
+# Editing AI claims in a review screen: versions, users, authorisation, and one paragraph or boxes
 
-Research note for `research-reviewer`, written 2026-10-25. Scope: a reviewer reads AI-generated
-claims, each with source cards and citation numbers, and may change a claim's wording before
-approving it. This note states what current practice says the edit should do, recommends the
-smallest flow worth 20 minutes, and lists what to leave out. Dated links are in the sources
-section.
+Research note for `research-reviewer`, written 2026-10-25. Scope: a reviewer changes the wording
+of AI-generated claims, each tied to source cards and citation numbers, before approval. Inline
+editing is taken as given. This note covers what current practice says about versions, more than
+one user, authorisation and audit, and whether to edit the claims as one paragraph or as separate
+boxes that look like one paragraph. It ends with the smallest build, open decisions, what to leave
+out, and a state table. Dated links are in the sources section.
 
-## 1. Inline, not a dialog
+## 1. Versions
 
-Edit in place when the text is short and the reviewer must compare it with context on the page.
-A modal is for a single-purpose task, a required answer, or confirming an action that cannot be
-reverted; it is not for editing something the user needs to see against the page behind it
-(GitLab, Sept 2026; PatternFly v5). AI approval-workflow guidance agrees: editing is a first-class
-state and edit-in-place beats "approve first, fix later" (AI UX Playground, July 2026). The
-Editage checklist (Aug 2026) adds that the original and edited sentence should be read side by
-side.
+**Practice: versions are immutable and append-only.** Every save is a new revision with author,
+time and a short summary; nothing is updated in place, and restoring an old version creates a new
+revision rather than rewriting history (content versioning design, Apr 2026). Google Docs works
+the same way: version history shows who changed what and when, versions can be named, and a
+version can be restored or copied (Google Docs help). Drupal keeps every revision and marks one as
+the "default" that visitors see, so an unpublished edit can sit ahead of the published one
+(Drupalize.me, updated Oct 2024).
 
-Two inline styles exist (PatternFly): field edit (pencil beside one value, tick and cross) for one
-small value, and block edit (one Edit button opens every field, one Save and one Cancel) for
-fields that change together. Claims are read as one text, so block edit fits.
+**Storage.** Store full snapshots for small documents; diff storage with periodic snapshots is an
+optimisation for large ones (Apr 2026). A few claims per document means snapshot every time.
 
-## 2. What an edit keeps and what it invalidates
+**What a version binds to.** Approval must name the version it approved. GitHub dismisses an
+approval when a new commit lands on an approved pull request, so the approval always matches the
+reviewed content (GitHub docs, required reviews). Translated: `approval.versionId`, and any later
+edit puts the document back into review.
 
-Sources attach to a claim by id, not by character position, so source cards and citation numbers
-stay attached and in order. What an edit invalidates is the _judgement_ that a source supports the
-wording. A check covers only the version checked: in July 2026 a Connecticut lawyer verified every
-citation, let an AI tool edit the drafts, nobody rechecked, and the court ordered training and
-donations (written up Aug 2026). Editage (Aug 2026) says the same for science: after an edit,
-confirm the cited source still supports the revised wording.
+**Minimum shape.** `Document { id, currentVersionId }`, `Version { id, documentId, number,
+claims[], createdBy, createdAt, summary? }`. The AI output is version 1. Diffing two versions for
+"what changed" is a UI feature on top, not storage.
 
-| Badge group                                                               | After an edit                               |
-| ------------------------------------------------------------------------- | ------------------------------------------- |
-| Facts about the source (reference check, publication status)              | Still valid                                 |
-| Facts about source and wording (claim support, stance, evidence strength) | Computed for the AI text; needs re-checking |
-| Citation numbers                                                          | Unchanged                                   |
+## 2. More than one user
 
-Practice: mark the claim as edited wherever its support badges are read, so the reviewer knows
-those badges describe the earlier text, and re-verify after the final edit.
+Three levels of concurrency control exist; pick the lowest that fits.
 
-## 3. Approve after edit
+| Level                        | How                                                                                                                                                                                                                                                               | When it is enough                                                   |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Optimistic locking           | Client sends the version it read (`If-Match` ETag or `expectedVersion`); server rejects with 412 if the document moved on; client reloads and re-applies (Ed-Fi API guidelines, Dec 2024; Apr 2026 design)                                                        | Edits are occasional and sequential: one person at a time, in turns |
+| Soft edit lock               | "Being edited by Alice since 11:02", with unlock or request-release; lock clears on save or timeout. Confluence users asked for this in 2004 and got it in 2.1 (Atlassian issue, fixed 2012); Ibexa's editorial workflow has draft locking with a release request | Several people may open the same item, but should not edit at once  |
+| Real-time merge (OT or CRDT) | Characters merge as typed; OT needs a central server, CRDTs (Yjs, Automerge) work offline and peer to peer (HackerNoon, Dec 2025)                                                                                                                                 | Two people need to type in the same text at the same time           |
 
-Consent applies to the edited text, not the original draft (AI UX Playground, July 2026).
-Human-in-the-loop guidance adds a cognitive forcing function at the approve step, such as a
-required reason or an explicit confirmation, against automation bias (Zartis, June 2026). So:
+For review work, where one reviewer edits and another approves, optimistic locking plus "last
+edited by X at T" on the page covers it. A soft lock is the next step. Real-time merge is a
+different product.
 
-1. Approve sends the current wording.
-2. Approve is unavailable while edits are unsaved, so what is approved is what is on the page.
-3. If any claim was edited, the confirmation says so ("2 of 3 claims edited").
+## 3. Authorisation and audit
 
-## 4. Who edited and when
+**Roles per stage, permissions per transition.** Editorial systems attach roles to workflow
+stages, so a "Needs review" stage notifies every Reviewer (Storyblok, Oct 2026), and create one
+permission per transition, so only a copy editor can move content from copy editing to final
+review (Drupal content moderation, Oct 2024). The review screen has four transitions: edit,
+approve, send back, reopen. Each is a permission.
 
-Collaborative tools show "Last updated by Alice at 22/05/2025, 12:00" next to the changed field,
-derived from the newest edit's author and time (Jazz, May 2025). Show one short line under an
-edited claim, beside the "Edited" mark; unedited claims show nothing.
+**Maker-checker.** In finance, every transaction needs one person to make it and a different
+person to check it (maker-checker, also "four eyes"; Wikipedia). Compliance tooling routes cases
+from an investigator to a separate approver queue (Sumsub 4-eyes review, Oct 2026). Feature-flag
+governance uses change requests the author cannot approve, with a log of who requested, who
+approved, previous state and justification (Flagsmith). GitHub enforces the same rule: authors
+cannot approve their own pull request.
 
-## 5. Empty and unchanged edits
+The question for this product: **may the person who edited a claim approve it?** Three settings:
 
-- **Empty.** Keep Save enabled and show an inline error linked to the field, rather than a
-  disabled button that explains nothing (Basis design system, 2026).
-- **Unchanged.** The one accepted exception to "never disable" is Save on a form with no
-  changes (same source). The alternative, Save with no changes just closes the form, needs no
-  disabled state. Compare trimmed text so whitespace does not count as a change.
+1. Single reviewer: edit and approve are the same person. Fast, no separation.
+2. Four eyes: an edited claim must be approved by someone other than its last editor.
+3. Two approvals: any document needs two approvers regardless of edits.
 
-## 6. Undo and revert
+**Audit trail.** Regulated records (21 CFR Part 11, EU Annex 11) require computer-generated,
+time-stamped entries that record who, what and when, do not obscure the previous value, and are
+retained and reviewable; Annex 11 also asks for the reason for a change (IntuitionLabs, Feb 2026,
+updated Oct 2026). Applied to AI-drafted content, the same source links the prompt and model
+version, the AI output, the reviewer's identity, time and decision, and every edit with before and
+after values and a reason. That list is the audit record for this screen even where no regulation
+applies:
 
-Microsoft's HAX guideline 9, "Support efficient correction", lists "Rich and detailed edits" and
-"Undo automated actions" (Oct 2023). The cheapest form in a review screen is one action, **Revert
-to AI text** per claim, not an undo stack. Escape is the second undo, and Atlassian's Jira issue
-(2016 to 2022, 43 votes) shows the trap: Escape that silently drops unsaved text loses work.
-Either Escape only closes when nothing changed, or it asks first.
+`Event { id, documentId, versionId, type: edited | approved | sent_back | reopened, by, at,
+before?, after?, reason? }`
 
-## 7. Keyboard and screen reader
+Immutable events plus immutable versions mean "who edited and when" is a query, not a stored
+field.
 
-- **In.** Edit is a real button. On activation focus moves to the first textarea. Each textarea
-  has a visible label ("Claim 1 of 3") and is described by its source cards by id.
-- **Out.** After Save or Discard the textareas vanish. The W3C dialog pattern rule applies to any
-  control that disappears: return focus to the element that opened it, or if it is gone, to the
-  element that continues the workflow. Never leave focus on `body`.
-- **Announce.** One polite live region says "Changes saved. 2 claims edited, not approved yet."
-  Reuse the same element so it is one region updating.
-- **Sticky bars.** WCAG 2.2 SC 2.4.11 Focus Not Obscured (June 2026) names sticky footers as the
-  typical failure. The last textarea must not scroll under the Approve bar: bottom padding and
-  `scroll-padding` equal to the bar height.
-- **Names.** Per-claim controls carry what they act on, as check-answers Change links do (NHS,
-  June 2026): "Revert claim 2 to AI text", not "Revert".
+## 4. One paragraph or separate boxes
 
-## 8. What to record
+The claims must read as one paragraph. Three ways to edit them:
 
-| Field                | Value                                              | Why                                    |
-| -------------------- | -------------------------------------------------- | -------------------------------------- |
-| `claim.id`           | unchanged                                          | Sources attach by id                   |
-| `claim.originalText` | AI wording, never changed                          | Revert; comparison for the Edited mark |
-| `claim.text`         | current wording                                    | What Approve sends                     |
-| `claim.edit`         | `{ by, at }`, ISO 8601 UTC, only when text differs | Who and when, shown in the UI          |
-| `approval.claims[]`  | `{ id, text, editedAt? }`                          | Consent is to this wording             |
+| Option                                             | How                                                                                                                                                     | Keeps claim ids and citations                                                                                                                                                                | Accessibility                                                                                                                                                             |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A. One textarea for the paragraph                  | Whole text in one field; on save, re-split into claims and re-attach citations                                                                          | No. Re-alignment of edited sentences to the original claims is a research problem (edit alignment surveys treat it as its own task); citations become text `[2]` the user can delete or move | Simplest: one native field, one label                                                                                                                                     |
+| B. One textarea per claim, styled as one paragraph | Borderless, auto-growing fields laid out inline so the boundaries vanish at rest; CSS `field-sizing: content` grows a textarea with its text (Apr 2024) | Yes. Each field is one claim; citations stay on the claim                                                                                                                                    | Each field needs a name that stands alone ("Claim 2 of 3") because a screen reader in forms mode announces fields one at a time, outside the sentence (Roselli, Aug 2021) |
+| C. One contenteditable with claim spans            | Rich editor (Lexical, ProseMirror) where each claim is a node and citations are atomic marks                                                            | Yes, by construction                                                                                                                                                                         | Needs `role="textbox"`, `aria-multiline`, a label, and manual screen-reader testing (Lexical accessibility guide); more work than native fields                           |
 
-Before and after are the two text fields. A history, if ever added, is a list of `{ text, by, at }`
-per claim, newest first, the shape Jazz and audit logs use.
+Roselli's 2021 review of "sentence forms" is the closest practice to option B: inputs inside
+prose confused magnifier and screen-reader users unless every field had its own label, errors
+listed the field by name, and the layout reflowed without horizontal scroll. Those are the
+conditions under which B works.
 
-## 9. Risks
+**Recommendation: B.** It is the only option that keeps claim ids and citations without an
+editor library or a re-alignment step, and native textareas keep keyboard and screen-reader
+behaviour for free. Make the boundaries visible on focus (a focus ring per claim), keep a visible
+or visually hidden "Claim n of N" label, and list errors by claim name. Option C is the upgrade if
+rich text or in-sentence citation editing is ever needed.
 
-- **Approve changes meaning.** Before editing it means "the AI text and its sources are fine".
-  After, it means "my text is fine and I checked the sources still support it". The confirmation
-  line makes that explicit; without it a reviewer approves stale badges unnoticed.
-- **Approving while editing.** If Approve stays enabled during editing, the old text is approved
-  while new text is on screen.
-- **Lost work.** Reload or Escape with unsaved edits. A `beforeunload` warning is cheap.
-- **Edited read as warning.** Amber or red on an edited claim says "problem". Use a neutral
-  outline and the word "Edited".
+## Smallest build worth 20 minutes
 
-## Recommendation: the smallest flow worth 20 minutes
-
-1. One **Edit** button opens one form: a textarea per claim, labelled "Claim n of N", described by
-   its source cards, focus in the first.
-2. **Save** and **Discard**. Save checks non-empty, trims, compares to the original, stores
-   `{ by, at }` on changed claims, closes the form, returns focus to Edit, announces "Changes saved".
-3. An **Edited** mark with a neutral outline and "Edited by X, 25 Oct 2026 11:40" on changed claims.
-4. **Approve** unavailable while the form is open; the confirmation names how many claims were
-   edited.
-
-## What to leave out, and why
-
-| Leave out                                 | Why it is safe to skip                                                                                                                                                                                                  |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Versioning and edit history               | Practice records before and after; a version list is only needed once more than one person edits or an audit is required. Record `originalText` and `{ by, at }` now so history can be added later without a migration. |
-| Multi-step undo and redo                  | Revert to AI text covers the one case that matters. An undo stack is state the reviewer cannot see.                                                                                                                     |
-| Per-claim Save                            | Claims are approved together, so one Save matches one Approve. Per-claim Save doubles the states.                                                                                                                       |
-| Re-computing support badges after an edit | Needs a backend. Marking the claim Edited is the practice until then.                                                                                                                                                   |
-| Add, delete, split or merge claims        | Changes the claim set the sources attach to; a different feature.                                                                                                                                                       |
-| Rich text                                 | Claims are plain sentences; a rich editor adds a dependency and a11y work.                                                                                                                                              |
-| Escape confirmation dialog                | Escape that only closes when unchanged is enough with a Discard button.                                                                                                                                                 |
-| `beforeunload` warning                    | Cheap, but one tab and one sitting; add if time remains.                                                                                                                                                                |
+1. Edit opens one form: a borderless textarea per claim, inline, "Claim n of N", focus in the
+   first. Save and Discard. Save with no change closes without a mark.
+2. Save creates a new version `{ number, claims, createdBy, createdAt }` and appends an `edited`
+   event with before and after. The page shows "Edited by X at T" on changed claims, from the
+   events.
+3. Approve stores `versionId`. A save after approval returns the document to review and the
+   confirmation says so.
+4. Save sends `expectedVersion`; on a 412 the screen says "Someone saved a newer version" and
+   offers Reload.
 
 ## Open decisions (default first)
 
-| Decision              | Default                         | Alternative                           |
-| --------------------- | ------------------------------- | ------------------------------------- |
-| Edit granularity      | One form for all claims         | Edit per claim                        |
-| Unchanged Save        | Closes with no Edited mark      | Save disabled                         |
-| Empty claim           | Inline error, Save enabled      | Save disabled                         |
-| Escape with changes   | Does nothing (Discard does it)  | Asks first                            |
-| Revert to AI text     | First thing if time remains     | Build now                             |
-| Approve while editing | Disabled, reason in live region | Hidden                                |
-| Badges after edit     | Edited mark only                | "For AI text" label on support badges |
+| Decision                              | Default                                    | Alternative                                    |
+| ------------------------------------- | ------------------------------------------ | ---------------------------------------------- |
+| Can the editor approve their own edit | Yes, single reviewer                       | Four eyes: last editor cannot approve          |
+| Concurrency                           | Optimistic locking, reload on conflict     | Soft edit lock with "being edited by"          |
+| Version storage                       | Full snapshot per save                     | Diffs with periodic snapshots                  |
+| Approval binding                      | To a version id; later edit reopens review | Approval survives edits, marked stale          |
+| Reason for edit                       | Optional note                              | Required (Annex 11 style)                      |
+| Claim label                           | Visible "Claim n of N"                     | Visually hidden label, visible focus ring only |
+| Restore an old version                | Creates a new version                      | Not offered                                    |
+
+## What to leave out, and why
+
+| Leave out                           | Why                                                                      |
+| ----------------------------------- | ------------------------------------------------------------------------ |
+| Real-time co-editing (OT, CRDT)     | Review is turn-based; optimistic locking handles it with one status code |
+| Diff storage                        | Snapshots are tiny at this size                                          |
+| Multi-step undo and redo            | Versions give revert; an in-session undo stack is state nobody can see   |
+| Edit history UI (timeline, compare) | Record the events now; render them later                                 |
+| Two-approval policy                 | A role flag on the approve transition can add it later                   |
+| Option C rich editor                | Only needed for rich text or editing citations inside sentences          |
+| Reason for every edit               | Keep the field optional until a compliance need names it                 |
 
 ## States and transitions
 
-| State           | Reviewer sees                                                                 | Transitions                                                                                                                                         |
-| --------------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Reading         | Claims as text; Edit, Approve, Send back enabled                              | Edit → Editing; Approve → Confirming; Send back → Reason                                                                                            |
-| Editing         | Textareas, Save, Discard; Approve and Send back disabled; "Edits are unsaved" | Save (valid, changed) → Reading, edited; Save (unchanged) → Reading; Save (empty) → Editing with error; Discard, or Escape when unchanged → Reading |
-| Reading, edited | As Reading plus Edited mark and by/at; "Changes not approved yet"             | Edit → Editing (draft from current text); Revert → Reading; Approve → Confirming (names edited count)                                               |
-| Confirming      | Approve dialog, focus on title; Escape returns focus to Approve               | Confirm → Approved; Cancel → previous state                                                                                                         |
-| Approved        | Read-only, approved by/at, Edit hidden                                        | none                                                                                                                                                |
-| Revision needed | Read-only, reason and by/at                                                   | none                                                                                                                                                |
+| State                 | Who can act                                               | Transitions                                                                               |
+| --------------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| In review (version n) | Anyone with `edit` or `approve`                           | Edit → Editing; Approve → Confirming; Send back → Reason                                  |
+| Editing               | The editor                                                | Save (changed) → Saving; Save (unchanged) or Discard → In review                          |
+| Saving                | system                                                    | 2xx → In review (version n+1, `edited` event); 412 → Conflict; error → Editing with alert |
+| Conflict              | The editor                                                | Reload → In review (latest), draft kept in the form                                       |
+| Confirming            | Anyone with `approve` (not the last editor, if four eyes) | Confirm → Approved (`approved` event, `versionId`); Cancel → In review                    |
+| Approved              | Anyone with `reopen`                                      | Edit or Reopen → In review (`reopened` event)                                             |
+| Revision needed       | Anyone with `reopen`                                      | Reopen → In review                                                                        |
 
-Loading and error are query states, not rows here; the form never opens while the document is
-loading or failed.
+Loading and error are query states and have no rows.
 
 ## Sources
 
-- GitLab Design System, Modal: when a modal is right and when inline is better; focus and
-  destructive confirmations. Updated 15 Sept 2026. https://design.gitlab.com/components/modal
-- PatternFly v5 (5.4.2), Inline edit design guidelines: field, row and full-page edit; save and
-  cancel. https://v5-archive.patternfly.org/components/inline-edit/design-guidelines
-- AI UX Playground, Approval workflows: states, editing as first-class, consent to the edited
-  payload, anti-patterns. Updated 10 July 2026. https://www.aiuxplayground.com/pattern/approval-workflows
-- Zartis, "Human-in-the-Loop UI Patterns: Designing Intentional Friction for Safer AI Products".
-  11 June 2026. https://www.zartis.com/human-in-the-loop-ui-patterns-designing-intentional-friction-for-safer-ai-products/
-- Editage, "How to verify an AI-edited manuscript": re-check citations against revised wording.
-  12 Aug 2026. https://www.editage.com/blog/how-to-verify-an-ai-edited-manuscript-checks-for-hallucinations-flow-and-scientific-writing-quality/
-- Vibe Graveyard, "ChatGPT rewrote verified citations in Connecticut Supreme Court briefs".
-  28 Aug 2026. https://vibegraveyard.ai/story/glg-law-chatgpt-verified-citations-rewritten/
-- Microsoft HAX Toolkit, Guideline 9 "Support efficient correction", patterns 9B and 9C.
-  Updated 17 Oct 2023. https://www.microsoft.com/en-us/haxtoolkit/library/pattern/11/
-- Jazz, History patterns: per-edit `by` and `madeAt`, "last updated by". Example dated
-  22 May 2025. https://jazz.tools/docs/react-native/design-patterns/history-patterns
-- Basis Design System, Disabled buttons: enabled by default with inline errors; disabled Save on
-  an unchanged form is the exception. 2026. https://design.basis.com/patterns/disabled-buttons
-- Atlassian Jira JRACLOUD-61439, "Prompt user before clearing changed values when ESC key is
-  pressed during inline edit". 14 June 2016 to 20 Sept 2022. https://jira.atlassian.com/browse/JRACLOUD-61439
-- W3C WAI ARIA Authoring Practices, Dialog (Modal) pattern: focus return.
-  https://www.w3.org/WAI/ARIA/apg/patterns/dialogmodal/
-- W3C, Understanding SC 2.4.11 Focus Not Obscured (Minimum). Updated 15 June 2026.
-  https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured.html
-- NHS digital service manual, Check answers: Change links with hidden text. Updated June 2026.
-  https://service-manual.nhs.uk/design-system/patterns/check-answers
+- techinterview.org, "Content Versioning Service Low-Level Design": append-only revisions,
+  restore creates a revision, optimistic locking. Updated 17 Apr 2026.
+  https://www.techinterview.org/post/3233470545/lld-content-versioning/
+- Google Docs Help, "Find what's changed in a file": version history, named versions, restore,
+  Show editors. https://support.google.com/docs/answer/190843
+- Drupalize.me, "Overview: Workflows and Content Moderation": states, per-transition
+  permissions, default revision. Updated 18 Oct 2024.
+  https://drupalize.me/tutorial/overview-workflows-and-content-moderation
+- GitHub Docs, "Approving a pull request with required reviews": authors cannot approve their
+  own PR, stale approvals dismissed on new commits.
+  https://docs.github.com/en/enterprise-server@3.21/pull-requests/how-tos/review-pull-requests/approving-a-pull-request-with-required-reviews
+- Ed-Fi API guidelines, "Handling optimistic concurrency with ETags": If-Match, 412, reload on
+  conflict. Updated 8 Dec 2024.
+  https://docs.ed-fi.org/reference/data-exchange/api-guidelines/design-and-implementation-guidelines/api-implementation-guidelines/handling-optimistic-concurrency-with-etags
+- Atlassian CONFSERVER-1193, "Warn when page is concurrently edited by multiple users". Created
+  4 May 2004, fixed 20 Dec 2012. https://jira.atlassian.com/browse/CONFSERVER-1193
+- Ibexa DXP 6.0 user guide, Editorial workflow: review queue, draft locking, release requests.
+  https://doc.ibexa.co/projects/userguide/en/6.0/content_management/workflow_management/editorial_workflow/
+- Saumya Tyagi, "CRDTs vs Operational Transformation: A Practical Guide to Real-Time
+  Collaboration", HackerNoon, 24 Dec 2025.
+  https://hackernoon.com/crdts-vs-operational-transformation-a-practical-guide-to-real-time-collaboration
+- Storyblok, Roles: roles per workflow stage, custom permissions. Updated 13 Oct 2026.
+  https://www.storyblok.com/docs/manuals/roles
+- Wikipedia, "Maker-checker". https://en.wikipedia.org/wiki/Maker-checker
+- Sumsub, "4-eyes review": investigator and approver as separate officers. Updated 19 Oct 2026.
+  https://docs.sumsub.com/docs/4-eyes-review
+- Tanaaz Khan, "What is the Four Eyes Principle?", Flagsmith: change requests, author cannot
+  approve, audit log fields. https://flagsmith.com/blog/what-is-the-four-eyes-principle
+- IntuitionLabs, "GxP Audit Trails for AI: 21 CFR Part 11 & Annex 11 Rules". 4 Feb 2026, updated
+  3 Oct 2026. https://intuitionlabs.ai/articles/audit-trail-requirements-ai-gxp-compliance
+- Adrian Roselli, "Sentence Forms (not Mad Libs)": inputs inside prose and their accessibility
+  cost. 16 Aug 2021. https://adrianroselli.com/2021/08/sentence-forms-not-mad-libs.html
+- Aaron Gustafson on Stephanie Stimac's CSS `field-sizing` article: auto-growing textareas.
+  1 Apr 2024. https://aaron-gustafson.com/notebook/links/better-form-ux-with-the-css-property-field-sizing-/
+- Lexical, Accessibility guide: ARIA for a contenteditable editor, manual screen-reader testing.
+  https://mintlify.wiki/facebook/lexical/guides/accessibility
+- "Making Revisions Understandable: A Survey of Edit Intentions, Methods, and Applications",
+  arXiv 2609.01610 (Sept 2026): edit alignment between revisions as its own task.
+  https://arxiv.org/abs/2609.01610
