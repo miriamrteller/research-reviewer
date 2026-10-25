@@ -75,3 +75,6 @@ One line per commit: the piece, what the assistant produced, what the human chan
   centres on wide screens, scrolled the sources inside their own box so the page keeps its bottom
   margin, and made claims keep their large size unless they would scroll, then step down one type
   size at a time until they fit. Miriam to review.
+- Project name (Miriam's instruction, 2026-10-25): AI replaced the leftover template name
+  "Assignment18" with "research-reviewer" in `package.json` and the lockfile, and the browser tab
+  title with "Research Reviewer".
