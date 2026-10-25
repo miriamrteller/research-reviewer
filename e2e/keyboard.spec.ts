@@ -72,17 +72,14 @@ test.describe('keyboard operability', () => {
     ).toBeVisible()
 
     const expectedOrder = [
-      'Report',
-      'Proposal',
-      'Specification',
-      'Notes',
-      'Summary',
-      'Remove Internal',
-      'Remove Research',
-      'Remove Follow-up',
-      'Add tag',
-      'Cancel',
-      'Submit',
+      'Badge key',
+      'Revise',
+      'Approve',
+      '1 Evening walking and sleep onset in adults over 65: a randomised trial',
+      '2 Habitual activity and the fading benefit of walking programmes',
+      '3 Light exposure timing and circadian phase in later life: a review',
+      '4 Outdoor walking time and sleep midpoint in retired adults',
+      'Feedback',
     ]
 
     for (const expected of expectedOrder) {
@@ -104,39 +101,24 @@ test.describe('keyboard operability', () => {
 
   test('pointer focus does not show the keyboard focus ring', async ({ page, gotoApp }) => {
     await gotoApp()
-    await page.getByRole('button', { name: 'Proposal' }).click()
+    await page.getByRole('button', { name: 'Badge key' }).click()
     const indicator = await focusIndicator(page)
     expect(indicator?.matchesFocusVisible).toBe(false)
   })
 
-  test('dialog traps focus, closes on Escape, and returns focus to its trigger', async ({
+  test('a source opens and closes from the keyboard, and focus stays on its trigger', async ({
     page,
     gotoApp,
   }) => {
     await gotoApp()
-    const trigger = page.getByRole('button', { name: 'Submit' })
+    const trigger = page.getByRole('button', { name: /^2 Habitual activity/ })
     await trigger.focus()
     await page.keyboard.press('Enter')
-
-    const dialog = page.getByRole('dialog', { name: 'Submit for review?' })
-    await expect(dialog).toBeVisible()
-
-    // Cycle well past the number of focusable elements; focus must stay inside.
-    for (let i = 0; i < 6; i += 1) {
-      await page.keyboard.press('Tab')
-      await expect
-        .poll(
-          () =>
-            page.evaluate(() =>
-              Boolean(document.activeElement?.closest('[role="dialog"]:not(#api-health)')),
-            ),
-          { message: `Tab #${i + 1} escaped the dialog` },
-        )
-        .toBe(true)
-    }
-
-    await page.keyboard.press('Escape')
-    await expect(dialog).toBeHidden()
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true')
+    await expect(page.getByText(/We followed 212 adults/)).toBeVisible()
+    await expect(trigger).toBeFocused()
+    await page.keyboard.press('Space')
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false')
     await expect(trigger).toBeFocused()
   })
 
@@ -183,7 +165,7 @@ test.describe('keyboard operability', () => {
       await expect(toast).toHaveAccessibleName(/^API ok/)
       const box = await toast.boundingBox()
       await page.mouse.move(box!.x + 8, box!.y + 8)
-      const last = page.getByRole('button', { name: 'Submit' })
+      const last = page.getByRole('button', { name: 'Feedback' })
 
       for (let i = 0; i < 30; i += 1) {
         await page.keyboard.press('Tab')
@@ -208,7 +190,7 @@ test.describe('keyboard operability', () => {
   test('honours prefers-reduced-motion', async ({ page, gotoApp }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await gotoApp()
-    const durationMs = await page.getByRole('button', { name: 'Submit' }).evaluate((el) => {
+    const durationMs = await page.getByRole('button', { name: 'Approve' }).evaluate((el) => {
       const raw = getComputedStyle(el).transitionDuration
       const value = parseFloat(raw)
       return raw.endsWith('ms') ? value : value * 1000

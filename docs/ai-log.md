@@ -32,3 +32,10 @@ One line per commit: the piece, what the assistant produced, what the human chan
 - ADR 001 source badges (Miriam's instruction, 2026-10-25): AI drafted the ADR from the research
   note `docs/research/uncertainty-signals.md` (five badge groups and their values); it folded
   `corrected` into text so every publication-status value has its own colour. Miriam to review.
+- Static review layout from sketch (Miriam's instruction and sketch, 2026-10-25): AI read
+  `docs/research/my-layout-sketch.jpg`, asked about the handwriting it could not read, and built the
+  static layout (question, status, badge key, claims paper with citation numbers and caveat, source
+  accordion with grade, badges, "why this was lowered" and quote, Revise/Approve, Feedback FAB) with
+  fictional sample content and updated the unit and e2e specs; Miriam answered the open questions
+  (two sources per claim allowed, "why this was lowered" lines, caveat kept, badges neutral until the
+  badge step).

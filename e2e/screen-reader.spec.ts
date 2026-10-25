@@ -18,29 +18,54 @@ import { expect, test } from './fixtures'
 function expectedTree(): string {
   return `
     - main:
-      - heading "Assignment18" [level=1]
-      - form "Project summary":
-        - heading "Project summary" [level=2]
-        - paragraph: /Draft/
-        - group "Document type":
-          - text: Document type
-          - button "Report" [pressed]
-          - button "Proposal"
-          - button "Specification"
-          - button "Notes"
-        - text: Summary
-        - textbox "Summary"
-        - paragraph: Plain language. Avoid personal or confidential information.
-        - group "Tags":
-          - text: Tags Internal
-          - button "Remove Internal"
-          - text: Research
-          - button "Remove Research"
-          - text: Follow-up
-          - button "Remove Follow-up"
-          - button "Add tag"
-        - button "Cancel"
-        - button "Submit"
+      - heading "Does a short evening walk help older adults fall asleep faster?" [level=1]
+      - paragraph: In review
+      - button "Badge key"
+      - region "AI answer":
+        - heading "AI answer" [level=2]
+        - paragraph: /AI-generated answer/
+        - paragraph:
+          - text: /A 20-minute evening walk/
+          - superscript: source 1
+        - paragraph:
+          - text: /The benefit was smaller/
+          - superscript: source 2
+        - paragraph:
+          - text: /Walking in daylight/
+          - superscript: source 3
+          - superscript: source 4
+        - button "Revise"
+        - button "Approve"
+      - region "Sources":
+        - heading "Sources" [level=2]
+        - heading /^1 Evening walking/ [level=3]:
+          - button /^1 Evening walking/
+        - text: "Evidence strength: Moderate"
+        - paragraph: /Controlled study/
+        - list "Checks for source 1":
+          - listitem: "Reference check: Verified"
+          - listitem: "Publication status: Peer reviewed"
+          - listitem: "Claim support: Supported"
+          - listitem: "Stance: Agrees"
+        - blockquote: /Sleep onset latency/
+        - heading /^2 Habitual activity/ [level=3]:
+          - button /^2 Habitual activity/
+        - text: "Evidence strength: Limited"
+        - paragraph: /Observational study/
+        - list "Checks for source 2":
+          - listitem: "Reference check: Details differ"
+          - listitem: "Publication status: Preprint"
+          - listitem: "Claim support: Partly supported"
+          - listitem: "Stance: Neutral"
+        - paragraph:
+          - strong: "Why this was lowered:"
+          - text: /self-reported rest/
+        - blockquote: /Gains were smaller/
+        - heading /^3 Light exposure timing/ [level=3]:
+          - button /^3 Light exposure timing/
+        - heading /^4 Outdoor walking time/ [level=3]:
+          - button /^4 Outdoor walking time/
+      - button "Feedback"
     - region "Notifications"
   `
 }
@@ -91,26 +116,14 @@ test.describe('screen reader experience', () => {
     await gotoApp()
     await waitForApi(page)
 
-    // Filter chips are toggles: the selection is in aria-pressed, not only in the colour.
-    await expect(page.getByRole('button', { name: 'Report' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    )
-    for (const name of ['Proposal', 'Specification', 'Notes']) {
-      await expect(page.getByRole('button', { name })).toHaveAttribute('aria-pressed', 'false')
+    // Source cards are accordion triggers: open or closed is in aria-expanded, not only the chevron.
+    for (const name of [/^1 Evening walking/, /^2 Habitual activity/, /^3 Light exposure/]) {
+      await expect(page.getByRole('button', { name })).toHaveAttribute('aria-expanded', 'false')
     }
 
-    // Icon-only remove buttons say what they remove.
-    for (const tag of ['Internal', 'Research', 'Follow-up']) {
-      await expect(page.getByRole('button', { name: `Remove ${tag}` })).toBeVisible()
-    }
-
-    // The text field has a label and its supporting text as the description.
-    const summary = page.getByRole('textbox', { name: 'Summary' })
-    await expect(summary).toHaveAccessibleName('Summary')
-    await expect(summary).toHaveAccessibleDescription(
-      'Plain language. Avoid personal or confidential information.',
-    )
+    // Each badge names its group for screen readers, so "Verified" is never read alone.
+    const checks = page.getByRole('list', { name: 'Checks for source 1' })
+    await expect(checks.getByRole('listitem').first()).toHaveText('Reference check: Verified')
   })
 
   test('decorative icons are hidden and images have meaningful alt text (WCAG 1.1.1)', async ({
@@ -203,32 +216,16 @@ test.describe('screen reader experience', () => {
     await expect(updated).toBeFocused()
   })
 
-  test('the dialog is modal: named, described, and the page behind it is hidden', async ({
+  test('opening a source reveals its passage and announces the expanded state', async ({
     page,
     gotoApp,
   }) => {
     await gotoApp()
-    await page.getByRole('button', { name: 'Submit' }).click()
-
-    const dialog = page.getByRole('dialog', { name: 'Submit for review?' })
-    await expect(dialog).toBeVisible()
-    await expect(dialog).toHaveAccessibleDescription(
-      'The summary will be locked and sent to the review queue.',
-    )
-    await expect(dialog.getByRole('heading', { level: 2 })).toHaveText('Submit for review?')
-    await expect(dialog).toMatchAriaSnapshot(`
-      - dialog "Submit for review?":
-        - heading "Submit for review?" [level=2]
-        - paragraph: The summary will be locked and sent to the review queue.
-        - button "Cancel"
-        - button "Submit"
-    `)
-
-    // While the dialog is open a screen reader must not be able to wander into the page.
-    await expect(page.getByRole('main')).toHaveCount(0)
-
-    await page.keyboard.press('Escape')
-    await expect(dialog).toBeHidden()
-    await expect(page.getByRole('main')).toHaveCount(1)
+    const trigger = page.getByRole('button', { name: /^1 Evening walking/ })
+    await trigger.click()
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true')
+    await expect(page.getByText(/Participants walked for 20 minutes/)).toBeVisible()
+    await trigger.click()
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false')
   })
 })
