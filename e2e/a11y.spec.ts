@@ -13,17 +13,40 @@ test.describe('WCAG 2.2 AA — automated scan', () => {
     expect(violations, formatViolations(violations)).toEqual([])
   })
 
-  test('text field focused (active indicator state)', async ({ page, gotoApp, makeAxe }) => {
+  test('source opened (full passage showing)', async ({ page, gotoApp, makeAxe }) => {
     await gotoApp()
-    await page.getByRole('textbox', { name: 'Summary' }).focus()
+    await page.getByRole('button', { name: /^1 Quarterly Data/ }).click()
+    await expect(page.getByText(/Delayed analysis handover was/)).toBeVisible()
     const { violations } = await makeAxe().analyze()
     expect(violations, formatViolations(violations)).toEqual([])
   })
 
-  test('confirmation dialog open', async ({ page, gotoApp, makeAxe }) => {
+  test('approve dialog open', async ({ page, gotoApp, makeAxe }) => {
     await gotoApp()
-    await page.getByRole('button', { name: 'Submit' }).click()
-    await page.getByRole('dialog', { name: 'Submit for review?' }).waitFor()
+    await page.getByRole('main').getByRole('button', { name: 'Approve' }).click()
+    await expect(page.getByRole('dialog', { name: 'Approve this answer?' })).toBeVisible()
+    const { violations } = await makeAxe().analyze()
+    expect(violations, formatViolations(violations)).toEqual([])
+  })
+
+  test('approved, read-only', async ({ page, gotoApp, makeAxe }) => {
+    await gotoApp()
+    await page.getByRole('main').getByRole('button', { name: 'Approve' }).click()
+    const dialog = page.getByRole('dialog', { name: 'Approve this answer?' })
+    await dialog.getByRole('checkbox').click()
+    await dialog.getByRole('button', { name: 'Approve' }).click()
+    await expect(page.getByText('Approved', { exact: true })).toBeVisible()
+    const { violations } = await makeAxe().analyze()
+    expect(violations, formatViolations(violations)).toEqual([])
+  })
+
+  test('revision needed, read-only', async ({ page, gotoApp, makeAxe }) => {
+    await gotoApp()
+    await page.getByRole('main').getByRole('button', { name: 'Revise' }).click()
+    const dialog = page.getByRole('dialog', { name: /Send this answer back/ })
+    await dialog.getByLabel('Reason').fill('Claim 3 needs a source for named owners.')
+    await dialog.getByRole('button', { name: 'Send back' }).click()
+    await expect(page.getByText('Revision needed', { exact: true })).toBeVisible()
     const { violations } = await makeAxe().analyze()
     expect(violations, formatViolations(violations)).toEqual([])
   })

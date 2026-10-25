@@ -18,29 +18,54 @@ import { expect, test } from './fixtures'
 function expectedTree(): string {
   return `
     - main:
-      - heading "Assignment18" [level=1]
-      - form "Project summary":
-        - heading "Project summary" [level=2]
-        - paragraph: /Draft/
-        - group "Document type":
-          - text: Document type
-          - button "Report" [pressed]
-          - button "Proposal"
-          - button "Specification"
-          - button "Notes"
-        - text: Summary
-        - textbox "Summary"
-        - paragraph: Plain language. Avoid personal or confidential information.
-        - group "Tags":
-          - text: Tags Internal
-          - button "Remove Internal"
-          - text: Research
-          - button "Remove Research"
-          - text: Follow-up
-          - button "Remove Follow-up"
-          - button "Add tag"
-        - button "Cancel"
-        - button "Submit"
+      - heading "Summarise the recurring data-quality issues reported this quarter and suggest next steps." [level=1]
+      - paragraph:
+        - strong: In review
+      - button "Badge key"
+      - region "AI answer":
+        - heading "AI answer" [level=2]
+        - paragraph: /AI-generated answer/
+        - paragraph:
+          - text: /concentrated in incomplete mandatory fields/
+          - superscript: source 1
+          - superscript: source 2
+        - paragraph:
+          - text: /delayed analysis handover/
+          - superscript: source 1
+        - paragraph:
+          - text: /named data owners/
+          - superscript: source 2
+          - superscript: source 3
+        - button "Revise"
+        - button "Approve"
+      - region "Sources":
+        - heading "Sources" [level=2]
+        - heading /^1 Quarterly Data Quality Review/ [level=3]:
+          - button /^1 Quarterly Data Quality Review/
+        - text: "Evidence strength: Moderate"
+        - paragraph: /Quarterly audit/
+        - list "Checks for source 1":
+          - listitem: "Reference check: Verified"
+          - listitem: "Publication status: Peer reviewed"
+          - listitem: "Claim support: Supported"
+          - listitem: "Stance: Agrees"
+        - blockquote: /Incomplete mandatory fields/
+        - heading /^2 Dataset Naming Retrospective/ [level=3]:
+          - button /^2 Dataset Naming Retrospective/
+        - heading /^3 Data Sharing Readiness Checklist/ [level=3]:
+          - button /^3 Data Sharing Readiness Checklist/
+        - text: "Evidence strength: Weak"
+        - paragraph: /Guidance checklist/
+        - list "Checks for source 3":
+          - listitem: "Reference check: Verified"
+          - listitem: "Publication status: Preprint"
+          - listitem: "Claim support: Partly supported"
+          - listitem: "Stance: Neutral"
+        - paragraph:
+          - strong: "Lowered because:"
+          - text: /without data/
+        - blockquote: /Validation checks/
+      - button "Feedback"
     - region "Notifications"
   `
 }
@@ -91,26 +116,14 @@ test.describe('screen reader experience', () => {
     await gotoApp()
     await waitForApi(page)
 
-    // Filter chips are toggles: the selection is in aria-pressed, not only in the colour.
-    await expect(page.getByRole('button', { name: 'Report' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    )
-    for (const name of ['Proposal', 'Specification', 'Notes']) {
-      await expect(page.getByRole('button', { name })).toHaveAttribute('aria-pressed', 'false')
+    // Source cards are accordion triggers: open or closed is in aria-expanded, not only the chevron.
+    for (const name of [/^1 Quarterly Data/, /^2 Dataset Naming/, /^3 Data Sharing/]) {
+      await expect(page.getByRole('button', { name })).toHaveAttribute('aria-expanded', 'false')
     }
 
-    // Icon-only remove buttons say what they remove.
-    for (const tag of ['Internal', 'Research', 'Follow-up']) {
-      await expect(page.getByRole('button', { name: `Remove ${tag}` })).toBeVisible()
-    }
-
-    // The text field has a label and its supporting text as the description.
-    const summary = page.getByRole('textbox', { name: 'Summary' })
-    await expect(summary).toHaveAccessibleName('Summary')
-    await expect(summary).toHaveAccessibleDescription(
-      'Plain language. Avoid personal or confidential information.',
-    )
+    // Each badge names its group for screen readers, so "Verified" is never read alone.
+    const checks = page.getByRole('list', { name: 'Checks for source 1' })
+    await expect(checks.getByRole('listitem').first()).toHaveText('Reference check: Verified')
   })
 
   test('decorative icons are hidden and images have meaningful alt text (WCAG 1.1.1)', async ({
@@ -203,32 +216,16 @@ test.describe('screen reader experience', () => {
     await expect(updated).toBeFocused()
   })
 
-  test('the dialog is modal: named, described, and the page behind it is hidden', async ({
+  test('opening a source reveals its passage and announces the expanded state', async ({
     page,
     gotoApp,
   }) => {
     await gotoApp()
-    await page.getByRole('button', { name: 'Submit' }).click()
-
-    const dialog = page.getByRole('dialog', { name: 'Submit for review?' })
-    await expect(dialog).toBeVisible()
-    await expect(dialog).toHaveAccessibleDescription(
-      'The summary will be locked and sent to the review queue.',
-    )
-    await expect(dialog.getByRole('heading', { level: 2 })).toHaveText('Submit for review?')
-    await expect(dialog).toMatchAriaSnapshot(`
-      - dialog "Submit for review?":
-        - heading "Submit for review?" [level=2]
-        - paragraph: The summary will be locked and sent to the review queue.
-        - button "Cancel"
-        - button "Submit"
-    `)
-
-    // While the dialog is open a screen reader must not be able to wander into the page.
-    await expect(page.getByRole('main')).toHaveCount(0)
-
-    await page.keyboard.press('Escape')
-    await expect(dialog).toBeHidden()
-    await expect(page.getByRole('main')).toHaveCount(1)
+    const trigger = page.getByRole('button', { name: /^1 Quarterly Data/ })
+    await trigger.click()
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true')
+    await expect(page.getByText(/Delayed analysis handover was/)).toBeVisible()
+    await trigger.click()
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false')
   })
 })

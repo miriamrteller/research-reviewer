@@ -22,6 +22,7 @@ The user is a scientific researcher, qualified to understand the text and the so
 - There is no real backend.
 - The question is not editable. Asking for a revision starts a new flow, with new text and new sources: a new workspace.
 - Source information is provided in full as plain text, and an external link opens the original.
+- The badges (groups, values, icons and colours in [ADR 001](docs/adr/001-ADR-Source-badges.md)) are a prototype stand-in. A real product would likely already have its own badges and colour tokens, and its own definition of each signal, and would use those instead.
 
 ## Intended user journey
 
