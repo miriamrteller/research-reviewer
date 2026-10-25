@@ -3,7 +3,7 @@
 These diagrams are the target the build works toward. Each later PR (screen, inspect, edit,
 feedback) updates this file in the same PR if what it builds differs.
 
-## 1-high-level
+## High Level
 
 ```mermaid
 %%{init: {"flowchart": {"wrappingWidth": 400}}}%%
@@ -26,7 +26,7 @@ flowchart LR
   Read & Write --> Req --> MSW
 ```
 
-## 2-approve-revise
+## Approve Revise
 
 ```mermaid
 sequenceDiagram
@@ -50,7 +50,7 @@ sequenceDiagram
   end
 ```
 
-## 3-sources
+## Sources
 
 ```mermaid
 stateDiagram-v2
