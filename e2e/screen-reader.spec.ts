@@ -19,7 +19,8 @@ function expectedTree(): string {
   return `
     - main:
       - heading "Summarise the recurring data-quality issues reported this quarter and suggest next steps." [level=1]
-      - paragraph: In review
+      - paragraph:
+        - strong: In review
       - button "Badge key"
       - region "AI answer":
         - heading "AI answer" [level=2]

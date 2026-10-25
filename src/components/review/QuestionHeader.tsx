@@ -16,7 +16,7 @@ export function QuestionHeader({ question, state }: QuestionHeaderProps) {
   return (
     <div
       className={cn(
-        'flex items-start justify-between gap-4 rounded-lg px-6 py-4',
+        'flex flex-wrap items-start justify-between gap-4 rounded-lg px-4 py-4 sm:px-6',
         reviewLooks[state.status].tint,
       )}
     >
