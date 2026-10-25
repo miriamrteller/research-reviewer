@@ -8,14 +8,11 @@ type SourceListProps = {
 
 export function SourceList({ children }: SourceListProps) {
   return (
-    <section aria-labelledby="sources-heading" className="flex min-h-0 flex-col">
+    <section aria-labelledby="sources-heading" className="flex flex-col">
       <h2 id="sources-heading" className="sr-only">
         Sources
       </h2>
-      <Accordion.Root
-        multiple
-        className="relative min-h-0 overflow-y-auto rounded-lg border border-outline-variant px-4"
-      >
+      <Accordion.Root multiple className="relative rounded-lg border border-outline-variant px-4">
         {children}
       </Accordion.Root>
     </section>
