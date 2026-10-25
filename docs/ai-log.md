@@ -71,3 +71,7 @@ One line per commit: the piece, what the assistant produced, what the human chan
   header tint, replacing the interim purple.
 - Revise button wording (Miriam's instruction, 2026-10-25): AI renamed the Revise dialog's confirm
   button from "Send back" to "Send for revision" and updated the tests.
+- Claim editing research (Miriam's instruction, 2026-10-25): AI searched the web and wrote
+  `docs/research/claim-editing.md`. Miriam rejected two drafts (README assumptions; then too
+  much on the obvious inline case) and redirected it to versions, multiple users, authorisation
+  and audit, and one paragraph versus separate boxes that look like one paragraph. Docs only.
