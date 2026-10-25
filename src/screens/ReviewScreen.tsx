@@ -50,47 +50,52 @@ export function ReviewScreen() {
   return (
     // Sources show in full for now (Miriam); their inner scroll comes in the next step. The health
     // toast and Feedback FAB may overlap the page; html scroll-padding keeps focus clear of them.
-    <main className="mx-auto flex w-full flex-col gap-8 px-4 py-6 sm:p-8 md:h-dvh md:px-12">
-      {document.isPending ? (
-        <output aria-busy="true" className="type-body-large text-on-surface-variant">
-          Loading the review…
-        </output>
-      ) : document.isError ? (
-        <div
-          role="alert"
-          className="grid justify-items-start gap-3 rounded-md bg-error-container p-4 text-on-error-container"
-        >
-          <h1 id="page-title" tabIndex={-1} className="type-title-medium">
-            The review could not be loaded
-          </h1>
-          <p className="type-body-medium">{describeError(document.error)} Try again.</p>
-          <Button variant="tonal" onClick={() => void document.refetch()}>
-            Retry
-          </Button>
-        </div>
-      ) : (
-        <ReviewBody
-          doc={document.data}
-          decisions={(edits) => (
-            <>
-              <ReviseDialog
-                open={openDialog === 'revise'}
-                onOpenChange={(open) => toggle('revise', open)}
-                onRevise={(reason) => revise.mutate({ reason, ...edits }, done)}
-                pending={revise.isPending}
-                error={revise.isError ? describeError(revise.error) : null}
-              />
-              <ApproveDialog
-                open={openDialog === 'approve'}
-                onOpenChange={(open) => toggle('approve', open)}
-                onApprove={(note) => approve.mutate({ ...(note ? { note } : {}), ...edits }, done)}
-                pending={approve.isPending}
-                error={approve.isError ? describeError(approve.error) : null}
-              />
-            </>
-          )}
-        />
-      )}
+    // A margin all round and a max width keep the middle of the page easy to see (Miriam).
+    <main className="flex w-full flex-col px-4 py-6 sm:p-8 md:h-dvh md:px-12">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 md:min-h-0 md:flex-1">
+        {document.isPending ? (
+          <output aria-busy="true" className="type-body-large text-on-surface-variant">
+            Loading the review…
+          </output>
+        ) : document.isError ? (
+          <div
+            role="alert"
+            className="grid justify-items-start gap-3 rounded-md bg-error-container p-4 text-on-error-container"
+          >
+            <h1 id="page-title" tabIndex={-1} className="type-title-medium">
+              The review could not be loaded
+            </h1>
+            <p className="type-body-medium">{describeError(document.error)} Try again.</p>
+            <Button variant="tonal" onClick={() => void document.refetch()}>
+              Retry
+            </Button>
+          </div>
+        ) : (
+          <ReviewBody
+            doc={document.data}
+            decisions={(edits) => (
+              <>
+                <ReviseDialog
+                  open={openDialog === 'revise'}
+                  onOpenChange={(open) => toggle('revise', open)}
+                  onRevise={(reason) => revise.mutate({ reason, ...edits }, done)}
+                  pending={revise.isPending}
+                  error={revise.isError ? describeError(revise.error) : null}
+                />
+                <ApproveDialog
+                  open={openDialog === 'approve'}
+                  onOpenChange={(open) => toggle('approve', open)}
+                  onApprove={(note) =>
+                    approve.mutate({ ...(note ? { note } : {}), ...edits }, done)
+                  }
+                  pending={approve.isPending}
+                  error={approve.isError ? describeError(approve.error) : null}
+                />
+              </>
+            )}
+          />
+        )}
+      </div>
       <SendFeedback />
     </main>
   )

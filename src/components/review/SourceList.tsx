@@ -18,7 +18,7 @@ export function SourceList({ open, onOpenChange, children }: SourceListProps) {
         multiple
         value={[...open]}
         onValueChange={(value: number[]) => onOpenChange(value)}
-        className="relative flex min-h-0 flex-col rounded-lg border border-outline-variant px-4"
+        className="relative flex min-h-0 flex-col overflow-y-auto rounded-lg border border-outline-variant px-4"
       >
         {children}
       </Accordion.Root>

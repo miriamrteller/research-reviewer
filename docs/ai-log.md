@@ -99,3 +99,7 @@ One line per commit: the piece, what the assistant produced, what the human chan
 - README Uncertainty section (Miriam's instruction, 2026-10-25): assistant replaced the
   placeholder with the five ADR 001 badge groups as a table and a short note on how the prototype
   shows uncertainty, linking the ADR and research doc. Miriam to review the wording.
+- Post-clock page touch-ups (Miriam's instruction, 2026-10-25): AI added a max width so the page
+  centres on wide screens, scrolled the sources inside their own box so the page keeps its bottom
+  margin, and made claims keep their large size unless they would scroll, then step down one type
+  size at a time until they fit. Miriam to review.

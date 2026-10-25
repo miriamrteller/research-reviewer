@@ -12,6 +12,8 @@ type ClaimFieldProps = {
   sourceNumbers: readonly number[]
   empty: boolean
   onChange: (text: string) => void
+  /** The type size that fits the claims box. */
+  typeClass: string
 }
 
 export function ClaimField({
@@ -22,6 +24,7 @@ export function ClaimField({
   sourceNumbers,
   empty,
   onChange,
+  typeClass,
 }: ClaimFieldProps) {
   const errorId = `${id}-error`
   return (
@@ -43,7 +46,10 @@ export function ClaimField({
           aria-invalid={empty || undefined}
           aria-describedby={empty ? errorId : undefined}
           onChange={(event) => onChange(event.target.value)}
-          className="block w-full field-sizing-content resize-none bg-transparent pr-8 type-headline-small text-on-surface outline-none"
+          className={cn(
+            'block w-full field-sizing-content resize-none bg-transparent pr-8 text-on-surface outline-none',
+            typeClass,
+          )}
         />
         <span className="absolute top-0 right-0">
           <Citations numbers={sourceNumbers} />
