@@ -10,7 +10,7 @@ type SourceListProps = {
 
 export function SourceList({ open, onOpenChange, children }: SourceListProps) {
   return (
-    <section aria-labelledby="sources-heading" className="flex flex-col">
+    <section aria-labelledby="sources-heading" className="flex min-h-0 flex-col">
       <h2 id="sources-heading" className="sr-only">
         Sources
       </h2>
@@ -18,7 +18,7 @@ export function SourceList({ open, onOpenChange, children }: SourceListProps) {
         multiple
         value={[...open]}
         onValueChange={(value: number[]) => onOpenChange(value)}
-        className="relative rounded-lg border border-outline-variant px-4"
+        className="relative flex min-h-0 flex-col rounded-lg border border-outline-variant px-4"
       >
         {children}
       </Accordion.Root>

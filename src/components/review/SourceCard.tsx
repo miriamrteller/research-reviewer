@@ -73,6 +73,8 @@ export function SourceCard({ source, open, compact, lit, onClose, onInspect }: S
       className={cn(
         '-mx-2 grid gap-3 rounded-md border-b border-outline-variant px-2 outline-offset-0 last:border-b-0',
         compact ? 'py-1' : 'py-3',
+        // The open source takes the free height; its paper runs to the card's edges (Miriam).
+        open && 'flex min-h-0 flex-1 flex-col pb-0',
         // Outline and tint (Miriam), not colour alone, mark the source of the claim in focus.
         lit && 'bg-secondary-container outline-2 outline-primary',
       )}
@@ -104,7 +106,7 @@ export function SourceCard({ source, open, compact, lit, onClose, onInspect }: S
           {chevron}
         </div>
       </div>
-      <Accordion.Panel>
+      <Accordion.Panel className="-mx-2 min-h-0 flex-1">
         <SourcePassage
           open={open}
           passage={source.passage}

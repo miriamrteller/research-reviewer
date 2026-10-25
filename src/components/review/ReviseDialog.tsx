@@ -55,7 +55,7 @@ export function ReviseDialog({ open, onOpenChange, onRevise, pending, error }: R
           supportingText={missing ? MISSING : HINT}
           onChange={(event) => setReason(event.target.value)}
         />
-        <DialogActions confirmLabel="Send back" pending={pending} error={error} />
+        <DialogActions confirmLabel="Send for revision" pending={pending} error={error} />
       </form>
     </DecisionDialog>
   )

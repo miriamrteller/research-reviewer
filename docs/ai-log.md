@@ -66,6 +66,11 @@ One line per commit: the piece, what the assistant produced, what the human chan
   Revise dialogs (one write each, never retried) and the three read-only header states, and
   updated the unit and e2e specs. AI chose the claim-to-source mapping, badge values and the
   approved tint; at her instruction it added `?doc=badges` so the two fixtures show all 17 badge values. Miriam to review.
+- Approved green (Miriam's instruction, 2026-10-25): AI added an `approved` green custom colour
+  (HCT hue 145, chroma 40, standard M3 tones) with contrast tests and used it for the Approved
+  header tint, replacing the interim purple.
+- Revise button wording (Miriam's instruction, 2026-10-25): AI renamed the Revise dialog's confirm
+  button from "Send back" to "Send for revision" and updated the tests.
 - Source highlight and open at passage (Miriam's instruction): AI linked claims and source cards
   both ways on hover and focus (outline and underline, keyed by claim id and citation number),
   made citation numbers buttons that go to their source, and opened a source to its whole passage
@@ -74,3 +79,6 @@ One line per commit: the piece, what the assistant produced, what the human chan
 - Cited words in the schema (Miriam's instruction): AI merged main (fixture, badge key) into the
   source highlight branch, replaced each claim's `sourceIds` with `citations: [{ sourceId, words }]`
   in the Zod schema and both fixtures, with a check that the words are in the claim text.
+- Long passages (Miriam's instruction): AI wrote longer fictional passages for the three sources
+  and made the open source's paper run to the card's edges and fill the free height of the
+  Sources column, scrolling inside, with the other sources still visible.

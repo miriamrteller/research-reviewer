@@ -70,7 +70,9 @@ describe('Review screen', () => {
     const trigger = screen.getByRole('button', { name: /Quarterly Data Quality Review/ })
     await user.click(trigger)
     expect(trigger).toHaveAttribute('aria-expanded', 'true')
-    expect(screen.getByText(/Delayed analysis handover was the most common/)).toBeVisible()
+    expect(
+      screen.getByText(/Delayed analysis handover was the most common reported impact/),
+    ).toBeVisible()
   })
 
   it('goes from a claim’s citation number to the source it cites', async () => {
@@ -125,12 +127,12 @@ describe('Review screen', () => {
     const { user } = await renderLoaded()
     await user.click(screen.getByRole('button', { name: 'Revise' }))
     const dialog = screen.getByRole('dialog', { name: /Send this answer back/ })
-    await user.click(within(dialog).getByRole('button', { name: 'Send back' }))
+    await user.click(within(dialog).getByRole('button', { name: 'Send for revision' }))
     const reason = within(dialog).getByLabelText('Reason')
     expect(reason).toHaveAccessibleDescription('Write a reason before sending the answer back.')
     expect(reason).toHaveAttribute('aria-invalid', 'true')
     await user.type(reason, 'Claim 3 needs a source for named owners.')
-    await user.click(within(dialog).getByRole('button', { name: 'Send back' }))
+    await user.click(within(dialog).getByRole('button', { name: 'Send for revision' }))
 
     expect(await screen.findByText('Revision needed')).toBeInTheDocument()
     expect(screen.getByText('Reason: Claim 3 needs a source for named owners.')).toBeInTheDocument()

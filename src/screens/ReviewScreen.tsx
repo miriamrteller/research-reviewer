@@ -43,7 +43,7 @@ export function ReviewScreen() {
   return (
     // Sources show in full for now (Miriam); their inner scroll comes in the next step. The health
     // toast and Feedback FAB may overlap the page; html scroll-padding keeps focus clear of them.
-    <main className="mx-auto flex w-full flex-col gap-8 px-4 py-6 sm:p-8 md:px-12">
+    <main className="mx-auto flex w-full flex-col gap-8 px-4 py-6 sm:p-8 md:h-dvh md:px-12">
       {document.isPending ? (
         <output aria-busy="true" className="type-body-large text-on-surface-variant">
           Loading the review…
@@ -112,7 +112,7 @@ function ReviewBody({ doc, actions }: ReviewBodyProps) {
   return (
     <>
       <QuestionHeader question={doc.question} state={doc.review} />
-      <div className="grid gap-6 md:grid-cols-2 md:gap-8">
+      <div className="grid gap-6 md:min-h-0 md:flex-1 md:grid-cols-2 md:gap-8">
         <ClaimsPaper
           caveat={doc.caveat}
           claims={claims}

@@ -25,7 +25,7 @@ export function SourcePassage({ open, passage, quote, reference }: SourcePassage
   return (
     <div
       ref={paper}
-      className="max-h-80 overflow-y-auto rounded-md bg-surface-container-lowest px-3 py-2 shadow-elevation-1"
+      className="h-full overflow-y-auto rounded-b-md bg-surface-container-lowest px-4 py-3"
     >
       <a
         href={reference.url}
@@ -36,7 +36,7 @@ export function SourcePassage({ open, passage, quote, reference }: SourcePassage
         {reference.code} <span className="sr-only">(opens the original in a new tab)</span>
         <ExternalLink aria-hidden="true" className="size-4" />
       </a>
-      <p className="mt-2 type-body-medium text-on-surface">
+      <p className="mt-2 type-body-medium whitespace-pre-line text-on-surface">
         {parts.before}
         {parts.quote && (
           <>
