@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { badgesFixture, reviewFixture } from '../../mocks/fixtures/review'
 import { badgeLooks } from '../../components/review/badges'
-import { ReviewDocument } from './schema'
+import { ApproveBody, ReviewDocument } from './schema'
 
 describe('ReviewDocument schema', () => {
   it('parses the seed fixture', () => {
@@ -28,6 +28,11 @@ describe('ReviewDocument schema', () => {
     }
     const result = ReviewDocument.safeParse(bad)
     expect(result.error?.issues[0]?.path).toEqual(['claims', 0, 'citations', 0, 'words'])
+  })
+
+  it('rejects an edit sent with a decision that has no who and when', () => {
+    const result = ApproveBody.safeParse({ claims: [{ id: 'claim-1', text: 'New wording' }] })
+    expect(result.error?.issues[0]?.path).toEqual(['claims', 0, 'edit'])
   })
 
   it('rejects an approval without who and when', () => {

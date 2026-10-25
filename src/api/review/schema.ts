@@ -51,6 +51,10 @@ export const Source = z.strictObject({
 })
 export type Source = z.infer<typeof Source>
 
+/** Who did it and when (CLAUDE.md rule 8). */
+export const Stamp = z.strictObject({ by: text, at: z.iso.datetime() })
+export type Stamp = z.infer<typeof Stamp>
+
 /** One source backing a claim, and the exact words of the claim it backs (lit on hover or focus). */
 export const Citation = z.strictObject({ sourceId: SourceId, words: text })
 export type Citation = z.infer<typeof Citation>
@@ -60,8 +64,12 @@ export const Claim = z
     id: ClaimId,
     text,
     citations: z.array(Citation).min(1),
+    /** Present once a reviewer changed the wording: who and when. */
+    edit: Stamp.optional(),
   })
   .superRefine((claim, ctx) => {
+    // Edited wording may no longer contain the cited words; the sources still attach by id.
+    if (claim.edit) return
     claim.citations.forEach((citation, i) => {
       if (!claim.text.includes(citation.words))
         ctx.addIssue({
@@ -72,10 +80,6 @@ export const Claim = z
     })
   })
 export type Claim = z.infer<typeof Claim>
-
-/** Who did it and when (CLAUDE.md rule 8). */
-export const Stamp = z.strictObject({ by: text, at: z.iso.datetime() })
-export type Stamp = z.infer<typeof Stamp>
 
 export const ReviewState = z.discriminatedUnion('status', [
   z.strictObject({ status: z.literal('review') }),
@@ -117,8 +121,12 @@ export const ReviewDocument = z
   })
 export type ReviewDocument = z.infer<typeof ReviewDocument>
 
-// Request bodies. The server stamps the reviewer and the time.
-export const ApproveBody = z.strictObject({ note: text.optional() })
+// Request bodies. The server stamps the decision; edits carry the stamp made when they were saved
+// on the page, because they only reach the server with the decision.
+export const ClaimEdit = z.strictObject({ id: ClaimId, text, edit: Stamp })
+export type ClaimEdit = z.infer<typeof ClaimEdit>
+const edits = z.array(ClaimEdit).optional()
+export const ApproveBody = z.strictObject({ note: text.optional(), claims: edits })
 export type ApproveBody = z.infer<typeof ApproveBody>
-export const ReviseBody = z.strictObject({ reason: text })
+export const ReviseBody = z.strictObject({ reason: text, claims: edits })
 export type ReviseBody = z.infer<typeof ReviseBody>

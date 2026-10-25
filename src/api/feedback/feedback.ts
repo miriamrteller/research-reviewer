@@ -3,8 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 import { z } from 'zod'
 import { request } from '../client'
 
-// The prototype has one fictional reviewer; a real app takes this from the signed-in user.
-export const REVIEWER = 'Prof. I. C. Everything'
+export { REVIEWER } from '../../lib/reviewer'
 
 export const FeedbackTopicSchema = z.enum(['badges', 'sources', 'editing', 'other'])
 export type FeedbackTopic = z.infer<typeof FeedbackTopicSchema>

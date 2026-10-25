@@ -86,3 +86,11 @@ One line per commit: the piece, what the assistant produced, what the human chan
 - Long passages (Miriam's instruction): AI wrote longer fictional passages for the three sources
   and made the open source's paper run to the card's edges and fill the free height of the
   Sources column, scrolling inside, with the other sources still visible.
+- Smallest edit flow (Miriam's instruction, 2026-10-25): AI added `edit?: { by, at }` to a claim and
+  optional `claims` edits to the Approve and Revise bodies, an edit draft hook on the review screen,
+  a borderless textarea per claim that reads as one paragraph, Edit/Save/Discard, an "Edited by"
+  line, and the note that edits stay on the page until approved or sent for revision, with journey
+  tests and e2e updates. AI chose the hidden "Claim n of N" labels, inline refusal of an empty claim,
+  and hiding Approve and Revise while editing. Miriam to review.
+- CI switched off (Miriam's decision, 2026-10-25): `npm run ci:off` parks the workflow; local
+  `npm run verify` and `CI=1 npm run test:e2e` are the gate for this timeboxed repo.

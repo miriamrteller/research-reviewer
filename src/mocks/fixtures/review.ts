@@ -4,8 +4,7 @@
 // together show every ADR 001 value at least once.
 import { ReviewDocument } from '../../api/review/schema'
 
-/** The fictional reviewer. The mock has no sign-in, so every write is stamped with this name. */
-export const REVIEWER = 'Prof. I. C. Everything'
+export { REVIEWER } from '../../lib/reviewer'
 
 export const reviewFixture = ReviewDocument.parse({
   id: 'DOC-DQ-01',

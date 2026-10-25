@@ -73,6 +73,7 @@ test.describe('keyboard operability', () => {
 
     const expectedOrder = [
       'Badge key',
+      'Edit',
       'Go to source 1',
       'Go to source 2',
       'Go to source 1',
