@@ -42,3 +42,9 @@ One line per commit: the piece, what the assistant produced, what the human chan
   fictional sample content and updated the unit and e2e specs; Miriam answered the open questions
   (two sources per claim allowed, "Lowered because" lines, renamed from "Why this was lowered", caveat kept, badges neutral until the
   badge step).
+- Live review screen with Approve and Revise (Miriam's instruction and seed text, 2026-10-25): AI
+  wrote the review schema (ADR 001 badge enums, `{ by, at }` review states), a fixture from her
+  draft summary, sources, uncertainty wording and question, the mock API, Base UI Approve and
+  Revise dialogs (one write each, never retried) and the three read-only header states, and
+  updated the unit and e2e specs. AI chose the claim-to-source mapping, badge values and the
+  approved tint; Miriam to review.
