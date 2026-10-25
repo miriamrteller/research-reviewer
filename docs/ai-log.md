@@ -32,3 +32,6 @@ One line per commit: the piece, what the assistant produced, what the human chan
 - ADR 001 source badges (Miriam's instruction, 2026-10-25): AI drafted the ADR from the research
   note `docs/research/uncertainty-signals.md` (five badge groups and their values); it folded
   `corrected` into text so every publication-status value has its own colour. Miriam to review.
+- Architecture diagrams (Miriam's instruction, 2026-10-25): AI drew two new diagrams, which Miriam
+  rejected and had deleted; at her instruction it copied three of her earlier approved diagrams
+  (high level, approve and revise, sources) unchanged into `docs/architecture.md`.
