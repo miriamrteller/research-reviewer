@@ -35,5 +35,6 @@ One line per commit: the piece, what the assistant produced, what the human chan
 - Claim editing research (Miriam's instruction, 2026-10-25): AI searched the web and wrote
   `docs/research/claim-editing.md` (inline vs dialog, what an edit invalidates, approve after
   edit, by/at, empty and unchanged edits, revert, keyboard and screen reader, record shape,
-  risks, 20-minute recommendation, open decisions, state table). Docs only, no code. Miriam to
-  review the defaults.
+  risks, 20-minute recommendation, what to leave out, open decisions, state table). Docs only, no
+  code. Miriam rejected the first draft for using README assumptions; redone from industry
+  practice only, shorter.
