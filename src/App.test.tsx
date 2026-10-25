@@ -37,7 +37,7 @@ describe('Review layout', () => {
     expect(within(checks).getByText('Details differ')).toBeInTheDocument()
     expect(within(checks).getByText('Reference check:')).toBeInTheDocument()
     expect(within(sources).getAllByText('Evidence strength:')).toHaveLength(4)
-    expect(within(sources).getAllByText('Why this was lowered:')).toHaveLength(2)
+    expect(within(sources).getAllByText('Lowered because:')).toHaveLength(2)
   })
 
   it('opens a source and reads the full passage', async () => {

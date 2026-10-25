@@ -69,7 +69,7 @@ const sources = [
       { group: 'Stance', label: 'Neutral', icon: Minus },
     ],
     lowered:
-      'The source measured self-reported rest, not sleep, and its publication year differs from the one in the answer.',
+      'the source measured self-reported rest, not sleep, and its publication year differs from the one in the answer.',
     quote:
       'Gains were smaller among habitual walkers and were not detected at the 10-week follow-up.',
     passage:
@@ -87,7 +87,7 @@ const sources = [
       { group: 'Stance', label: 'Agrees', icon: ThumbsUp },
     ],
     lowered:
-      'A review would grade Strong, but half of its 34 studies were small and unblinded, so the grade was lowered to Moderate.',
+      'half of its 34 studies were small and unblinded, so a review that would grade Strong is Moderate.',
     quote:
       'Morning and midday daylight shifted sleep timing more than activity at any time of day.',
     passage:

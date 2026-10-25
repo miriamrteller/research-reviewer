@@ -52,7 +52,7 @@ export function SourceCard({
       </ul>
       {lowered && (
         <p className="type-body-small text-on-surface-variant">
-          <strong className="text-on-surface">Why this was lowered:</strong> {lowered}
+          <strong className="text-on-surface">Lowered because:</strong> {lowered}
         </p>
       )}
       <blockquote className="border-l-2 border-outline pl-3 type-body-medium">“{quote}”</blockquote>

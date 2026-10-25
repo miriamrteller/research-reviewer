@@ -58,7 +58,7 @@ function expectedTree(): string {
           - listitem: "Claim support: Partly supported"
           - listitem: "Stance: Neutral"
         - paragraph:
-          - strong: "Why this was lowered:"
+          - strong: "Lowered because:"
           - text: /self-reported rest/
         - blockquote: /Gains were smaller/
         - heading /^3 Light exposure timing/ [level=3]:
