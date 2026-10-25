@@ -28,6 +28,11 @@ const textPairs: Array<[foreground: string, background: string]> = [
   ['on-positive', 'positive'],
   ['on-caution', 'caution'],
   ['on-limited', 'limited'],
+  // Approved review state: the question header tint, its word and icon, and the outlined
+  // Badge key button (primary) that sits on it.
+  ['on-approved-container', 'approved-container'],
+  ['primary', 'approved-container'],
+  ['on-approved', 'approved'],
 ]
 
 const nonTextPairs: Array<[foreground: string, background: string]> = [
@@ -52,8 +57,8 @@ describe.each<Scheme>(['light', 'dark'])('badge colours · %s', (scheme) => {
 })
 
 describe('badge colour wiring', () => {
-  it('defines four roles for each of positive, caution and limited', () => {
-    expect(Object.keys(custom)).toHaveLength(12)
+  it('defines four roles for each of positive, caution, limited and approved', () => {
+    expect(Object.keys(custom)).toHaveLength(16)
   })
 
   it('maps every badge colour role to a Tailwind utility in index.css', () => {
