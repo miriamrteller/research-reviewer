@@ -12,9 +12,19 @@ type ClaimTextProps = {
   lit: readonly ClaimCitation[]
   onInspect: (id: string | null) => void
   onCite: (number: number) => void
+  /** The type size that fits the claims box. */
+  typeClass: string
 }
 
-export function ClaimText({ id, text, citations, lit, onInspect, onCite }: ClaimTextProps) {
+export function ClaimText({
+  id,
+  text,
+  citations,
+  lit,
+  onInspect,
+  onCite,
+  typeClass,
+}: ClaimTextProps) {
   return (
     // Hover is extra; the citation buttons inside give keyboard users the same highlight.
     <div
@@ -22,7 +32,7 @@ export function ClaimText({ id, text, citations, lit, onInspect, onCite }: Claim
       onMouseLeave={() => onInspect(null)}
       onFocus={() => onInspect(id)}
       onBlur={() => onInspect(null)}
-      className="type-headline-small"
+      className={typeClass}
     >
       {/* Tint and underline on the cited words only, no box (Miriam): not colour alone. */}
       {segmentClaim(text, lit).map((run, i) =>

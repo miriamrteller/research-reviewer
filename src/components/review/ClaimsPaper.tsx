@@ -8,6 +8,7 @@ import { cn } from '../../lib/cn'
 import { formatAt } from '../../lib/formatStamp'
 import { ClaimField } from './ClaimField'
 import { ClaimText, type ClaimCitation } from './ClaimText'
+import { useFitText } from './useFitText'
 
 export type ShownClaim = {
   id: ClaimId
@@ -49,6 +50,10 @@ export function ClaimsPaper({
   toolbar,
   actions,
 }: ClaimsPaperProps) {
+  // Typing does not restart the fit; the claims only step down while they grow.
+  const { setBox, setInner, typeClass } = useFitText(
+    claims.map((claim) => claim.text).join('\n') + (editing ? ' editing' : '') + (note ?? ''),
+  )
   return (
     <section
       aria-labelledby="claims-heading"
@@ -69,39 +74,43 @@ export function ClaimsPaper({
         {toolbar && <div className="flex shrink-0 gap-2">{toolbar}</div>}
       </div>
 
-      <div className="relative grid min-h-0 flex-1 content-start gap-6 overflow-y-auto px-6 py-4">
-        {claims.map((claim, index) =>
-          editing ? (
-            <ClaimField
-              key={claim.id}
-              id={claim.id}
-              index={index}
-              count={claims.length}
-              value={editing.drafts[claim.id] ?? ''}
-              sourceNumbers={claim.citations.map((c) => c.number)}
-              empty={editing.empty.has(claim.id)}
-              onChange={(text) => editing.onChange(claim.id, text)}
-            />
-          ) : (
-            <div key={claim.id} className="grid gap-1">
-              <ClaimText
+      <div ref={setBox} className="relative min-h-0 flex-1 overflow-y-auto px-6 py-4">
+        <div ref={setInner} className="grid content-start gap-6">
+          {claims.map((claim, index) =>
+            editing ? (
+              <ClaimField
+                key={claim.id}
                 id={claim.id}
-                text={claim.text}
-                citations={claim.citations}
-                lit={litFor(claim)}
-                onInspect={onInspect}
-                onCite={onCite}
+                index={index}
+                count={claims.length}
+                value={editing.drafts[claim.id] ?? ''}
+                sourceNumbers={claim.citations.map((c) => c.number)}
+                empty={editing.empty.has(claim.id)}
+                typeClass={typeClass}
+                onChange={(text) => editing.onChange(claim.id, text)}
               />
-              {claim.edit && (
-                <p className="type-label-medium text-on-surface-variant">
-                  Edited by {claim.edit.by} ·{' '}
-                  <time dateTime={claim.edit.at}>{formatAt(claim.edit.at)}</time>
-                </p>
-              )}
-            </div>
-          ),
-        )}
-        {note && <output className="type-body-small text-on-surface-variant">{note}</output>}
+            ) : (
+              <div key={claim.id} className="grid gap-1">
+                <ClaimText
+                  id={claim.id}
+                  text={claim.text}
+                  citations={claim.citations}
+                  lit={litFor(claim)}
+                  onInspect={onInspect}
+                  onCite={onCite}
+                  typeClass={typeClass}
+                />
+                {claim.edit && (
+                  <p className="type-label-medium text-on-surface-variant">
+                    Edited by {claim.edit.by} ·{' '}
+                    <time dateTime={claim.edit.at}>{formatAt(claim.edit.at)}</time>
+                  </p>
+                )}
+              </div>
+            ),
+          )}
+          {note && <output className="type-body-small text-on-surface-variant">{note}</output>}
+        </div>
       </div>
 
       {actions && (
