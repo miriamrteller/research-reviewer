@@ -1,4 +1,4 @@
-// Which colour each badge value gets (ADR 001). Green = good, amber = needs attention,
+// Which colour each badge value gets (ADR 001). Blue = good (green is kept for Approved), amber = needs attention,
 // orange = limited, red = bad, neutral = outline only. Classes are token utilities only.
 
 export type BadgeTone = 'positive' | 'caution' | 'limited' | 'negative' | 'neutral'

@@ -109,15 +109,15 @@
    md.custom.color — badge colours (ADR 001)
    M3 custom colours: one tonal palette per hue from HCT (Material color
    utilities, TonalPalette.fromHueAndChroma), with the standard M3 tones
-   (40/100/90/10 light, 80/20/30/90 dark). Hue, chroma: positive 142, 40;
+   (40/100/90/10 light, 80/20/30/90 dark). Hue, chroma: positive (blue, so green stays for Approved) 255, 40;
    caution 85, 40; limited 55, 48. Negative uses the error roles; neutral uses
    the outline. Kept outside md.sys.color so the 49 system roles stay intact.
    -------------------------------------------------------------------------- */
 :root {
-  --md-custom-color-positive: light-dark(#3b6930, #a0d48f);
-  --md-custom-color-on-positive: light-dark(#ffffff, #0a3905);
-  --md-custom-color-positive-container: light-dark(#bcf1a9, #23501b);
-  --md-custom-color-on-positive-container: light-dark(#012200, #bcf1a9);
+  --md-custom-color-positive: light-dark(#2e6195, #a0c9ff);
+  --md-custom-color-on-positive: light-dark(#ffffff, #003259);
+  --md-custom-color-positive-container: light-dark(#d2e4ff, #0b497c);
+  --md-custom-color-on-positive-container: light-dark(#001c37, #d2e4ff);
 
   --md-custom-color-caution: light-dark(#795900, #edc061);
   --md-custom-color-on-caution: light-dark(#ffffff, #402d00);

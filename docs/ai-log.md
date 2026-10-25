@@ -48,3 +48,5 @@ One line per commit: the piece, what the assistant produced, what the human chan
   for every badge pair; Miriam set one colour per value and orange for Limited.
 - Badges as a prototype stand-in (Miriam's instruction, 2026-10-25): AI added a README assumption
   that the badge set is for the prototype and a real product would use its own badges.
+- Badge good values blue (Miriam's instruction, 2026-10-25): AI re-derived the positive role at
+  HCT hue 255 so green keeps one meaning (Approved), and updated ADR 001.
