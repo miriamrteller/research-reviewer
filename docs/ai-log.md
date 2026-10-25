@@ -42,3 +42,8 @@ One line per commit: the piece, what the assistant produced, what the human chan
   fictional sample content and updated the unit and e2e specs; Miriam answered the open questions
   (two sources per claim allowed, "Lowered because" lines, renamed from "Why this was lowered", caveat kept, badges neutral until the
   badge step).
+- Source highlight and open at passage (Miriam's instruction): AI linked claims and source cards
+  both ways on hover and focus (outline and underline, keyed by claim id and citation number),
+  made citation numbers buttons that go to their source, and opened a source to its whole passage
+  on a scrolling paper with the quote marked, the reference code linking out to a made-up URL, and
+  Escape returning focus to the chevron. Miriam added the passage paper and the reference link.

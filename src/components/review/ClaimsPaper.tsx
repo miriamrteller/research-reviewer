@@ -1,13 +1,19 @@
 // The AI answer on its own paper: caveat, claims with citation numbers, and the decision buttons.
 import { Sparkles } from 'lucide-react'
+import { cn } from '../../lib/cn'
 import { Button } from '../Button'
+
+type Claim = { id: string; text: string; sourceNumbers: readonly number[] }
 
 type ClaimsPaperProps = {
   caveat: string
-  claims: readonly { id: string; text: string; sourceNumbers: readonly number[] }[]
+  claims: readonly Claim[]
+  isLit: (claim: Claim) => boolean
+  onInspect: (id: string | null) => void
+  onCite: (number: number) => void
 }
 
-export function ClaimsPaper({ caveat, claims }: ClaimsPaperProps) {
+export function ClaimsPaper({ caveat, claims, isLit, onInspect, onCite }: ClaimsPaperProps) {
   return (
     <section
       aria-labelledby="claims-heading"
@@ -25,15 +31,34 @@ export function ClaimsPaper({ caveat, claims }: ClaimsPaperProps) {
 
       <div className="relative grid min-h-0 flex-1 content-start gap-6 overflow-y-auto px-6 py-4">
         {claims.map((claim) => (
-          <p key={claim.id} className="type-headline-small">
+          // Hover is extra; the citation buttons inside give keyboard users the same highlight.
+          <div
+            key={claim.id}
+            onMouseEnter={() => onInspect(claim.id)}
+            onMouseLeave={() => onInspect(null)}
+            onFocus={() => onInspect(claim.id)}
+            onBlur={() => onInspect(null)}
+            className={cn(
+              'rounded-sm type-headline-small outline-offset-4',
+              // Outline and underline, not colour alone, mark the claim a source cites.
+              isLit(claim) &&
+                'underline decoration-primary decoration-2 underline-offset-4 outline-2 outline-primary',
+            )}
+          >
             {claim.text}
             {claim.sourceNumbers.map((n) => (
-              <sup key={n} className="ml-1 type-label-small text-primary">
-                <span className="sr-only">source </span>
-                {n}
+              <sup key={n} className="ml-1">
+                <button
+                  type="button"
+                  aria-label={`Go to source ${n}`}
+                  onClick={() => onCite(n)}
+                  className="rounded-sm px-0.5 type-label-small text-primary"
+                >
+                  {n}
+                </button>
               </sup>
             ))}
-          </p>
+          </div>
         ))}
       </div>
 

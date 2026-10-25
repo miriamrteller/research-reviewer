@@ -1,5 +1,6 @@
 // Static review layout from Miriam's sketch (docs/research/my-layout-sketch.jpg). Hard-coded,
-// fictional sample content; no data fetching and no actions. The live screen replaces this file.
+// fictional sample content; no data fetching and no writes. Owns the inspect state: which claim or
+// source is in focus, and which sources are open. The live screen replaces the sample data.
 import {
   BadgeCheck,
   CircleCheck,
@@ -12,11 +13,13 @@ import {
   ThumbsUp,
   TriangleAlert,
 } from 'lucide-react'
+import { useState } from 'react'
 import { ClaimsPaper } from '../components/review/ClaimsPaper'
 import { FeedbackFab } from '../components/review/FeedbackFab'
 import { QuestionHeader } from '../components/review/QuestionHeader'
 import { SourceCard } from '../components/review/SourceCard'
 import { SourceList } from '../components/review/SourceList'
+import { isClaimLit, isSourceLit, sourceTriggerId, type Focused } from '../lib/highlight'
 
 const question = 'Does a short evening walk help older adults fall asleep faster?'
 
@@ -44,6 +47,7 @@ const claims = [
 const sources = [
   {
     number: 1,
+    reference: { code: 'MJSH-2024-0417', url: 'https://journals.example.org/mjsh/2024/0417' },
     title: 'Evening walking and sleep onset after 65: a trial',
     meta: 'Controlled study · Meridale Journal of Sleep Health · 2024 · 41 citations',
     grade: { group: 'Evidence strength', label: 'Moderate', icon: SignalMedium },
@@ -59,6 +63,7 @@ const sources = [
   },
   {
     number: 2,
+    reference: { code: 'OPL-2025-0093', url: 'https://preprints.example.org/openleaf/2025/0093' },
     title: 'Habitual activity and the fading benefit of walking programmes',
     meta: 'Observational study · Preprint server Openleaf · 2025 · 6 citations',
     grade: { group: 'Evidence strength', label: 'Limited', icon: SignalLow },
@@ -75,6 +80,7 @@ const sources = [
   },
   {
     number: 3,
+    reference: { code: 'HRA-2023-0212', url: 'https://journals.example.org/hra/2023/0212' },
     title: 'Light exposure timing and circadian phase in later life: a review',
     meta: 'Systematic review · Hollin Review of Ageing · 2023 · 128 citations',
     grade: { group: 'Evidence strength', label: 'Moderate', icon: SignalMedium },
@@ -92,16 +98,32 @@ const sources = [
 ] as const
 
 export function ReviewLayout() {
+  const [focused, setFocused] = useState<Focused>(null)
+  const [open, setOpen] = useState<number[]>([])
+
   return (
     // Sources show in full for now (Miriam); their inner scroll comes in the next step. The health
     // toast and Feedback FAB may overlap the page; html scroll-padding keeps focus clear of them.
     <main className="mx-auto flex w-full flex-col gap-8 px-4 py-6 sm:p-8 md:px-12">
       <QuestionHeader question={question} status="In review" />
       <div className="grid gap-6 md:grid-cols-2 md:gap-8">
-        <ClaimsPaper caveat={caveat} claims={claims} />
-        <SourceList>
+        <ClaimsPaper
+          caveat={caveat}
+          claims={claims}
+          isLit={(claim) => isClaimLit(claim, focused)}
+          onInspect={(id) => setFocused(id === null ? null : { kind: 'claim', id })}
+          onCite={(n) => document.getElementById(sourceTriggerId(n))?.focus()}
+        />
+        <SourceList open={open} onOpenChange={setOpen}>
           {sources.map((source) => (
-            <SourceCard key={source.number} {...source} />
+            <SourceCard
+              key={source.number}
+              {...source}
+              open={open.includes(source.number)}
+              lit={isSourceLit(source.number, claims, focused)}
+              onClose={() => setOpen(open.filter((n) => n !== source.number))}
+              onInspect={(n) => setFocused(n === null ? null : { kind: 'source', number: n })}
+            />
           ))}
         </SourceList>
       </div>

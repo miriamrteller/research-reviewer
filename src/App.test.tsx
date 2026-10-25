@@ -23,10 +23,8 @@ describe('Review layout', () => {
     renderWithProviders(<App />)
     const answer = screen.getByRole('region', { name: 'AI answer' })
     expect(within(answer).getByText(/badges are the AI’s own checks/)).toBeInTheDocument()
-    expect(within(answer).getByText(/shortened the time adults over 65/)).toHaveTextContent(
-      'source 1',
-    )
-    expect(within(answer).getByText(/Walking in daylight/)).toHaveTextContent('source 3')
+    expect(within(answer).getByText(/shortened the time adults over 65/)).toHaveTextContent('1')
+    expect(within(answer).getByText(/Walking in daylight/)).toHaveTextContent('3')
   })
 
   it('sees each source with its title, grade, badges and quote', () => {
@@ -48,6 +46,39 @@ describe('Review layout', () => {
     await user.click(trigger)
     expect(trigger).toHaveAttribute('aria-expanded', 'true')
     expect(screen.getByText(/Participants walked for 20 minutes/)).toBeVisible()
+  })
+
+  it('goes from a claim’s citation number to the source it cites', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<App />)
+    await user.click(screen.getByRole('button', { name: 'Go to source 2' }))
+    expect(screen.getByRole('button', { name: /Habitual activity and the fading/ })).toHaveFocus()
+  })
+
+  it('opens a source at the marked quote, with its reference code opening the original', async () => {
+    const user = userEvent.setup()
+    const { container } = renderWithProviders(<App />)
+    await user.click(screen.getByRole('button', { name: /Evening walking and sleep onset/ }))
+    expect(screen.getByText('Quoted excerpt starts.')).toBeInTheDocument()
+    expect(
+      screen.getByText('Sleep onset latency fell by a mean of 12 minutes in the walking group'),
+    ).toBeVisible()
+    const original = screen.getByRole('link', { name: /MJSH-2024-0417/ })
+    expect(original).toHaveAttribute('target', '_blank')
+    expect(original).toHaveAccessibleName('MJSH-2024-0417 (opens the original in a new tab)')
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('closes an open source with Escape and lands back on its chevron', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<App />)
+    const trigger = screen.getByRole('button', { name: /Light exposure timing/ })
+    await user.click(trigger)
+    await user.tab()
+    expect(screen.getByRole('link', { name: /HRA-2023-0212/ })).toHaveFocus()
+    await user.keyboard('{Escape}')
+    expect(trigger).toHaveAttribute('aria-expanded', 'false')
+    expect(trigger).toHaveFocus()
   })
 
   it('sees Revise, Approve and Feedback', () => {
