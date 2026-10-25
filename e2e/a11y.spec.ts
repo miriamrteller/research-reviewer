@@ -45,7 +45,7 @@ test.describe('WCAG 2.2 AA — automated scan', () => {
     await page.getByRole('main').getByRole('button', { name: 'Revise' }).click()
     const dialog = page.getByRole('dialog', { name: /Send this answer back/ })
     await dialog.getByLabel('Reason').fill('Claim 3 needs a source for named owners.')
-    await dialog.getByRole('button', { name: 'Send back' }).click()
+    await dialog.getByRole('button', { name: 'Send for revision' }).click()
     await expect(page.getByText('Revision needed', { exact: true })).toBeVisible()
     const { violations } = await makeAxe().analyze()
     expect(violations, formatViolations(violations)).toEqual([])

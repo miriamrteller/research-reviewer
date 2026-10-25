@@ -63,3 +63,5 @@ One line per commit: the piece, what the assistant produced, what the human chan
 - Approved green (Miriam's instruction, 2026-10-25): AI added an `approved` green custom colour
   (HCT hue 145, chroma 40, standard M3 tones) with contrast tests and used it for the Approved
   header tint, replacing the interim purple.
+- Revise button wording (Miriam's instruction, 2026-10-25): AI renamed the Revise dialog's confirm
+  button from "Send back" to "Send for revision" and updated the tests.
