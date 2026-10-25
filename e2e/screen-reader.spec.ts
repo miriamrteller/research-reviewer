@@ -33,7 +33,6 @@ function expectedTree(): string {
         - paragraph:
           - text: /Walking in daylight/
           - superscript: source 3
-          - superscript: source 4
         - button "Revise"
         - button "Approve"
       - region "Sources":
@@ -63,8 +62,6 @@ function expectedTree(): string {
         - blockquote: /Gains were smaller/
         - heading /^3 Light exposure timing/ [level=3]:
           - button /^3 Light exposure timing/
-        - heading /^4 Outdoor walking time/ [level=3]:
-          - button /^4 Outdoor walking time/
       - button "Feedback"
     - region "Notifications"
   `

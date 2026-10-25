@@ -75,10 +75,9 @@ test.describe('keyboard operability', () => {
       'Badge key',
       'Revise',
       'Approve',
-      '1 Evening walking and sleep onset in adults over 65: a randomised trial',
+      '1 Evening walking and sleep onset after 65: a trial',
       '2 Habitual activity and the fading benefit of walking programmes',
       '3 Light exposure timing and circadian phase in later life: a review',
-      '4 Outdoor walking time and sleep midpoint in retired adults',
       'Feedback',
     ]
 

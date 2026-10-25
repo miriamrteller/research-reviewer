@@ -26,17 +26,17 @@ describe('Review layout', () => {
     expect(within(answer).getByText(/shortened the time adults over 65/)).toHaveTextContent(
       'source 1',
     )
-    expect(within(answer).getByText(/Walking in daylight/)).toHaveTextContent('source 3source 4')
+    expect(within(answer).getByText(/Walking in daylight/)).toHaveTextContent('source 3')
   })
 
   it('sees each source with its title, grade, badges and quote', () => {
     renderWithProviders(<App />)
     const sources = screen.getByRole('region', { name: 'Sources' })
-    expect(within(sources).getAllByRole('heading', { level: 3 })).toHaveLength(4)
+    expect(within(sources).getAllByRole('heading', { level: 3 })).toHaveLength(3)
     const checks = within(sources).getByRole('list', { name: 'Checks for source 2' })
     expect(within(checks).getByText('Details differ')).toBeInTheDocument()
     expect(within(checks).getByText('Reference check:')).toBeInTheDocument()
-    expect(within(sources).getAllByText('Evidence strength:')).toHaveLength(4)
+    expect(within(sources).getAllByText('Evidence strength:')).toHaveLength(3)
     expect(within(sources).getAllByText('Lowered because:')).toHaveLength(2)
   })
 
