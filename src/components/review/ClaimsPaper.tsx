@@ -1,8 +1,8 @@
 // The AI answer on its own paper: caveat, claims with citation numbers, and the decision buttons.
 import { Sparkles } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { cn } from '../../lib/cn'
 import { segmentClaim } from '../../lib/highlight'
-import { Button } from '../Button'
 
 type Citation = { number: number; words: string }
 type Claim = { id: string; text: string; citations: readonly Citation[] }
@@ -13,9 +13,18 @@ type ClaimsPaperProps = {
   litFor: (claim: Claim) => Citation[]
   onInspect: (id: string | null) => void
   onCite: (number: number) => void
+  /** Approve and Revise while in review; nothing once the answer is read-only. */
+  actions: ReactNode
 }
 
-export function ClaimsPaper({ caveat, claims, litFor, onInspect, onCite }: ClaimsPaperProps) {
+export function ClaimsPaper({
+  caveat,
+  claims,
+  litFor,
+  onInspect,
+  onCite,
+  actions,
+}: ClaimsPaperProps) {
   return (
     <section
       aria-labelledby="claims-heading"
@@ -27,7 +36,7 @@ export function ClaimsPaper({ caveat, claims, litFor, onInspect, onCite }: Claim
         </h2>
         <p className="inline-flex items-start gap-2 type-body-small text-on-surface-variant">
           <Sparkles aria-hidden="true" className="mt-px size-4 shrink-0" />
-          {caveat}
+          AI-generated answer. {caveat}
         </p>
       </div>
 
@@ -75,11 +84,11 @@ export function ClaimsPaper({ caveat, claims, litFor, onInspect, onCite }: Claim
         ))}
       </div>
 
-      {/* Drawn but inert: approve and revise are the write action in a later step. */}
-      <div className="flex justify-end gap-2 border-t border-outline-variant px-6 py-4">
-        <Button variant="outlined">Revise</Button>
-        <Button>Approve</Button>
-      </div>
+      {actions && (
+        <div className="flex justify-end gap-2 border-t border-outline-variant px-6 py-4">
+          {actions}
+        </div>
+      )}
     </section>
   )
 }

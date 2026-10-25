@@ -15,8 +15,38 @@ test.describe('WCAG 2.2 AA — automated scan', () => {
 
   test('source opened (full passage showing)', async ({ page, gotoApp, makeAxe }) => {
     await gotoApp()
-    await page.getByRole('button', { name: /^Full passage: Evening walking/ }).click()
-    await expect(page.getByText(/Participants walked for 20 minutes/)).toBeVisible()
+    await page.getByRole('button', { name: /^Full passage. Quarterly Data/ }).click()
+    await expect(page.getByText(/Delayed analysis handover was/)).toBeVisible()
+    const { violations } = await makeAxe().analyze()
+    expect(violations, formatViolations(violations)).toEqual([])
+  })
+
+  test('approve dialog open', async ({ page, gotoApp, makeAxe }) => {
+    await gotoApp()
+    await page.getByRole('main').getByRole('button', { name: 'Approve' }).click()
+    await expect(page.getByRole('dialog', { name: 'Approve this answer?' })).toBeVisible()
+    const { violations } = await makeAxe().analyze()
+    expect(violations, formatViolations(violations)).toEqual([])
+  })
+
+  test('approved, read-only', async ({ page, gotoApp, makeAxe }) => {
+    await gotoApp()
+    await page.getByRole('main').getByRole('button', { name: 'Approve' }).click()
+    const dialog = page.getByRole('dialog', { name: 'Approve this answer?' })
+    await dialog.getByRole('checkbox').click()
+    await dialog.getByRole('button', { name: 'Approve' }).click()
+    await expect(page.getByText('Approved', { exact: true })).toBeVisible()
+    const { violations } = await makeAxe().analyze()
+    expect(violations, formatViolations(violations)).toEqual([])
+  })
+
+  test('revision needed, read-only', async ({ page, gotoApp, makeAxe }) => {
+    await gotoApp()
+    await page.getByRole('main').getByRole('button', { name: 'Revise' }).click()
+    const dialog = page.getByRole('dialog', { name: /Send this answer back/ })
+    await dialog.getByLabel('Reason').fill('Claim 3 needs a source for named owners.')
+    await dialog.getByRole('button', { name: 'Send back' }).click()
+    await expect(page.getByText('Revision needed', { exact: true })).toBeVisible()
     const { violations } = await makeAxe().analyze()
     expect(violations, formatViolations(violations)).toEqual([])
   })

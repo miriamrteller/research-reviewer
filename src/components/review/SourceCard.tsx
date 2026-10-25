@@ -2,25 +2,17 @@
 // opens it to the whole passage. While any source is open, every card shrinks to one line (title
 // and badges) and the open one shows its paper underneath (Miriam). Escape closes and returns focus.
 import { Accordion } from '@base-ui/react/accordion'
-import { ChevronDown, type LucideIcon } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
+import type { Source } from '../../api/review/schema'
 import { useRef } from 'react'
 import { cn } from '../../lib/cn'
 import { sourceTriggerId } from '../../lib/highlight'
 import { Badge } from './Badge'
+import { badgeFor, rowGroups } from './badges'
 import { SourcePassage } from './SourcePassage'
 
-type BadgeItem = { group: string; label: string; icon: LucideIcon }
-
 type SourceCardProps = {
-  number: number
-  title: string
-  meta: string
-  grade: BadgeItem
-  badges: readonly BadgeItem[]
-  quote: string
-  passage: string
-  reference: { code: string; url: string }
-  lowered?: string
+  source: Source
   open: boolean
   compact: boolean
   lit: boolean
@@ -28,8 +20,8 @@ type SourceCardProps = {
   onInspect: (number: number | null) => void
 }
 
-export function SourceCard(props: SourceCardProps) {
-  const { number, title, meta, grade, badges, quote, lowered, open, compact, lit } = props
+export function SourceCard({ source, open, compact, lit, onClose, onInspect }: SourceCardProps) {
+  const { number, title, design, publisher, year, citations, badges, lowered, quote } = source
   const trigger = useRef<HTMLButtonElement>(null)
 
   const heading = (
@@ -43,9 +35,9 @@ export function SourceCard(props: SourceCardProps) {
       aria-label={`Checks for source ${number}`}
       className={cn('flex gap-1', compact ? 'flex-nowrap' : 'flex-wrap')}
     >
-      {badges.map((badge) => (
-        <li key={badge.group}>
-          <Badge {...badge} />
+      {rowGroups.map((group) => (
+        <li key={group}>
+          <Badge {...badgeFor(group, badges)} />
         </li>
       ))}
     </ul>
@@ -69,13 +61,13 @@ export function SourceCard(props: SourceCardProps) {
   return (
     <Accordion.Item
       value={number}
-      onMouseEnter={() => props.onInspect(number)}
-      onMouseLeave={() => props.onInspect(null)}
-      onFocus={() => props.onInspect(number)}
-      onBlur={() => props.onInspect(null)}
+      onMouseEnter={() => onInspect(number)}
+      onMouseLeave={() => onInspect(null)}
+      onFocus={() => onInspect(number)}
+      onBlur={() => onInspect(null)}
       onKeyDown={(event) => {
         if (event.key !== 'Escape' || !open) return
-        props.onClose()
+        onClose()
         trigger.current?.focus()
       }}
       className={cn(
@@ -90,7 +82,11 @@ export function SourceCard(props: SourceCardProps) {
       <div className={cn('flex gap-3', compact && 'items-center gap-2')}>
         <div className={cn('min-w-0 flex-1', compact ? 'grid gap-1' : 'grid gap-2')}>
           {heading}
-          {!compact && <p className="type-body-small text-on-surface-variant">{meta}</p>}
+          {!compact && (
+            <p className="type-body-small text-on-surface-variant">
+              {design} · {publisher} · {year} · {citations} citations
+            </p>
+          )}
           {checks}
           {!compact && lowered && (
             <p className="type-body-small text-on-surface-variant">
@@ -104,16 +100,16 @@ export function SourceCard(props: SourceCardProps) {
           )}
         </div>
         <div className={cn('flex shrink-0 items-end', compact ? 'items-center gap-1' : 'flex-col')}>
-          <Badge {...grade} />
+          <Badge {...badgeFor('evidenceStrength', badges)} />
           {chevron}
         </div>
       </div>
       <Accordion.Panel>
         <SourcePassage
           open={open}
-          passage={props.passage}
+          passage={source.passage}
           quote={quote}
-          reference={props.reference}
+          reference={source.reference}
         />
       </Accordion.Panel>
     </Accordion.Item>

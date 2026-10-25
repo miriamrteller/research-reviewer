@@ -18,49 +18,54 @@ import { expect, test } from './fixtures'
 function expectedTree(): string {
   return `
     - main:
-      - heading "Does a short evening walk help older adults fall asleep faster?" [level=1]
-      - paragraph: In review
+      - heading "Summarise the recurring data-quality issues reported this quarter and suggest next steps." [level=1]
+      - paragraph:
+        - strong: In review
       - button "Badge key"
       - region "AI answer":
         - heading "AI answer" [level=2]
         - paragraph: /AI-generated answer/
-        - text: /A 20-minute evening walk/
+        - text: /concentrated in incomplete mandatory fields/
         - superscript:
           - button "Go to source 1"
-        - text: /The benefit was smaller/
         - superscript:
           - button "Go to source 2"
-        - text: /Walking in daylight/
+        - text: /delayed analysis handover/
+        - superscript:
+          - button "Go to source 1"
+        - text: /named data owners/
+        - superscript:
+          - button "Go to source 2"
         - superscript:
           - button "Go to source 3"
         - button "Revise"
         - button "Approve"
       - region "Sources":
         - heading "Sources" [level=2]
-        - heading /^1 Evening walking/ [level=3]
-        - paragraph: /Controlled study/
+        - heading /^1 Quarterly Data Quality Review/ [level=3]
+        - paragraph: /Quarterly audit/
         - list "Checks for source 1":
           - listitem: "Reference check: Verified"
           - listitem: "Publication status: Peer reviewed"
           - listitem: "Claim support: Supported"
           - listitem: "Stance: Agrees"
-        - blockquote: /Sleep onset latency/
+        - blockquote: /Incomplete mandatory fields/
         - text: "Evidence strength: Moderate"
-        - button /^Full passage. Evening walking/
-        - heading /^2 Habitual activity/ [level=3]
-        - paragraph: /Observational study/
-        - list "Checks for source 2":
-          - listitem: "Reference check: Details differ"
+        - button /^Full passage. Quarterly Data Quality Review/
+        - heading /^2 Dataset Naming Retrospective/ [level=3]
+        - heading /^3 Data Sharing Readiness Checklist/ [level=3]
+        - paragraph: /Guidance checklist/
+        - list "Checks for source 3":
+          - listitem: "Reference check: Verified"
           - listitem: "Publication status: Preprint"
           - listitem: "Claim support: Partly supported"
           - listitem: "Stance: Neutral"
         - paragraph:
           - strong: "Lowered because:"
-          - text: /self-reported rest/
-        - blockquote: /Gains were smaller/
-        - text: "Evidence strength: Limited"
-        - button /^Full passage. Habitual activity/
-        - heading /^3 Light exposure timing/ [level=3]
+          - text: /without data/
+        - blockquote: /Validation checks/
+        - text: "Evidence strength: Weak"
+        - button /^Full passage. Data Sharing Readiness Checklist/
       - button "Feedback"
     - region "Notifications"
   `
@@ -114,9 +119,9 @@ test.describe('screen reader experience', () => {
 
     // Source cards are accordion triggers: open or closed is in aria-expanded, not only the chevron.
     for (const name of [
-      /^Full passage: Evening walking/,
-      /^Full passage: Habitual activity/,
-      /^Full passage: Light exposure/,
+      /^Full passage. Quarterly Data/,
+      /^Full passage. Dataset Naming/,
+      /^Full passage. Data Sharing/,
     ]) {
       await expect(page.getByRole('button', { name })).toHaveAttribute('aria-expanded', 'false')
     }
@@ -221,10 +226,10 @@ test.describe('screen reader experience', () => {
     gotoApp,
   }) => {
     await gotoApp()
-    const trigger = page.getByRole('button', { name: /^Full passage: Evening walking/ })
+    const trigger = page.getByRole('button', { name: /^Full passage. Quarterly Data/ })
     await trigger.click()
     await expect(trigger).toHaveAttribute('aria-expanded', 'true')
-    await expect(page.getByText(/Participants walked for 20 minutes/)).toBeVisible()
+    await expect(page.getByText(/Delayed analysis handover was/)).toBeVisible()
     await trigger.click()
     await expect(trigger).toHaveAttribute('aria-expanded', 'false')
   })

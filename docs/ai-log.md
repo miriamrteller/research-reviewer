@@ -42,8 +42,35 @@ One line per commit: the piece, what the assistant produced, what the human chan
   fictional sample content and updated the unit and e2e specs; Miriam answered the open questions
   (two sources per claim allowed, "Lowered because" lines, renamed from "Why this was lowered", caveat kept, badges neutral until the
   badge step).
+- Badge key and Feedback (Miriam's instruction): the assistant built the Badge key popover (one
+  table: signal, every value with its icon and word, the question it answers, from ADR 001 and the
+  research badge key) and the Feedback dialog (ease 1 to 5, topic, comment) posting to a mock
+  `POST /api/feedback` that stamps who and when, with journey tests; Miriam reviews.
+- Badge key one line per row (Miriam's instruction): the assistant made the key a striped table with
+  every row on one line, no divider lines.
+- Badge colours (Miriam's instruction, 2026-10-25): AI derived green, amber and orange M3 custom
+  colour roles from HCT tones (light and dark), mapped them to Tailwind utilities, coloured each
+  badge value per ADR 001 (red from the error roles, neutral as outline), and added contrast tests
+  for every badge pair; Miriam set one colour per value and orange for Limited.
+- Badges as a prototype stand-in (Miriam's instruction, 2026-10-25): AI added a README assumption
+  that the badge set is for the prototype and a real product would use its own badges.
+- Badge good values blue (Miriam's instruction, 2026-10-25): AI re-derived the positive role at
+  HCT hue 255 so green keeps one meaning (Approved), and updated ADR 001.
+- Limited badge pink (Miriam's instruction, 2026-10-25): AI moved the limited role to HCT hue 355
+  so it no longer looks like amber Moderate, and updated ADR 001.
+- Badge text in its own colour (Miriam's instruction, 2026-10-25): AI set each badge's word and
+  icon to the strong tone of its colour, with contrast tests for each pair.
+- Live review screen with Approve and Revise (Miriam's instruction and seed text, 2026-10-25): AI
+  wrote the review schema (ADR 001 badge enums, `{ by, at }` review states), a fixture from her
+  draft summary, sources, uncertainty wording and question, the mock API, Base UI Approve and
+  Revise dialogs (one write each, never retried) and the three read-only header states, and
+  updated the unit and e2e specs. AI chose the claim-to-source mapping, badge values and the
+  approved tint; at her instruction it added `?doc=badges` so the two fixtures show all 17 badge values. Miriam to review.
 - Source highlight and open at passage (Miriam's instruction): AI linked claims and source cards
   both ways on hover and focus (outline and underline, keyed by claim id and citation number),
   made citation numbers buttons that go to their source, and opened a source to its whole passage
   on a scrolling paper with the quote marked, the reference code linking out to a made-up URL, and
   Escape returning focus to the chevron. Miriam added the passage paper and the reference link, tint on the claim words only with no outline, a bold citation number, a tinted outlined source, the chevron under the grade badge, only the cited words lit, and cards shrinking while a source is open (badges on a second line, as one line did not fit).
+- Cited words in the schema (Miriam's instruction): AI merged main (fixture, badge key) into the
+  source highlight branch, replaced each claim's `sourceIds` with `citations: [{ sourceId, words }]`
+  in the Zod schema and both fixtures, with a check that the words are in the claim text.
