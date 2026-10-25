@@ -3,6 +3,7 @@ import { cleanup } from '@testing-library/react'
 import { toHaveNoViolations } from 'jest-axe'
 import { afterAll, afterEach, beforeAll, expect } from 'vitest'
 import { requestLog } from '../mocks/applyScenario'
+import { resetReviewDocument } from '../mocks/handlers/review'
 import { server } from '../mocks/node'
 import { resetScenario } from '../mocks/scenario'
 
@@ -18,5 +19,6 @@ afterEach(() => {
   cleanup()
   server.resetHandlers()
   resetScenario()
+  resetReviewDocument()
   requestLog.length = 0
 })
