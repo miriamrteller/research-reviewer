@@ -23,8 +23,9 @@ describe('Review layout', () => {
     renderWithProviders(<App />)
     const answer = screen.getByRole('region', { name: 'AI answer' })
     expect(within(answer).getByText(/badges are the AI’s own checks/)).toBeInTheDocument()
-    expect(within(answer).getByText(/shortened the time adults over 65/)).toHaveTextContent('1')
-    expect(within(answer).getByText(/Walking in daylight/)).toHaveTextContent('3')
+    expect(within(answer).getByText(/shortened the time adults over 65/)).toBeInTheDocument()
+    expect(within(answer).getByRole('button', { name: 'Go to source 1' })).toHaveTextContent('1')
+    expect(within(answer).getByRole('button', { name: 'Go to source 3' })).toHaveTextContent('3')
   })
 
   it('sees each source with its title, grade, badges and quote', () => {

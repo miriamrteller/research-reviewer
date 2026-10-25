@@ -46,4 +46,4 @@ One line per commit: the piece, what the assistant produced, what the human chan
   both ways on hover and focus (outline and underline, keyed by claim id and citation number),
   made citation numbers buttons that go to their source, and opened a source to its whole passage
   on a scrolling paper with the quote marked, the reference code linking out to a made-up URL, and
-  Escape returning focus to the chevron. Miriam added the passage paper and the reference link.
+  Escape returning focus to the chevron. Miriam added the passage paper and the reference link, tint on the claim words only with no outline, a bold citation number, a tinted outlined source, and the chevron under the grade badge.

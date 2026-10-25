@@ -55,48 +55,55 @@ export function SourceCard({
         trigger.current?.focus()
       }}
       className={cn(
-        '-mx-2 grid gap-2 rounded-md border-b border-outline-variant px-2 py-3 outline-offset-0 last:border-b-0',
-        // Outline, not colour alone, marks the source of the claim in focus.
-        lit && 'outline-2 outline-primary',
+        '-mx-2 grid gap-3 rounded-md border-b border-outline-variant px-2 py-3 outline-offset-0 last:border-b-0',
+        // Outline and tint (Miriam), not colour alone, mark the source of the claim in focus.
+        lit && 'bg-secondary-container outline-2 outline-primary',
       )}
     >
-      <div className="flex items-start justify-between gap-2">
-        <Accordion.Header className="min-w-0 flex-1">
-          <Accordion.Trigger
-            ref={trigger}
-            id={sourceTriggerId(number)}
-            className="group flex w-full items-start gap-2 rounded-sm text-left"
-          >
-            <span className="type-label-medium text-primary">{number}</span>
-            {/* A real space, so the button's name reads "1 Title", not "1Title". */}{' '}
+      {/* Card body on the left; grade badge top right with the chevron centred below it (Miriam). */}
+      <div className="flex gap-3">
+        <div className="grid min-w-0 flex-1 gap-2">
+          <h3 className="flex items-start gap-2">
+            <span className="type-label-medium text-primary">{number}</span>{' '}
             <span className="flex-1 type-title-small">{title}</span>
-            <ChevronDown
-              aria-hidden="true"
-              className="size-5 shrink-0 transition-transform group-data-[panel-open]:rotate-180"
-            />
-          </Accordion.Trigger>
-        </Accordion.Header>
-        <Badge {...grade} />
+          </h3>
+          <p className="type-body-small text-on-surface-variant">{meta}</p>
+          <ul aria-label={`Checks for source ${number}`} className="flex flex-wrap gap-1">
+            {badges.map((badge) => (
+              <li key={badge.group}>
+                <Badge {...badge} />
+              </li>
+            ))}
+          </ul>
+          {lowered && (
+            <p className="type-body-small text-on-surface-variant">
+              <strong className="text-on-surface">Lowered because:</strong> {lowered}
+            </p>
+          )}
+          {/* Open, the quote is marked inside the passage, so it is shown once. */}
+          {!open && (
+            <blockquote className="border-l-2 border-outline pl-3 type-body-medium">
+              “{quote}”
+            </blockquote>
+          )}
+        </div>
+        <div className="flex shrink-0 flex-col items-end">
+          <Badge {...grade} />
+          <Accordion.Header render={<div />} className="flex flex-1 items-center">
+            <Accordion.Trigger
+              ref={trigger}
+              id={sourceTriggerId(number)}
+              aria-label={`Full passage: ${title}`}
+              className="group grid size-10 place-items-center rounded-full text-on-surface-variant hover:bg-surface-container-high"
+            >
+              <ChevronDown
+                aria-hidden="true"
+                className="size-6 transition-transform group-data-[panel-open]:rotate-180"
+              />
+            </Accordion.Trigger>
+          </Accordion.Header>
+        </div>
       </div>
-      <p className="type-body-small text-on-surface-variant">{meta}</p>
-      <ul aria-label={`Checks for source ${number}`} className="flex flex-wrap gap-1">
-        {badges.map((badge) => (
-          <li key={badge.group}>
-            <Badge {...badge} />
-          </li>
-        ))}
-      </ul>
-      {lowered && (
-        <p className="type-body-small text-on-surface-variant">
-          <strong className="text-on-surface">Lowered because:</strong> {lowered}
-        </p>
-      )}
-      {/* Open, the quote is marked inside the passage, so it is shown once. */}
-      {!open && (
-        <blockquote className="border-l-2 border-outline pl-3 type-body-medium">
-          “{quote}”
-        </blockquote>
-      )}
       <Accordion.Panel>
         <SourcePassage open={open} passage={passage} quote={quote} reference={reference} />
       </Accordion.Panel>

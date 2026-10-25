@@ -38,21 +38,29 @@ export function ClaimsPaper({ caveat, claims, isLit, onInspect, onCite }: Claims
             onMouseLeave={() => onInspect(null)}
             onFocus={() => onInspect(claim.id)}
             onBlur={() => onInspect(null)}
-            className={cn(
-              'rounded-sm type-headline-small outline-offset-4',
-              // Outline and underline, not colour alone, mark the claim a source cites.
-              isLit(claim) &&
-                'underline decoration-primary decoration-2 underline-offset-4 outline-2 outline-primary',
-            )}
+            className="type-headline-small"
           >
-            {claim.text}
+            {/* Tint and underline on the words only, no box (Miriam): not colour alone. */}
+            <span
+              className={cn(
+                'rounded-sm box-decoration-clone',
+                isLit(claim) &&
+                  'bg-secondary-container text-on-secondary-container underline decoration-primary decoration-2 underline-offset-4',
+              )}
+            >
+              {claim.text}
+            </span>
             {claim.sourceNumbers.map((n) => (
               <sup key={n} className="ml-1">
                 <button
                   type="button"
                   aria-label={`Go to source ${n}`}
                   onClick={() => onCite(n)}
-                  className="rounded-sm px-0.5 type-label-small text-primary"
+                  // Bold, not outlined, while its claim is lit (Miriam).
+                  className={cn(
+                    'rounded-sm px-0.5 type-label-small text-primary',
+                    isLit(claim) && 'font-bold',
+                  )}
                 >
                   {n}
                 </button>
