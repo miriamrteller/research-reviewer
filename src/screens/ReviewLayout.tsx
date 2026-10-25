@@ -13,7 +13,7 @@ import {
   TriangleAlert,
 } from 'lucide-react'
 import { ClaimsPaper } from '../components/review/ClaimsPaper'
-import { FeedbackFab } from '../components/review/FeedbackFab'
+import { SendFeedback } from './SendFeedback'
 import { QuestionHeader } from '../components/review/QuestionHeader'
 import { SourceCard } from '../components/review/SourceCard'
 import { SourceList } from '../components/review/SourceList'
@@ -105,7 +105,7 @@ export function ReviewLayout() {
           ))}
         </SourceList>
       </div>
-      <FeedbackFab />
+      <SendFeedback />
     </main>
   )
 }

@@ -1,6 +1,6 @@
 // The page heading: the question the AI researched, the review status under it, and the badge key.
-import { Clock, KeyRound } from 'lucide-react'
-import { buttonClass } from '../button-styles'
+import { Clock } from 'lucide-react'
+import { BadgeKey } from './BadgeKey'
 
 type QuestionHeaderProps = {
   question: string
@@ -19,11 +19,7 @@ export function QuestionHeader({ question, status }: QuestionHeaderProps) {
           {status}
         </p>
       </div>
-      {/* Drawn but inert: the key is a later sub-flow. */}
-      <button type="button" className={buttonClass('outlined', 'shrink-0')}>
-        <KeyRound aria-hidden="true" className="size-4" />
-        Badge key
-      </button>
+      <BadgeKey />
     </div>
   )
 }
