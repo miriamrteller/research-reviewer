@@ -31,14 +31,14 @@ Each source card shows five badge groups, one value each, in the order a reviewe
 - Stance: Agrees (thumbs-up, blue) · Disagrees (thumbs-down, red) · Neutral (minus, neutral).
   Schema values `agrees` | `disagrees` | `neutral`.
 - Evidence strength: Strong (signal-high, blue) · Moderate (signal-medium, amber) · Limited
-  (signal-low, orange) · Weak (signal-zero, grey), mapped from study design: review or
+  (signal-low, pink) · Weak (signal-zero, grey), mapped from study design: review or
   meta-analysis, controlled study, observational or single dataset, opinion or unspecified. The
   design word shows as text beside the badge.
 - Plain text, not badges: publication year and citation count in the card's meta line.
 - Not shown on cards: model confidence (one caveat line at the top of the answer says the badges
   are the AI's own checks and can be wrong) and source prestige.
 - Badge key: one table listing the five groups in the order above.
-- Good values are blue, not green, so green keeps one meaning: Approved (Miriam, 2026-10-25).
+- Good values are blue, not green, so green keeps one meaning: Approved; Limited is pink so it stands apart from amber Moderate (Miriam, 2026-10-25).
 
 ## Alternatives considered
 
@@ -56,7 +56,7 @@ Each source card shows five badge groups, one value each, in the order a reviewe
 - What the codebase now guarantees: each group is a Zod enum on the source schema, and every value
   has its own icon, colour and word.
 - What becomes harder, or what the prototype mocks: every signal is fixture data; a real system
-  needs a reference lookup, a retraction feed and an entailment check. Blue, amber, orange and grey
+  needs a reference lookup, a retraction feed and an entailment check. Blue, amber, pink and grey
   need token pairs with contrast tests. Agreement between sources, derived per claim from stance,
   is a sub-flow and is cut first.
 - What a reviewer should watch for: two values in one group that look alike, and the same colour

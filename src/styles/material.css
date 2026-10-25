@@ -110,7 +110,7 @@
    M3 custom colours: one tonal palette per hue from HCT (Material color
    utilities, TonalPalette.fromHueAndChroma), with the standard M3 tones
    (40/100/90/10 light, 80/20/30/90 dark). Hue, chroma: positive (blue, so green stays for Approved) 255, 40;
-   caution 85, 40; limited 55, 48. Negative uses the error roles; neutral uses
+   caution 85, 40; limited (pink) 355, 48. Negative uses the error roles; neutral uses
    the outline. Kept outside md.sys.color so the 49 system roles stay intact.
    -------------------------------------------------------------------------- */
 :root {
@@ -124,10 +124,10 @@
   --md-custom-color-caution-container: light-dark(#ffdea0, #5c4300);
   --md-custom-color-on-caution-container: light-dark(#261900, #ffdea0);
 
-  --md-custom-color-limited: light-dark(#944b00, #ffb783);
-  --md-custom-color-on-limited: light-dark(#ffffff, #4f2500);
-  --md-custom-color-limited-container: light-dark(#ffdcc5, #703700);
-  --md-custom-color-on-limited-container: light-dark(#301400, #ffdcc5);
+  --md-custom-color-limited: light-dark(#964168, #ffb0cf);
+  --md-custom-color-on-limited: light-dark(#ffffff, #5d1139);
+  --md-custom-color-limited-container: light-dark(#ffd9e5, #792950);
+  --md-custom-color-on-limited-container: light-dark(#3d0023, #ffd9e5);
 }
 
 /* --------------------------------------------------------------------------

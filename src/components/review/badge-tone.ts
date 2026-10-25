@@ -1,5 +1,5 @@
 // Which colour each badge value gets (ADR 001). Blue = good (green is kept for Approved), amber = needs attention,
-// orange = limited, red = bad, neutral = outline only. Classes are token utilities only.
+// pink = limited, red = bad, neutral = outline only. Classes are token utilities only.
 
 export type BadgeTone = 'positive' | 'caution' | 'limited' | 'negative' | 'neutral'
 
@@ -29,10 +29,10 @@ export const badgeToneByLabel: Readonly<Record<string, BadgeTone>> = {
 }
 
 export const badgeToneClass: Readonly<Record<BadgeTone, string>> = {
-  positive: 'border-transparent bg-positive-container text-on-positive-container',
-  caution: 'border-transparent bg-caution-container text-on-caution-container',
-  limited: 'border-transparent bg-limited-container text-on-limited-container',
-  negative: 'border-transparent bg-error-container text-on-error-container',
+  positive: 'border-transparent bg-positive-container text-positive',
+  caution: 'border-transparent bg-caution-container text-caution',
+  limited: 'border-transparent bg-limited-container text-limited',
+  negative: 'border-transparent bg-error-container text-error',
   neutral: 'border-outline-variant text-on-surface-variant',
 }
 

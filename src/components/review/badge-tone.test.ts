@@ -17,7 +17,7 @@ describe.each(Object.entries(groups))('%s badges', (_group, labels) => {
   })
 })
 
-it('keeps amber for "needs attention" and orange only for Limited', () => {
+it('keeps amber for "needs attention" and pink only for Limited', () => {
   expect(badgeTone('Details differ')).toBe('caution')
   expect(badgeTone('Concern raised')).toBe('caution')
   expect(badgeTone('Limited')).toBe('limited')

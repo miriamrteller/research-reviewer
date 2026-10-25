@@ -50,3 +50,7 @@ One line per commit: the piece, what the assistant produced, what the human chan
   that the badge set is for the prototype and a real product would use its own badges.
 - Badge good values blue (Miriam's instruction, 2026-10-25): AI re-derived the positive role at
   HCT hue 255 so green keeps one meaning (Approved), and updated ADR 001.
+- Limited badge pink (Miriam's instruction, 2026-10-25): AI moved the limited role to HCT hue 355
+  so it no longer looks like amber Moderate, and updated ADR 001.
+- Badge text in its own colour (Miriam's instruction, 2026-10-25): AI set each badge's word and
+  icon to the strong tone of its colour, with contrast tests for each pair.
