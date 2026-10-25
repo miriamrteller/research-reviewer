@@ -47,4 +47,4 @@ One line per commit: the piece, what the assistant produced, what the human chan
   draft summary, sources, uncertainty wording and question, the mock API, Base UI Approve and
   Revise dialogs (one write each, never retried) and the three read-only header states, and
   updated the unit and e2e specs. AI chose the claim-to-source mapping, badge values and the
-  approved tint; Miriam to review.
+  approved tint; at her instruction it added `?doc=badges` so the two fixtures show all 17 badge values. Miriam to review.
