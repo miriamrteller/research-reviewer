@@ -29,3 +29,6 @@ One line per commit: the piece, what the assistant produced, what the human chan
   Miriam said she usually wants CI, only not in the timeboxed repo, so that was reverted. AI then
   added `npm run ci:off` / `ci:on` (`scripts/ci-switch.mjs`), which park the workflow in `ci/` and
   move it back, and noted it in CLAUDE.md, timebox, quick start, setup and template guide.
+- ADR 001 source badges (Miriam's instruction, 2026-10-25): AI drafted the ADR from the research
+  note `docs/research/uncertainty-signals.md` (five badge groups and their values); it folded
+  `corrected` into text so every publication-status value has its own colour. Miriam to review.
