@@ -24,22 +24,20 @@ function expectedTree(): string {
       - region "AI answer":
         - heading "AI answer" [level=2]
         - paragraph: /AI-generated answer/
-        - paragraph:
-          - text: /A 20-minute evening walk/
-          - superscript: source 1
-        - paragraph:
-          - text: /The benefit was smaller/
-          - superscript: source 2
-        - paragraph:
-          - text: /Walking in daylight/
-          - superscript: source 3
+        - text: /A 20-minute evening walk/
+        - superscript:
+          - button "Go to source 1"
+        - text: /The benefit was smaller/
+        - superscript:
+          - button "Go to source 2"
+        - text: /Walking in daylight/
+        - superscript:
+          - button "Go to source 3"
         - button "Revise"
         - button "Approve"
       - region "Sources":
         - heading "Sources" [level=2]
-        - heading /^1 Evening walking/ [level=3]:
-          - button /^1 Evening walking/
-        - text: "Evidence strength: Moderate"
+        - heading /^1 Evening walking/ [level=3]
         - paragraph: /Controlled study/
         - list "Checks for source 1":
           - listitem: "Reference check: Verified"
@@ -47,9 +45,9 @@ function expectedTree(): string {
           - listitem: "Claim support: Supported"
           - listitem: "Stance: Agrees"
         - blockquote: /Sleep onset latency/
-        - heading /^2 Habitual activity/ [level=3]:
-          - button /^2 Habitual activity/
-        - text: "Evidence strength: Limited"
+        - text: "Evidence strength: Moderate"
+        - button /^Full passage. Evening walking/
+        - heading /^2 Habitual activity/ [level=3]
         - paragraph: /Observational study/
         - list "Checks for source 2":
           - listitem: "Reference check: Details differ"
@@ -60,8 +58,9 @@ function expectedTree(): string {
           - strong: "Lowered because:"
           - text: /self-reported rest/
         - blockquote: /Gains were smaller/
-        - heading /^3 Light exposure timing/ [level=3]:
-          - button /^3 Light exposure timing/
+        - text: "Evidence strength: Limited"
+        - button /^Full passage. Habitual activity/
+        - heading /^3 Light exposure timing/ [level=3]
       - button "Feedback"
     - region "Notifications"
   `
@@ -114,7 +113,11 @@ test.describe('screen reader experience', () => {
     await waitForApi(page)
 
     // Source cards are accordion triggers: open or closed is in aria-expanded, not only the chevron.
-    for (const name of [/^1 Evening walking/, /^2 Habitual activity/, /^3 Light exposure/]) {
+    for (const name of [
+      /^Full passage: Evening walking/,
+      /^Full passage: Habitual activity/,
+      /^Full passage: Light exposure/,
+    ]) {
       await expect(page.getByRole('button', { name })).toHaveAttribute('aria-expanded', 'false')
     }
 
@@ -218,7 +221,7 @@ test.describe('screen reader experience', () => {
     gotoApp,
   }) => {
     await gotoApp()
-    const trigger = page.getByRole('button', { name: /^1 Evening walking/ })
+    const trigger = page.getByRole('button', { name: /^Full passage: Evening walking/ })
     await trigger.click()
     await expect(trigger).toHaveAttribute('aria-expanded', 'true')
     await expect(page.getByText(/Participants walked for 20 minutes/)).toBeVisible()

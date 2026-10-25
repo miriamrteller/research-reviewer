@@ -19,7 +19,7 @@ import { FeedbackFab } from '../components/review/FeedbackFab'
 import { QuestionHeader } from '../components/review/QuestionHeader'
 import { SourceCard } from '../components/review/SourceCard'
 import { SourceList } from '../components/review/SourceList'
-import { isClaimLit, isSourceLit, sourceTriggerId, type Focused } from '../lib/highlight'
+import { isSourceLit, litCitations, sourceTriggerId, type Focused } from '../lib/highlight'
 
 const question = 'Does a short evening walk help older adults fall asleep faster?'
 
@@ -30,17 +30,22 @@ const claims = [
   {
     id: 'claim-1',
     text: 'A 20-minute evening walk shortened the time adults over 65 took to fall asleep by about 12 minutes.',
-    sourceNumbers: [1],
+    citations: [
+      {
+        number: 1,
+        words: 'shortened the time adults over 65 took to fall asleep by about 12 minutes',
+      },
+    ],
   },
   {
     id: 'claim-2',
     text: 'The benefit was smaller for people who already walked every day, and it faded after eight weeks.',
-    sourceNumbers: [2],
+    citations: [{ number: 2, words: 'it faded after eight weeks' }],
   },
   {
     id: 'claim-3',
     text: 'Walking in daylight, rather than in the evening, may matter more for when people fall asleep.',
-    sourceNumbers: [3],
+    citations: [{ number: 3, words: 'Walking in daylight' }],
   },
 ] as const
 
@@ -110,7 +115,7 @@ export function ReviewLayout() {
         <ClaimsPaper
           caveat={caveat}
           claims={claims}
-          isLit={(claim) => isClaimLit(claim, focused)}
+          litFor={(claim) => litCitations(claim, focused)}
           onInspect={(id) => setFocused(id === null ? null : { kind: 'claim', id })}
           onCite={(n) => document.getElementById(sourceTriggerId(n))?.focus()}
         />
@@ -120,6 +125,7 @@ export function ReviewLayout() {
               key={source.number}
               {...source}
               open={open.includes(source.number)}
+              compact={open.length > 0}
               lit={isSourceLit(source.number, claims, focused)}
               onClose={() => setOpen(open.filter((n) => n !== source.number))}
               onInspect={(n) => setFocused(n === null ? null : { kind: 'source', number: n })}

@@ -73,11 +73,14 @@ test.describe('keyboard operability', () => {
 
     const expectedOrder = [
       'Badge key',
+      'Go to source 1',
+      'Go to source 2',
+      'Go to source 3',
       'Revise',
       'Approve',
-      '1 Evening walking and sleep onset after 65: a trial',
-      '2 Habitual activity and the fading benefit of walking programmes',
-      '3 Light exposure timing and circadian phase in later life: a review',
+      'Full passage: Evening walking and sleep onset after 65: a trial',
+      'Full passage: Habitual activity and the fading benefit of walking programmes',
+      'Full passage: Light exposure timing and circadian phase in later life: a review',
       'Feedback',
     ]
 
@@ -110,7 +113,7 @@ test.describe('keyboard operability', () => {
     gotoApp,
   }) => {
     await gotoApp()
-    const trigger = page.getByRole('button', { name: /^2 Habitual activity/ })
+    const trigger = page.getByRole('button', { name: /^Full passage: Habitual activity/ })
     await trigger.focus()
     await page.keyboard.press('Enter')
     await expect(trigger).toHaveAttribute('aria-expanded', 'true')

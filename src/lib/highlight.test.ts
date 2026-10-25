@@ -1,9 +1,15 @@
 import { describe, expect, it } from 'vitest'
-import { isClaimLit, isSourceLit, splitPassage } from './highlight'
+import { isSourceLit, litCitations, segmentClaim, splitPassage } from './highlight'
 
 const claims = [
-  { id: 'c1', sourceNumbers: [1, 2] },
-  { id: 'c2', sourceNumbers: [2] },
+  {
+    id: 'c1',
+    citations: [
+      { number: 1, words: 'a b' },
+      { number: 2, words: 'd' },
+    ],
+  },
+  { id: 'c2', citations: [{ number: 2, words: 'x' }] },
 ]
 
 describe('claim and source highlight', () => {
@@ -12,9 +18,13 @@ describe('claim and source highlight', () => {
     expect([1, 2, 3].map((n) => isSourceLit(n, claims, focused))).toEqual([true, true, false])
   })
 
-  it('lights every claim a focused source supports', () => {
-    const focused = { kind: 'source', number: 2 } as const
-    expect(claims.map((c) => isClaimLit(c, focused))).toEqual([true, true])
+  it('lights only the words a focused source backs', () => {
+    const lit = litCitations(claims[0]!, { kind: 'source', number: 2 })
+    expect(segmentClaim('a b c d e', lit)).toEqual([
+      { text: 'a b c ', lit: false },
+      { text: 'd', lit: true },
+      { text: ' e', lit: false },
+    ])
   })
 
   it('marks the quote inside the passage, ignoring its closing full stop', () => {

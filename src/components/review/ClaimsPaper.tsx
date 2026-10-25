@@ -1,19 +1,21 @@
 // The AI answer on its own paper: caveat, claims with citation numbers, and the decision buttons.
 import { Sparkles } from 'lucide-react'
 import { cn } from '../../lib/cn'
+import { segmentClaim } from '../../lib/highlight'
 import { Button } from '../Button'
 
-type Claim = { id: string; text: string; sourceNumbers: readonly number[] }
+type Citation = { number: number; words: string }
+type Claim = { id: string; text: string; citations: readonly Citation[] }
 
 type ClaimsPaperProps = {
   caveat: string
   claims: readonly Claim[]
-  isLit: (claim: Claim) => boolean
+  litFor: (claim: Claim) => Citation[]
   onInspect: (id: string | null) => void
   onCite: (number: number) => void
 }
 
-export function ClaimsPaper({ caveat, claims, isLit, onInspect, onCite }: ClaimsPaperProps) {
+export function ClaimsPaper({ caveat, claims, litFor, onInspect, onCite }: ClaimsPaperProps) {
   return (
     <section
       aria-labelledby="claims-heading"
@@ -40,29 +42,32 @@ export function ClaimsPaper({ caveat, claims, isLit, onInspect, onCite }: Claims
             onBlur={() => onInspect(null)}
             className="type-headline-small"
           >
-            {/* Tint and underline on the words only, no box (Miriam): not colour alone. */}
-            <span
-              className={cn(
-                'rounded-sm box-decoration-clone',
-                isLit(claim) &&
-                  'bg-secondary-container text-on-secondary-container underline decoration-primary decoration-2 underline-offset-4',
-              )}
-            >
-              {claim.text}
-            </span>
-            {claim.sourceNumbers.map((n) => (
-              <sup key={n} className="ml-1">
+            {/* Tint and underline on the cited words only, no box (Miriam): not colour alone. */}
+            {segmentClaim(claim.text, litFor(claim)).map((run, i) =>
+              run.lit ? (
+                <span
+                  key={i}
+                  className="rounded-sm bg-secondary-container box-decoration-clone text-on-secondary-container underline decoration-primary decoration-2 underline-offset-4"
+                >
+                  {run.text}
+                </span>
+              ) : (
+                <span key={i}>{run.text}</span>
+              ),
+            )}
+            {claim.citations.map(({ number }) => (
+              <sup key={number} className="ml-1">
                 <button
                   type="button"
-                  aria-label={`Go to source ${n}`}
-                  onClick={() => onCite(n)}
-                  // Bold, not outlined, while its claim is lit (Miriam).
+                  aria-label={`Go to source ${number}`}
+                  onClick={() => onCite(number)}
+                  // Bold, not outlined, while its words are lit (Miriam).
                   className={cn(
                     'rounded-sm px-0.5 type-label-small text-primary',
-                    isLit(claim) && 'font-bold',
+                    litFor(claim).some((c) => c.number === number) && 'font-bold',
                   )}
                 >
-                  {n}
+                  {number}
                 </button>
               </sup>
             ))}

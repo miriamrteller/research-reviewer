@@ -25,7 +25,7 @@ export function SourcePassage({ open, passage, quote, reference }: SourcePassage
   return (
     <div
       ref={paper}
-      className="max-h-64 overflow-y-auto rounded-md bg-surface-container-lowest px-3 py-2 shadow-elevation-1"
+      className="max-h-80 overflow-y-auto rounded-md bg-surface-container-lowest px-3 py-2 shadow-elevation-1"
     >
       <a
         href={reference.url}
