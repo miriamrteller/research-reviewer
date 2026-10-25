@@ -60,3 +60,6 @@ One line per commit: the piece, what the assistant produced, what the human chan
   Revise dialogs (one write each, never retried) and the three read-only header states, and
   updated the unit and e2e specs. AI chose the claim-to-source mapping, badge values and the
   approved tint; at her instruction it added `?doc=badges` so the two fixtures show all 17 badge values. Miriam to review.
+- Approved green (Miriam's instruction, 2026-10-25): AI added an `approved` green custom colour
+  (HCT hue 145, chroma 40, standard M3 tones) with contrast tests and used it for the Approved
+  header tint, replacing the interim purple.

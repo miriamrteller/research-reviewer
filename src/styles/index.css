@@ -72,6 +72,10 @@
   --color-on-limited: var(--md-custom-color-on-limited);
   --color-limited-container: var(--md-custom-color-limited-container);
   --color-on-limited-container: var(--md-custom-color-on-limited-container);
+  --color-approved: var(--md-custom-color-approved);
+  --color-on-approved: var(--md-custom-color-on-approved);
+  --color-approved-container: var(--md-custom-color-approved-container);
+  --color-on-approved-container: var(--md-custom-color-on-approved-container);
   --color-primary-fixed: var(--md-sys-color-primary-fixed);
   --color-primary-fixed-dim: var(--md-sys-color-primary-fixed-dim);
   --color-on-primary-fixed: var(--md-sys-color-on-primary-fixed);
