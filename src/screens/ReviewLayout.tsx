@@ -115,9 +115,9 @@ export function ReviewLayout() {
   return (
     // Fits a laptop window with no page scroll; claims and sources scroll inside their own boxes.
     // Bottom padding keeps controls clear of the health toast (left) and the Feedback FAB (right).
-    <main className="mx-auto flex w-full flex-col gap-6 px-4 py-6 sm:px-6 sm:pb-24 md:h-svh">
+    <main className="mx-auto flex w-full flex-col gap-8 px-4 py-6 sm:px-8 sm:pt-8 sm:pb-24 md:h-svh md:px-12">
       <QuestionHeader question={question} status="In review" />
-      <div className="grid gap-6 md:min-h-0 md:flex-1 md:grid-cols-2 md:grid-rows-1">
+      <div className="grid gap-6 md:min-h-0 md:flex-1 md:grid-cols-2 md:grid-rows-1 md:gap-8">
         <ClaimsPaper caveat={caveat} claims={claims} />
         <SourceList>
           {sources.map((source) => (

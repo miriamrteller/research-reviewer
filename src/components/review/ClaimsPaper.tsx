@@ -23,9 +23,9 @@ export function ClaimsPaper({ caveat, claims }: ClaimsPaperProps) {
         </p>
       </div>
 
-      <div className="relative grid min-h-0 flex-1 content-start gap-4 overflow-y-auto px-6 py-4">
+      <div className="relative grid min-h-0 flex-1 content-start gap-6 overflow-y-auto px-6 py-4">
         {claims.map((claim) => (
-          <p key={claim.id} className="type-body-large">
+          <p key={claim.id} className="type-headline-small">
             {claim.text}
             {claim.sourceNumbers.map((n) => (
               <sup key={n} className="ml-1 type-label-small text-primary">
