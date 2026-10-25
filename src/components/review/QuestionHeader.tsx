@@ -1,9 +1,8 @@
 // The page heading: the question the AI researched, the review state under it, and the badge key.
 // The header is tinted by review state so a decided answer looks different at a glance.
-import { KeyRound } from 'lucide-react'
 import type { ReviewState } from '../../api/review/schema'
 import { cn } from '../../lib/cn'
-import { buttonClass } from '../button-styles'
+import { BadgeKey } from './BadgeKey'
 import { ReviewStatus } from './ReviewStatus'
 import { reviewLooks } from './reviewLooks'
 
@@ -26,11 +25,7 @@ export function QuestionHeader({ question, state }: QuestionHeaderProps) {
         </h1>
         <ReviewStatus state={state} />
       </div>
-      {/* Drawn but inert: the key is a later sub-flow. */}
-      <button type="button" className={buttonClass('outlined', 'shrink-0')}>
-        <KeyRound aria-hidden="true" className="size-4" />
-        Badge key
-      </button>
+      <BadgeKey />
     </div>
   )
 }
