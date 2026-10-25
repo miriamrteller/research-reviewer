@@ -75,9 +75,9 @@ test.describe('keyboard operability', () => {
       'Badge key',
       'Revise',
       'Approve',
-      '1 Evening walking and sleep onset after 65: a trial',
-      '2 Habitual activity and the fading benefit of walking programmes',
-      '3 Light exposure timing and circadian phase in later life: a review',
+      '1 Quarterly Data Quality Review',
+      '2 Dataset Naming Retrospective',
+      '3 Data Sharing Readiness Checklist',
       'Feedback',
     ]
 
@@ -110,11 +110,11 @@ test.describe('keyboard operability', () => {
     gotoApp,
   }) => {
     await gotoApp()
-    const trigger = page.getByRole('button', { name: /^2 Habitual activity/ })
+    const trigger = page.getByRole('button', { name: /^2 Dataset Naming/ })
     await trigger.focus()
     await page.keyboard.press('Enter')
     await expect(trigger).toHaveAttribute('aria-expanded', 'true')
-    await expect(page.getByText(/We followed 212 adults/)).toBeVisible()
+    await expect(page.getByText(/shared naming convention/)).toBeVisible()
     await expect(trigger).toBeFocused()
     await page.keyboard.press('Space')
     await expect(trigger).toHaveAttribute('aria-expanded', 'false')

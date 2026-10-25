@@ -1,33 +1,19 @@
 // One source as an accordion item: number, title, evidence grade, badges and quote; opens to the passage.
 import { Accordion } from '@base-ui/react/accordion'
-import { ChevronDown, type LucideIcon } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
+import type { Source } from '../../api/review/schema'
 import { Badge } from './Badge'
-
-type BadgeItem = { group: string; label: string; icon: LucideIcon }
+import { badgeFor, rowGroups } from './badges'
 
 type SourceCardProps = {
-  number: number
-  title: string
-  meta: string
-  grade: BadgeItem
-  badges: readonly BadgeItem[]
-  quote: string
-  passage: string
-  lowered?: string
+  source: Source
 }
 
-export function SourceCard({
-  number,
-  title,
-  meta,
-  grade,
-  badges,
-  quote,
-  passage,
-  lowered,
-}: SourceCardProps) {
+export function SourceCard({ source }: SourceCardProps) {
+  const { number, title, design, publisher, year, citations, badges, lowered, quote, passage } =
+    source
   return (
-    <Accordion.Item className="grid gap-2 border-b border-outline-variant py-3 last:border-b-0">
+    <Accordion.Item className="group/item grid gap-2 border-b border-outline-variant py-3 last:border-b-0">
       <div className="flex items-start justify-between gap-2">
         <Accordion.Header className="min-w-0 flex-1">
           <Accordion.Trigger className="group flex w-full items-start gap-2 rounded-sm text-left">
@@ -40,13 +26,15 @@ export function SourceCard({
             />
           </Accordion.Trigger>
         </Accordion.Header>
-        <Badge {...grade} />
+        <Badge {...badgeFor('evidenceStrength', badges)} />
       </div>
-      <p className="type-body-small text-on-surface-variant">{meta}</p>
+      <p className="type-body-small text-on-surface-variant">
+        {design} · {publisher} · {year} · {citations} citations
+      </p>
       <ul aria-label={`Checks for source ${number}`} className="flex flex-wrap gap-1">
-        {badges.map((badge) => (
-          <li key={badge.group}>
-            <Badge {...badge} />
+        {rowGroups.map((group) => (
+          <li key={group}>
+            <Badge {...badgeFor(group, badges)} />
           </li>
         ))}
       </ul>
@@ -55,8 +43,11 @@ export function SourceCard({
           <strong className="text-on-surface">Lowered because:</strong> {lowered}
         </p>
       )}
-      <blockquote className="border-l-2 border-outline pl-3 type-body-medium">“{quote}”</blockquote>
-      <Accordion.Panel className="type-body-medium text-on-surface-variant">
+      {/* The quote gives way to the full passage when the card opens, so the text shows once. */}
+      <blockquote className="border-l-2 border-outline pl-3 type-body-medium group-data-[open]/item:hidden">
+        “{quote}”
+      </blockquote>
+      <Accordion.Panel className="border-l-2 border-outline pl-3 type-body-medium">
         {passage}
       </Accordion.Panel>
     </Accordion.Item>
