@@ -47,7 +47,7 @@ const claims = [
 const sources = [
   {
     number: 1,
-    reference: { code: 'MJSH-2024-0417', url: 'https://journals.example.org/mjsh/2024/0417' },
+    reference: { code: 'SRC-01', url: 'https://sources.example.org/src-01' },
     title: 'Evening walking and sleep onset after 65: a trial',
     meta: 'Controlled study · Meridale Journal of Sleep Health · 2024 · 41 citations',
     grade: { group: 'Evidence strength', label: 'Moderate', icon: SignalMedium },
@@ -63,7 +63,7 @@ const sources = [
   },
   {
     number: 2,
-    reference: { code: 'OPL-2025-0093', url: 'https://preprints.example.org/openleaf/2025/0093' },
+    reference: { code: 'SRC-02', url: 'https://sources.example.org/src-02' },
     title: 'Habitual activity and the fading benefit of walking programmes',
     meta: 'Observational study · Preprint server Openleaf · 2025 · 6 citations',
     grade: { group: 'Evidence strength', label: 'Limited', icon: SignalLow },
@@ -80,7 +80,7 @@ const sources = [
   },
   {
     number: 3,
-    reference: { code: 'HRA-2023-0212', url: 'https://journals.example.org/hra/2023/0212' },
+    reference: { code: 'SRC-03', url: 'https://sources.example.org/src-03' },
     title: 'Light exposure timing and circadian phase in later life: a review',
     meta: 'Systematic review · Hollin Review of Ageing · 2023 · 128 citations',
     grade: { group: 'Evidence strength', label: 'Moderate', icon: SignalMedium },

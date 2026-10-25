@@ -63,9 +63,9 @@ describe('Review layout', () => {
     expect(
       screen.getByText('Sleep onset latency fell by a mean of 12 minutes in the walking group'),
     ).toBeVisible()
-    const original = screen.getByRole('link', { name: /MJSH-2024-0417/ })
+    const original = screen.getByRole('link', { name: /SRC-01/ })
     expect(original).toHaveAttribute('target', '_blank')
-    expect(original).toHaveAccessibleName('MJSH-2024-0417 (opens the original in a new tab)')
+    expect(original).toHaveAccessibleName('SRC-01 (opens the original in a new tab)')
     expect(await axe(container)).toHaveNoViolations()
   })
 
@@ -75,7 +75,7 @@ describe('Review layout', () => {
     const trigger = screen.getByRole('button', { name: /Light exposure timing/ })
     await user.click(trigger)
     await user.tab()
-    expect(screen.getByRole('link', { name: /HRA-2023-0212/ })).toHaveFocus()
+    expect(screen.getByRole('link', { name: /SRC-03/ })).toHaveFocus()
     await user.keyboard('{Escape}')
     expect(trigger).toHaveAttribute('aria-expanded', 'false')
     expect(trigger).toHaveFocus()
