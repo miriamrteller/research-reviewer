@@ -107,7 +107,7 @@ The mock API produces a clear error state, and errors are written so the reviewe
 
 ## How AI was used in this project
 
-I directed the whole build and AI threads wrote the code, working in parallel PRs from my own layout sketch and my ADR 001. I supplied the research questions, seed content and design feedback, decided what to cut when time ran short, and corrected the AI whenever it drifted. Every PR was merged only on my explicit yes and an input was added to the ai-log. The template and diagrams were prepared before the clock and one touch-up PR was added just afterwards.
+I directed the whole build and AI threads wrote the code, working in parallel PRs from my own layout sketch and my [ADR 002](docs/adr/002-ADR-Sources.md). I supplied the research questions, seed content and design feedback, decided what to cut when time ran short, and corrected the AI whenever it drifted. Every PR was merged only on my explicit yes and an input was added to the ai-log. The template and diagrams were prepared before the clock and one touch-up PR was added just afterwards.
 
 ## Options
 
