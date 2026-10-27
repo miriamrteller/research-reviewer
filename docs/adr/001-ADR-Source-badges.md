@@ -35,8 +35,7 @@ Each source card shows five badge groups, one value each, in the order a reviewe
   meta-analysis, controlled study, observational or single dataset, opinion or unspecified. The
   design word shows as text beside the badge.
 - Plain text, not badges: publication year and citation count in the card's meta line.
-- Not shown on cards: model confidence (one caveat line at the top of the answer says the badges
-  are the AI's own checks and can be wrong) and source prestige.
+- Not shown on cards: model confidence and source prestige.
 - Badge key: one table listing the five groups in the order above.
 - Good values are blue, not green, so green keeps one meaning: Approved; Limited is pink so it stands apart from amber Moderate (Miriam, 2026-10-25).
 
