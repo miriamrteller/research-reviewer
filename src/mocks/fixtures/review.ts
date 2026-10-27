@@ -1,5 +1,5 @@
 // Seed review document from Miriam's brief text: question, three-sentence draft summary as claims,
-// three internal sources, and her uncertainty wording as the caveat. Parsed so a bad edit fails here.
+// three internal sources (one per claim, Miriam), and her uncertainty wording as the caveat. Parsed so a bad edit fails here.
 // A second document (?doc=badges) gives the same sources the other badge values, so the two
 // together show every ADR 001 value at least once.
 import { ReviewDocument } from '../../api/review/schema'
@@ -16,21 +16,17 @@ export const reviewFixture = ReviewDocument.parse({
     {
       id: 'claim-1',
       text: 'Data-quality issues this quarter were concentrated in incomplete mandatory fields and inconsistent dataset naming.',
-      citations: [
-        { sourceId: 'SRC-01', words: 'incomplete mandatory fields' },
-        { sourceId: 'SRC-02', words: 'inconsistent dataset naming' },
-      ],
+      citations: [{ sourceId: 'SRC-01', words: 'incomplete mandatory fields' }],
     },
     {
       id: 'claim-2',
       text: 'The most frequently reported impact was delayed analysis handover.',
-      citations: [{ sourceId: 'SRC-01', words: 'delayed analysis handover' }],
+      citations: [{ sourceId: 'SRC-02', words: 'delayed analysis handover' }],
     },
     {
       id: 'claim-3',
       text: 'The draft recommends establishing named data owners for priority datasets and introducing validation checks before data is shared for analysis.',
       citations: [
-        { sourceId: 'SRC-02', words: 'establishing named data owners for priority datasets' },
         {
           sourceId: 'SRC-03',
           words: 'introducing validation checks before data is shared for analysis',

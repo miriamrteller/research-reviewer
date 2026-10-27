@@ -50,7 +50,7 @@ describe('Review screen', () => {
       'AI-generated answer.',
     )
     expect(within(answer).getByText(/concentrated in incomplete mandatory/)).toBeInTheDocument()
-    expect(within(answer).getAllByRole('button', { name: /^Go to source/ })).toHaveLength(5)
+    expect(within(answer).getAllByRole('button', { name: /^Go to source/ })).toHaveLength(3)
     expect(await axe(container)).toHaveNoViolations()
   })
 
@@ -77,7 +77,7 @@ describe('Review screen', () => {
 
   it('goes from a claim’s citation number to the source it cites', async () => {
     const { user } = await renderLoaded()
-    await user.click(screen.getAllByRole('button', { name: 'Go to source 3' })[0]!)
+    await user.click(screen.getByRole('button', { name: 'Go to source 3' }))
     expect(screen.getByRole('button', { name: /Data Sharing Readiness Checklist/ })).toHaveFocus()
   })
 
@@ -159,7 +159,7 @@ describe('Review screen', () => {
     await waitFor(() => expect(edit).toHaveFocus())
     const answer = screen.getByRole('region', { name: 'AI answer' })
     expect(within(answer).getByText(/Two teams reported it/)).toBeInTheDocument()
-    expect(within(answer).getAllByRole('button', { name: /^Go to source/ })).toHaveLength(5)
+    expect(within(answer).getAllByRole('button', { name: /^Go to source/ })).toHaveLength(3)
     expect(within(answer).getAllByText(/Edited by Prof. I. C. Everything/)).toHaveLength(2)
     expect(within(answer).getByText(/named data owners/)).toBeInTheDocument()
     expect(screen.getByRole('status')).toHaveTextContent('kept on this page only')

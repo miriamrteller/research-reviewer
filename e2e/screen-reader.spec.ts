@@ -29,14 +29,10 @@ function expectedTree(): string {
         - text: /concentrated in incomplete mandatory fields/
         - superscript:
           - button "Go to source 1"
-        - superscript:
-          - button "Go to source 2"
         - text: /delayed analysis handover/
         - superscript:
-          - button "Go to source 1"
-        - text: /named data owners/
-        - superscript:
           - button "Go to source 2"
+        - text: /named data owners/
         - superscript:
           - button "Go to source 3"
         - button "Revise"
