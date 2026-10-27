@@ -1,9 +1,13 @@
 // The badge key: a Base UI popover with one table of every signal, its values and its question.
+// Taller and narrower, and pushed towards the right edge, so it covers less of the page (Miriam).
 import { Popover } from '@base-ui/react/popover'
 import { KeyRound } from 'lucide-react'
 import { buttonClass } from '../button-styles'
 import { Badge } from './Badge'
 import { badgeKeyRows } from './badge-key-rows'
+
+// Lets the key run past the trigger towards the page edge; collision padding keeps it on screen.
+const ALIGN_OFFSET = -32
 
 export function BadgeKey() {
   return (
@@ -13,10 +17,17 @@ export function BadgeKey() {
         Badge key
       </Popover.Trigger>
       <Popover.Portal>
-        <Popover.Positioner side="bottom" align="end" sideOffset={8} className="z-30">
+        <Popover.Positioner
+          side="bottom"
+          align="end"
+          sideOffset={8}
+          alignOffset={ALIGN_OFFSET}
+          collisionPadding={16}
+          className="z-30"
+        >
           <Popover.Popup className="max-h-(--available-height) w-max max-w-[calc(100vw-2rem)] overflow-auto rounded-xl bg-surface-container-high p-4 text-on-surface shadow-elevation-3 outline-none">
             <Popover.Title className="mb-3 type-title-medium">Badge key</Popover.Title>
-            <table className="border-collapse text-left whitespace-nowrap type-body-medium">
+            <table className="border-collapse text-left type-body-medium">
               <thead className="type-label-large text-on-surface-variant">
                 <tr>
                   <th scope="col" className="px-3 py-1">
@@ -33,11 +44,14 @@ export function BadgeKey() {
               <tbody>
                 {badgeKeyRows.map((row) => (
                   <tr key={row.signal} className="align-middle odd:bg-surface-container-highest">
-                    <th scope="row" className="px-3 py-1 type-label-large">
+                    <th scope="row" className="px-3 py-2 type-label-large whitespace-nowrap">
                       {row.signal}
                     </th>
-                    <td className="px-3 py-1">
-                      <ul className="flex gap-1" aria-label={`${row.signal} values`}>
+                    <td className="px-3 py-2">
+                      <ul
+                        className="flex max-w-64 flex-wrap gap-1"
+                        aria-label={`${row.signal} values`}
+                      >
                         {row.values.map((value) => (
                           <li key={value.label}>
                             <Badge group={row.signal} label={value.label} icon={value.icon} />
@@ -45,7 +59,7 @@ export function BadgeKey() {
                         ))}
                       </ul>
                     </td>
-                    <td className="px-3 py-1 text-on-surface-variant">{row.question}</td>
+                    <td className="w-56 px-3 py-2 text-on-surface-variant">{row.question}</td>
                   </tr>
                 ))}
               </tbody>
