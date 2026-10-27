@@ -1,13 +1,11 @@
 // The badge key: a Base UI popover with one table of every signal, its values and its question.
-// Taller and narrower, and pushed towards the right edge, so it covers less of the page (Miriam).
+// Taller and narrower, and it opens from the button towards the right edge, using any empty
+// space there; collision padding slides it back so it stays on screen (Miriam).
 import { Popover } from '@base-ui/react/popover'
 import { KeyRound } from 'lucide-react'
 import { buttonClass } from '../button-styles'
 import { Badge } from './Badge'
 import { badgeKeyRows } from './badge-key-rows'
-
-// Lets the key run past the trigger towards the page edge; collision padding keeps it on screen.
-const ALIGN_OFFSET = -32
 
 export function BadgeKey() {
   return (
@@ -19,10 +17,10 @@ export function BadgeKey() {
       <Popover.Portal>
         <Popover.Positioner
           side="bottom"
-          align="end"
+          align="start"
           sideOffset={8}
-          alignOffset={ALIGN_OFFSET}
           collisionPadding={16}
+          collisionAvoidance={{ side: 'flip', align: 'shift' }}
           className="z-30"
         >
           <Popover.Popup className="max-h-(--available-height) w-max max-w-[calc(100vw-2rem)] overflow-auto rounded-xl bg-surface-container-high p-4 text-on-surface shadow-elevation-3 outline-none">
