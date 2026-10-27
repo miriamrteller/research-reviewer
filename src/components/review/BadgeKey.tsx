@@ -24,7 +24,8 @@ export function BadgeKey() {
           className="z-30"
         >
           <Popover.Popup className="max-h-(--available-height) w-max max-w-[calc(100vw-2rem)] overflow-auto rounded-xl bg-surface-container-high p-4 text-on-surface shadow-elevation-3 outline-none">
-            <Popover.Title className="mb-3 type-title-medium">Badge key</Popover.Title>
+            {/* The button already says "Badge key" (Miriam); the title stays for screen readers. */}
+            <Popover.Title className="sr-only">Badge key</Popover.Title>
             <table className="border-collapse text-left type-body-medium">
               <thead className="type-label-large text-on-surface-variant">
                 <tr>
