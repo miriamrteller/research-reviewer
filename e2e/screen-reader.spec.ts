@@ -29,14 +29,10 @@ function expectedTree(): string {
         - text: /concentrated in incomplete mandatory fields/
         - superscript:
           - button "Go to source 1"
-        - superscript:
-          - button "Go to source 2"
         - text: /delayed analysis handover/
         - superscript:
-          - button "Go to source 1"
-        - text: /named data owners/
-        - superscript:
           - button "Go to source 2"
+        - text: /named data owners/
         - superscript:
           - button "Go to source 3"
         - button "Revise"
@@ -56,6 +52,8 @@ function expectedTree(): string {
         - heading /^2 Dataset Naming Retrospective/ [level=3]
         - heading /^3 Data Sharing Readiness Checklist/ [level=3]
         - paragraph: /Guidance checklist/
+        - paragraph:
+          - strong: "Full text missing."
         - list "Checks for source 3":
           - listitem: "Reference check: Verified"
           - listitem: "Publication status: Preprint"

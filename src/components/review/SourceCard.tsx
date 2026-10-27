@@ -8,6 +8,7 @@ import { useRef } from 'react'
 import { cn } from '../../lib/cn'
 import { sourceTriggerId } from '../../lib/highlight'
 import { Badge } from './Badge'
+import { FullTextMissing } from './FullTextMissing'
 import { badgeFor, rowGroups } from './badges'
 import { SourcePassage } from './SourcePassage'
 
@@ -72,7 +73,7 @@ export function SourceCard({ source, open, compact, lit, onClose, onInspect }: S
       }}
       className={cn(
         '-mx-2 grid gap-3 rounded-md border-b border-outline-variant px-2 outline-offset-0 last:border-b-0',
-        compact ? 'py-1' : 'py-3',
+        compact ? 'py-1' : 'py-2',
         // The open source takes the free height; its paper runs to the card's edges (Miriam).
         open && 'flex min-h-0 flex-1 flex-col pb-0',
         // Outline and tint (Miriam), not colour alone, mark the source of the claim in focus.
@@ -82,13 +83,14 @@ export function SourceCard({ source, open, compact, lit, onClose, onInspect }: S
       {/* One tree for both layouts, so the chevron keeps focus when the cards shrink. Full: body
           left, grade top right with the chevron centred below it. Compact: all on one line. */}
       <div className={cn('flex gap-3', compact && 'items-center gap-2')}>
-        <div className={cn('min-w-0 flex-1', compact ? 'grid gap-1' : 'grid gap-2')}>
+        <div className={cn('min-w-0 flex-1', compact ? 'grid gap-1' : 'grid gap-1.5')}>
           {heading}
           {!compact && (
             <p className="type-body-small text-on-surface-variant">
               {design} · {publisher} · {year} · {citations} citations
             </p>
           )}
+          {!compact && source.passage === undefined && <FullTextMissing short />}
           {checks}
           {!compact && lowered && (
             <p className="type-body-small text-on-surface-variant">

@@ -76,8 +76,6 @@ test.describe('keyboard operability', () => {
       'Edit',
       'Go to source 1',
       'Go to source 2',
-      'Go to source 1',
-      'Go to source 2',
       'Go to source 3',
       'Revise',
       'Approve',

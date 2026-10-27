@@ -26,6 +26,7 @@ describe('Review screen', () => {
     const loading = screen.getByRole('status')
     expect(loading).toHaveTextContent('Loading the review…')
     expect(loading).toHaveAttribute('aria-busy', 'true')
+    expect(screen.getByRole('button', { name: 'Badge key' })).toBeEnabled()
     expect(await axe(container)).toHaveNoViolations()
   })
 
@@ -50,7 +51,7 @@ describe('Review screen', () => {
       'AI-generated answer.',
     )
     expect(within(answer).getByText(/concentrated in incomplete mandatory/)).toBeInTheDocument()
-    expect(within(answer).getAllByRole('button', { name: /^Go to source/ })).toHaveLength(5)
+    expect(within(answer).getAllByRole('button', { name: /^Go to source/ })).toHaveLength(3)
     expect(await axe(container)).toHaveNoViolations()
   })
 
@@ -75,9 +76,21 @@ describe('Review screen', () => {
     ).toBeVisible()
   })
 
+  it('sees that source 3’s full text is missing, with its title, checks and quote still there', async () => {
+    const { user, container } = await renderLoaded()
+    const sources = screen.getByRole('region', { name: 'Sources' })
+    expect(within(sources).getAllByText('Full text missing.')).toHaveLength(1)
+    expect(within(sources).getByText(/Validation checks before analytical handover/)).toBeVisible()
+    await user.click(screen.getByRole('button', { name: /Data Sharing Readiness Checklist/ }))
+    expect(screen.getAllByText('Full text missing.')).toHaveLength(1)
+    expect(screen.queryByText('Quoted excerpt starts.')).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /SRC-03/ })).toBeInTheDocument()
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
   it('goes from a claim’s citation number to the source it cites', async () => {
     const { user } = await renderLoaded()
-    await user.click(screen.getAllByRole('button', { name: 'Go to source 3' })[0]!)
+    await user.click(screen.getByRole('button', { name: 'Go to source 3' }))
     expect(screen.getByRole('button', { name: /Data Sharing Readiness Checklist/ })).toHaveFocus()
   })
 
@@ -159,7 +172,7 @@ describe('Review screen', () => {
     await waitFor(() => expect(edit).toHaveFocus())
     const answer = screen.getByRole('region', { name: 'AI answer' })
     expect(within(answer).getByText(/Two teams reported it/)).toBeInTheDocument()
-    expect(within(answer).getAllByRole('button', { name: /^Go to source/ })).toHaveLength(5)
+    expect(within(answer).getAllByRole('button', { name: /^Go to source/ })).toHaveLength(3)
     expect(within(answer).getAllByText(/Edited by Prof. I. C. Everything/)).toHaveLength(2)
     expect(within(answer).getByText(/named data owners/)).toBeInTheDocument()
     expect(screen.getByRole('status')).toHaveTextContent('kept on this page only')

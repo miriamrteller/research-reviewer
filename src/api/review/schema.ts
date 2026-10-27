@@ -47,7 +47,8 @@ export const Source = z.strictObject({
   /** Why a badge is lower than the source type would suggest. */
   lowered: text.optional(),
   quote: text,
-  passage: text,
+  /** The full text; missing when the source document could not be found. */
+  passage: text.optional(),
 })
 export type Source = z.infer<typeof Source>
 

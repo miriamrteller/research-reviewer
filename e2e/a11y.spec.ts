@@ -21,6 +21,14 @@ test.describe('WCAG 2.2 AA — automated scan', () => {
     expect(violations, formatViolations(violations)).toEqual([])
   })
 
+  test('source opened with its full text missing', async ({ page, gotoApp, makeAxe }) => {
+    await gotoApp()
+    await page.getByRole('button', { name: /^Full passage. Data Sharing/ }).click()
+    await expect(page.getByText('Full text missing.')).toBeVisible()
+    const { violations } = await makeAxe().analyze()
+    expect(violations, formatViolations(violations)).toEqual([])
+  })
+
   test('editing the claims', async ({ page, gotoApp, makeAxe }) => {
     await gotoApp()
     await page.getByRole('button', { name: 'Edit' }).click()
@@ -65,6 +73,18 @@ test.describe('WCAG 2.2 AA — automated scan', () => {
     await dialog.getByLabel('Reason').fill('Claim 3 needs a source for named owners.')
     await dialog.getByRole('button', { name: 'Send for revision' }).click()
     await expect(page.getByText('Revision needed', { exact: true })).toBeVisible()
+    const { violations } = await makeAxe().analyze()
+    expect(violations, formatViolations(violations)).toEqual([])
+  })
+
+  test('review loading, skeletons where the words will go (mock=slow)', async ({
+    page,
+    gotoApp,
+    makeAxe,
+  }) => {
+    await gotoApp('/?mock=slow&delay=30000')
+    await expect(page.getByRole('main').getByRole('status')).toHaveText('Loading the review…')
+    await expect(page.getByRole('button', { name: 'Badge key' })).toBeVisible()
     const { violations } = await makeAxe().analyze()
     expect(violations, formatViolations(violations)).toEqual([])
   })
