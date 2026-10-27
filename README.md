@@ -1,4 +1,4 @@
-# Research Review
+# Research Reviewer
 
 A React prototype for the human-in-the-loop workflow that checks AI research claims against reliable sources.
 
@@ -15,7 +15,7 @@ npm run test:e2e     # browser accessibility, keyboard and screen-reader suites
 
 AI gives confident answers and cites sources, but those sources can be wrong, and the conclusions drawn from them can be wrong. Unless a person checks, that confidence goes untested. An AI system cannot be trusted to rate its own correctness, so a human has to take responsibility.
 
-This prototype is that check. It is a straightforward workflow for the oversight task: the key information is on the screen, and distractions are kept out of the way. The reviewer can edit the research quote, approve it, or send it back for revision.
+This prototype is that check. It is a straightforward workflow for the oversight task: the key information is on the screen, and distractions are kept out of the way. The reviewer can edit the claims, approve the answer, or send it back for revision.
 
 The user is a scientific researcher, qualified to understand the text and the sources, and to judge the consequences of approving, editing, or sending a claim back.
 
@@ -38,8 +38,8 @@ The user is a scientific researcher, qualified to understand the text and the so
 - The reviewer opens the workspace and sees the original question, the AI research claims, and the source material, with confidence markers visible.
 - They read the claims and the attached sources, and assess their confidence.
 - They may edit the text.
-- They approve the claim. It is marked approved and becomes read-only.
-- Or they send the whole claim back for revision, with a reason. That also makes it read-only.
+- They approve the answer. It is marked approved and becomes read-only.
+- Or they send the whole answer back for revision, with a reason. That also makes it read-only.
 - A "Feedback" button in the bottom-right corner opens a short dialog for feedback on the review workspace itself. It never blocks or changes the review.
 - We've added a concise badge key in case the reviewer needs extra clarity.
 
