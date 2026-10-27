@@ -7,7 +7,8 @@ A React prototype for the human-in-the-loop workflow that checks AI research cla
 ```bash
 npm install          # also installs git hooks via husky
 npm run dev          # http://localhost:5173
-npm run verify       # runs all tests: unit, e2e, a11y see more below in Options
+npm run verify       # lint, format, typecheck, unit tests and build (see Scripts)
+npm run test:e2e     # browser accessibility, keyboard and screen-reader suites
 ```
 
 ## Short description and target user
@@ -40,15 +41,15 @@ The user is a scientific researcher, qualified to understand the text and the so
 - They approve the claim. It is marked approved and becomes read-only.
 - Or they send the whole claim back for revision, with a reason. That also makes it read-only.
 - A "Feedback" button in the bottom-right corner opens a short dialog for feedback on the review workspace itself. It never blocks or changes the review.
-- we've added a concise badge key incase for extra clarity for the reviewer.
+- We've added a concise badge key in case the reviewer needs extra clarity.
 
 ## Accessibility and design choices
 
-This prototype is built ontop of my own template made with [Base UI](https://base-ui.com/), for unstyled accessible components. `src/styles/material.css` supplies the spacing, size, elevation, and other values from the [Material Design 3](https://m3.material.io/) specification, so the components start from an accessible and spec following baseline.
+This prototype is built on top of my own template made with [Base UI](https://base-ui.com/), for unstyled accessible components. `src/styles/material.css` supplies the spacing, size, elevation, and other values from the [Material Design 3](https://m3.material.io/) specification, so the components start from an accessible and spec following baseline.
 
-On top of that is a brand token layer, ready for tailwind. Customisation is typeface and colour. Colours go through an accessibility contrast check, and they are generated with Material's own HCT recommendation. Shape, elevation, type scale, and layout stay on the Material defaults, so a design change does not break those rules, and the brand can change on its own.
+On top of that is a brand token layer, ready for Tailwind. Customisation is typeface and colour. Colours go through an accessibility contrast check, and they are generated with Material's own HCT recommendation. Shape, elevation, type scale, and layout stay on the Material defaults, so a design change does not break those rules, and the brand can change on its own.
 
-Accessibility tests can be run in the pipeline, so each change is checked before it lands. These are not done for the prototype.
+Accessibility tests run in the CI pipeline, so each change is checked before it lands: accessibility lint, colour contrast tests, unit tests with an axe scan, and browser suites for axe, keyboard and the screen-reader tree.
 
 ## How the design supports human oversight
 
@@ -60,7 +61,7 @@ The AI-generated text is clearly displayed, with the sources for each conclusion
 
 Every source the AI used is on the page, so the reviewer can read the precise passage and the background the claim depends on. The full document is in the workspace, with the relevant section highlighted, so the review does not mean changing screens. A link opens the original in another tab when more context, or the document at full size, is needed.
 
-Each claim's sources sit beside it in one Sources panel on the right: a bar per source with its badges, title and quote. Hovering or focusing a claim's bar highlights the claim, and the other way round. Opening a bar fills the panel with the whole document, scrolled to the highlighted passage. On a narrow screen or at high zoom, each claim's sources sit under it.
+The sources sit beside the claims in one Sources list on the right: a card per source with its title, badges and quote. Each claim ends with a citation number. Hovering or focusing a citation highlights the cited words and its card, and the other way round. Opening a card shows the whole document inside it, scrolled to the highlighted passage. If a source's full text cannot be loaded, its card says so and still shows the title, badges and quote. On a narrow screen or at high zoom, the Sources list moves under the claims.
 
 ### Uncertainty
 
@@ -78,7 +79,7 @@ The badges are prototype stand-ins: in this mock every value is fixture data, wh
 
 ### Feedback
 
-- A workspace in review looks different from one that has been approved and is now read-only. The edit area shows when edits are unsaved. API errors are shown clearly with a toast and if apropriate a retry button.
+- A workspace in review looks different from one that has been approved and is now read-only. The edit area shows when edits are unsaved. API errors are shown clearly with a toast and, where appropriate, a Retry button.
 - A "Feedback" button in the bottom-right corner opens a short dialog for anything the reviewer found difficult or missing: a 1 to 5 ease rating, a topic, and a comment. Each submission records who sent it and when. The button stays low emphasis so it does not compete with Approve, and the page keeps enough space below its content that the button never covers a focused control. Below 600px it sits at the end of the page instead.
 
 ### Error recovery
@@ -89,10 +90,9 @@ The mock API produces a clear error state, and errors are written so the reviewe
 
 - No real API, authentication, or authorisation.
 - Branding is only a skeleton.
-- For this timebox, laptops and tablets come first. Phones neeed a separate design pass, (or possibly to be used horizontally).
-- Accessibility comes first, so extra animation, hover effects. Tooltips are left out.
+- For this timebox, laptops and tablets come first. Phones need a separate design pass (or could be used in landscape).
+- Accessibility comes first, so extra animation, hover-only effects and tooltips are left out.
 - No app-wide client state for this single-page version. TanStack Query holds server state; interaction state stays in the component.
-- Merges are not gated on CI for this prototype. (quality, unit, build, e2e). otherwise, each change waits a few minutes for the checks, which costs time in a timebox. In real work that wait is worth it to keep the code clean.
 
 ## How to mature this prototype for enterprise
 
@@ -111,7 +111,7 @@ I directed the whole build and AI threads wrote the code, working in parallel PR
 
 ## Options
 
-The following are settings from the template that can be added to the URL to veiw differernt states.
+The following are settings from the template that can be added to the URL to view different states.
 Set a theme and colour scheme with `/?theme=brand&scheme=dark`; the page has no switcher. Themes: `material` (Material 3 baseline), `brand` (generic placeholder). There is no top bar: the API's health shows as a toast in the bottom-left corner (Material 3 snackbar, Base UI Toast). "API ok" closes itself after 6 seconds, paused while the pointer or keyboard focus is on it; "API unavailable" stays with Retry until it is used or dismissed. F6 jumps to it.
 
 In development the app talks to a mock API (MSW). Drive it from the URL with `?mock=<scenario>`:
