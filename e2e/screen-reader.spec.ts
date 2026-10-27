@@ -52,6 +52,8 @@ function expectedTree(): string {
         - heading /^2 Dataset Naming Retrospective/ [level=3]
         - heading /^3 Data Sharing Readiness Checklist/ [level=3]
         - paragraph: /Guidance checklist/
+        - paragraph:
+          - strong: "Full text missing."
         - list "Checks for source 3":
           - listitem: "Reference check: Verified"
           - listitem: "Publication status: Preprint"
@@ -61,9 +63,6 @@ function expectedTree(): string {
           - strong: "Lowered because:"
           - text: /without data/
         - blockquote: /Validation checks/
-        - paragraph:
-          - strong: "Full text missing."
-          - text: /could not be loaded/
         - text: "Evidence strength: Weak"
         - button /^Full passage. Data Sharing Readiness Checklist/
       - button "Feedback"
