@@ -42,7 +42,7 @@ test.describe('WCAG 2.2 AA — automated scan', () => {
     await page.getByRole('button', { name: 'Edit' }).click()
     await page.getByLabel('Claim 2 of 3').fill('The most reported impact was delayed handover.')
     await page.getByRole('button', { name: 'Save' }).click()
-    await expect(page.getByText(/Edited by Prof\. I\. C\. Everything/)).toBeVisible()
+    await expect(page.getByText(/Edited by Dr\. A\. Morgan/)).toBeVisible()
     const { violations } = await makeAxe().analyze()
     expect(violations, formatViolations(violations)).toEqual([])
   })

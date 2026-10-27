@@ -57,13 +57,13 @@ describe('Feedback', () => {
     renderWithProviders(<App />)
     const dialog = await fillAndSend(user)
     expect(await within(dialog).findByText('Thank you. Your feedback was sent.')).toBeVisible()
-    expect(within(dialog).getByText(/Sent by Prof. I. C. Everything/)).toBeVisible()
+    expect(within(dialog).getByText(/Sent by Dr. A. Morgan/)).toBeVisible()
     expect(receivedFeedback()).toEqual([
       expect.objectContaining({
         ease: 4,
         topic: 'sources',
         comment: 'Quotes are easy to find.',
-        by: 'Prof. I. C. Everything',
+        by: 'Dr. A. Morgan',
         at: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T/),
       }),
     ])
