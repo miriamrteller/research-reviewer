@@ -76,6 +76,18 @@ describe('Review screen', () => {
     ).toBeVisible()
   })
 
+  it('sees that source 3’s full text is missing, with its title, checks and quote still there', async () => {
+    const { user, container } = await renderLoaded()
+    const sources = screen.getByRole('region', { name: 'Sources' })
+    expect(within(sources).getAllByText('Full text missing.')).toHaveLength(1)
+    expect(within(sources).getByText(/Validation checks before analytical handover/)).toBeVisible()
+    await user.click(screen.getByRole('button', { name: /Data Sharing Readiness Checklist/ }))
+    expect(screen.getAllByText('Full text missing.')).toHaveLength(1)
+    expect(screen.queryByText('Quoted excerpt starts.')).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /SRC-03/ })).toBeInTheDocument()
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
   it('goes from a claim’s citation number to the source it cites', async () => {
     const { user } = await renderLoaded()
     await user.click(screen.getByRole('button', { name: 'Go to source 3' }))

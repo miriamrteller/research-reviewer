@@ -21,6 +21,14 @@ test.describe('WCAG 2.2 AA — automated scan', () => {
     expect(violations, formatViolations(violations)).toEqual([])
   })
 
+  test('source opened with its full text missing', async ({ page, gotoApp, makeAxe }) => {
+    await gotoApp()
+    await page.getByRole('button', { name: /^Full passage. Data Sharing/ }).click()
+    await expect(page.getByText('Full text missing.')).toBeVisible()
+    const { violations } = await makeAxe().analyze()
+    expect(violations, formatViolations(violations)).toEqual([])
+  })
+
   test('editing the claims', async ({ page, gotoApp, makeAxe }) => {
     await gotoApp()
     await page.getByRole('button', { name: 'Edit' }).click()

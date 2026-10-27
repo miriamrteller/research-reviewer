@@ -8,6 +8,7 @@ import { useRef } from 'react'
 import { cn } from '../../lib/cn'
 import { sourceTriggerId } from '../../lib/highlight'
 import { Badge } from './Badge'
+import { FullTextMissing } from './FullTextMissing'
 import { badgeFor, rowGroups } from './badges'
 import { SourcePassage } from './SourcePassage'
 
@@ -100,6 +101,8 @@ export function SourceCard({ source, open, compact, lit, onClose, onInspect }: S
               “{quote}”
             </blockquote>
           )}
+          {/* While open, the paper says it instead, so it shows once. */}
+          {!compact && source.passage === undefined && <FullTextMissing />}
         </div>
         <div className={cn('flex shrink-0 items-end', compact ? 'items-center gap-1' : 'flex-col')}>
           <Badge {...badgeFor('evidenceStrength', badges)} />

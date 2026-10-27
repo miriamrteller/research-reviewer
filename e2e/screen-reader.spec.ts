@@ -61,6 +61,9 @@ function expectedTree(): string {
           - strong: "Lowered because:"
           - text: /without data/
         - blockquote: /Validation checks/
+        - paragraph:
+          - strong: "Full text missing."
+          - text: /could not be loaded/
         - text: "Evidence strength: Weak"
         - button /^Full passage. Data Sharing Readiness Checklist/
       - button "Feedback"

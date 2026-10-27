@@ -1,5 +1,5 @@
 // Seed review document from Miriam's brief text: question, three-sentence draft summary as claims,
-// three internal sources (one per claim, Miriam), and her uncertainty wording as the caveat. Parsed so a bad edit fails here.
+// three internal sources (one per claim, Miriam; source 3's full text is missing), and her uncertainty wording as the caveat. Parsed so a bad edit fails here.
 // A second document (?doc=badges) gives the same sources the other badge values, so the two
 // together show every ADR 001 value at least once.
 import { ReviewDocument } from '../../api/review/schema'
@@ -94,8 +94,7 @@ export const reviewFixture = ReviewDocument.parse({
       lowered:
         'it is a checklist that states the benefit without data, and it does not mention named data owners.',
       quote: 'Validation checks before analytical handover reduce avoidable rework.',
-      passage:
-        'Purpose. This checklist helps a dataset owner decide whether a dataset is ready to share with analysts outside their own team. It is guidance, not a policy, and owners may adapt it to their context.\n\nBefore sharing. Confirm the dataset has a named owner and a catalogue entry with a plain description, the refresh schedule and known gaps. Confirm that mandatory fields are complete or that gaps are documented. Confirm that the dataset name follows the shared convention where one exists.\n\nValidation. Validation checks before analytical handover reduce avoidable rework and clarify readiness expectations. A minimal set is row counts against the source, null rates on mandatory fields, value ranges on key measures, and a check that identifiers are unique where they should be. Record the result of each check with the date it was run.\n\nAccess. Confirm who may see the dataset and that the access group matches the description. Remove personal data that the analysis does not need before sharing.\n\nHandover. Send the analyst the catalogue link, the validation results and the owner’s contact. Agree how issues will be reported and how quickly the owner will respond.\n\nReview. Revisit the checklist after each quarter’s data-quality review and update it where new issue categories appear.',
+      // No passage: the full text could not be found (Miriam), so the card shows a minor error.
     },
   ],
   review: { status: 'review' },
