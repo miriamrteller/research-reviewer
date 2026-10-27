@@ -75,7 +75,7 @@ This was the main research topic. Each source card shows five badge groups, one 
 | Stance             | Agrees · Disagrees · Neutral                          |
 | Evidence strength  | Strong · Moderate · Limited · Weak                    |
 
-The badges are prototype stand-ins: in this mock every value is fixture data, where a real system would need a reference lookup, a retraction feed and an entailment check. Model confidence is not a badge, because it is poorly calibrated and reviewers over-trust it; instead one caveat line at the top of the answer says the badges are the AI's own checks and can be wrong. The AI's wording of each claim carries its support judgement, and editing a claim does not re-check it against its sources. The full decision is in [ADR 001](docs/adr/001-ADR-Source-badges.md), and the research behind it is in [uncertainty-signals.md](docs/research/uncertainty-signals.md).
+The badges are prototype stand-ins: in this mock every value is fixture data, where a real system would need a reference lookup, a retraction feed and an entailment check. Model confidence is not a badge, because it is poorly calibrated and reviewers over-trust it. The AI's wording of each claim carries its support judgement, and editing a claim does not re-check it against its sources. The full decision is in [ADR 001](docs/adr/001-ADR-Source-badges.md), and the research behind it is in [uncertainty-signals.md](docs/research/uncertainty-signals.md).
 
 ### Feedback
 
