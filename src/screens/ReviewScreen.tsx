@@ -9,6 +9,7 @@ import { Button } from '../components/Button'
 import { ApproveDialog } from '../components/review/ApproveDialog'
 import { ClaimsPaper } from '../components/review/ClaimsPaper'
 import { QuestionHeader } from '../components/review/QuestionHeader'
+import { ReviewSkeleton } from '../components/review/ReviewSkeleton'
 import { ReviseDialog } from '../components/review/ReviseDialog'
 import { SourceCard } from '../components/review/SourceCard'
 import { SourceList } from '../components/review/SourceList'
@@ -53,10 +54,16 @@ export function ReviewScreen() {
     // A margin all round and a max width keep the middle of the page easy to see (Miriam).
     <main className="flex w-full flex-col px-4 py-6 sm:p-8 md:h-dvh md:px-12">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 md:min-h-0 md:flex-1">
+        {/* One header for loading and loaded, so it is not remounted when the words arrive. */}
+        {!document.isError && (
+          <QuestionHeader
+            review={
+              document.data && { question: document.data.question, state: document.data.review }
+            }
+          />
+        )}
         {document.isPending ? (
-          <output aria-busy="true" className="type-body-large text-on-surface-variant">
-            Loading the review…
-          </output>
+          <ReviewSkeleton />
         ) : document.isError ? (
           <div
             role="alert"
@@ -136,7 +143,6 @@ function ReviewBody({ doc, decisions }: ReviewBodyProps) {
 
   return (
     <>
-      <QuestionHeader question={doc.question} state={doc.review} />
       <div className="grid gap-6 md:min-h-0 md:flex-1 md:grid-cols-2 md:gap-8">
         <ClaimsPaper
           caveat={doc.caveat}

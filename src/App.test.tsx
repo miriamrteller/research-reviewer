@@ -26,6 +26,7 @@ describe('Review screen', () => {
     const loading = screen.getByRole('status')
     expect(loading).toHaveTextContent('Loading the review…')
     expect(loading).toHaveAttribute('aria-busy', 'true')
+    expect(screen.getByRole('button', { name: 'Badge key' })).toBeEnabled()
     expect(await axe(container)).toHaveNoViolations()
   })
 

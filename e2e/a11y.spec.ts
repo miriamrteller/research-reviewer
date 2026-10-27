@@ -69,6 +69,18 @@ test.describe('WCAG 2.2 AA — automated scan', () => {
     expect(violations, formatViolations(violations)).toEqual([])
   })
 
+  test('review loading, skeletons where the words will go (mock=slow)', async ({
+    page,
+    gotoApp,
+    makeAxe,
+  }) => {
+    await gotoApp('/?mock=slow&delay=30000')
+    await expect(page.getByRole('main').getByRole('status')).toHaveText('Loading the review…')
+    await expect(page.getByRole('button', { name: 'Badge key' })).toBeVisible()
+    const { violations } = await makeAxe().analyze()
+    expect(violations, formatViolations(violations)).toEqual([])
+  })
+
   test('API loading toast (mock=slow)', async ({ page, gotoApp, makeAxe }) => {
     await gotoApp('/?mock=slow')
     const notifications = page.getByRole('region', { name: 'Notifications' })
